@@ -8,7 +8,7 @@ const createGroup = async (groupInfo) => {
   return result.insertId;
 };
 
-const getCards = async () => {
+const getGroups = async () => {
   const [result] = await pool.execute(
     // 按最新的團、剩餘名額最多排序 (取 10 筆)
     'SELECT group.id, title, date, time_duration, net, place, place_description, money, group.level, people_have, people_need, user.username FROM `group` INNER JOIN `user` ON group.creator_id = user.id ORDER BY group.date DESC, group.people_left ASC LIMIT 10'
@@ -16,7 +16,7 @@ const getCards = async () => {
   return result;
 };
 
-const filterCards = async (filterInfo) => {
+const filterGroups = async (filterInfo) => {
   const [result] = await pool.execute(
     // 加入篩選條件，按最新的團、剩餘名額最多排序 (取 10 筆)
     'SELECT group.id, title, date, time_duration, net, place, place_description, money, group.level, people_have, people_need, user.username FROM `group` INNER JOIN `user` ON group.creator_id = user.id WHERE place LIKE ? AND place LIKE ? AND group.level LIKE ? AND net LIKE ? AND court LIKE ? AND is_charge LIKE ? ORDER BY group.date DESC, group.people_left ASC LIMIT 10',
@@ -25,4 +25,13 @@ const filterCards = async (filterInfo) => {
   return result;
 };
 
-module.exports = { createGroup, getCards, filterCards };
+const groupDetails = async (groupId) => {
+  const [result] = await pool.execute(
+    // 取出某團詳細資料
+    'SELECT * FROM `group` INNER JOIN `user` ON group.creator_id = user.id WHERE group.id = ?',
+    groupId
+  );
+  return result;
+};
+
+module.exports = { createGroup, getGroups, filterGroups, groupDetails };

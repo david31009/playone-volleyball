@@ -21,4 +21,9 @@ const isBuild = {
   1: '已成團',
 };
 
-module.exports = { groupLevel, netHigh, court };
+const isCharge = {
+  0: '免費',
+  1: '收費',
+};
+
+module.exports = { groupLevel, netHigh, court, isBuild, isCharge };

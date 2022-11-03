@@ -90,7 +90,7 @@ $('#start-group').click(async (e) => {
   }
 });
 
-// ----------------------首頁----------------------
+// ----------------------首頁渲染、篩選字卡----------------------
 // 選擇台灣、地區
 new TwCitySelector({
   el: '.tw-city-filter',
@@ -108,20 +108,22 @@ new TwCitySelector({
   for (let i = 0; i < cardInfo.length; i++) {
     // 按照日期，剩餘報名名額排列
     $('#card-group').prepend(
-      `<div class="card">
-          <div class="card-title">${cardInfo[i].title}</div>
-          <div class="card-net">網高: ${cardInfo[i].net}</div>
-          <div class="card-group-level">程度: ${cardInfo[i].groupLevel}</div>
-          <div class="card-date">日期: ${cardInfo[i].date}</div>
-          <div class="card-time">時間: ${cardInfo[i].time}</div>
-          <div class="card-time-duration">可以打: ${cardInfo[i].timeDuration} 小時</div>
-          <div class="card-place">地點: ${cardInfo[i].place}</div>
-          <div class="card-place-des">詳細地點: ${cardInfo[i].placeDescription}</div>
-          <div class="card-people-have">內建: ${cardInfo[i].peopleHave} 人</div>
-          <div class="card-people-need">預計揪: ${cardInfo[i].peopleNeed} 人</div>
-          <div class="card-money">費用: ${cardInfo[i].money} 元</div>
-          <div class="card-creator">主揪: ${cardInfo[i].username}</div>
-       </div>`
+      `<a href="/group.html?id=${cardInfo[i].groupId}">
+        <div class="card">
+            <div class="card-title">${cardInfo[i].title}</div>
+            <div class="card-net">網高: ${cardInfo[i].net}</div>
+            <div class="card-group-level">程度: ${cardInfo[i].groupLevel}</div>
+            <div class="card-date">日期: ${cardInfo[i].date}</div>
+            <div class="card-time">時間: ${cardInfo[i].time}</div>
+            <div class="card-time-duration">可以打: ${cardInfo[i].timeDuration} 小時</div>
+            <div class="card-place">地點: ${cardInfo[i].place}</div>
+            <div class="card-place-des">詳細地點: ${cardInfo[i].placeDescription}</div>
+            <div class="card-people-have">內建: ${cardInfo[i].peopleHave} 人</div>
+            <div class="card-people-need">預計揪: ${cardInfo[i].peopleNeed} 人</div>
+            <div class="card-money">費用: ${cardInfo[i].money} 元</div>
+            <div class="card-creator">主揪: ${cardInfo[i].username}</div>
+        </div>
+       </a>`
     );
   }
 })();
@@ -146,20 +148,22 @@ $('#filter').click(async (e) => {
   for (let i = 0; i < filterCardsInfo.length; i++) {
     // 按照日期，剩餘報名名額排列
     $('#card-group').prepend(
-      `<div class="card">
-          <div class="card-title">${filterCardsInfo[i].title}</div>
-          <div class="card-net">網高: ${filterCardsInfo[i].net}</div>
-          <div class="card-group-level">程度: ${filterCardsInfo[i].groupLevel}</div>
-          <div class="card-date">日期: ${filterCardsInfo[i].date}</div>
-          <div class="card-time">時間: ${filterCardsInfo[i].time}</div>
-          <div class="card-time-duration">可以打: ${filterCardsInfo[i].timeDuration} 小時</div>
-          <div class="card-place">地點: ${filterCardsInfo[i].place}</div>
-          <div class="card-place-des">詳細地點: ${filterCardsInfo[i].placeDescription}</div>
-          <div class="card-people-have">內建: ${filterCardsInfo[i].peopleHave} 人</div>
-          <div class="card-people-need">預計揪: ${filterCardsInfo[i].peopleNeed} 人</div>
-          <div class="card-money">費用: ${filterCardsInfo[i].money} 元</div>
-          <div class="card-creator">主揪: ${filterCardsInfo[i].username}</div>
-       </div>`
+      `<a href="/group.html?id=${filterCardsInfo[i].groupId}">
+        <div class="card">
+            <div class="card-title">${filterCardsInfo[i].title}</div>
+            <div class="card-net">網高: ${filterCardsInfo[i].net}</div>
+            <div class="card-group-level">程度: ${filterCardsInfo[i].groupLevel}</div>
+            <div class="card-date">日期: ${filterCardsInfo[i].date}</div>
+            <div class="card-time">時間: ${filterCardsInfo[i].time}</div>
+            <div class="card-time-duration">可以打: ${filterCardsInfo[i].timeDuration} 小時</div>
+            <div class="card-place">地點: ${filterCardsInfo[i].place}</div>
+            <div class="card-place-des">詳細地點: ${filterCardsInfo[i].placeDescription}</div>
+            <div class="card-people-have">內建: ${filterCardsInfo[i].peopleHave} 人</div>
+            <div class="card-people-need">預計揪: ${filterCardsInfo[i].peopleNeed} 人</div>
+            <div class="card-money">費用: ${filterCardsInfo[i].money} 元</div>
+            <div class="card-creator">主揪: ${filterCardsInfo[i].username}</div>
+        </div>
+       <a>`
     );
   }
 });

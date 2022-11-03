@@ -1,4 +1,10 @@
-const { netHigh, groupLevel } = require('../utils/enum');
+const {
+  groupLevel,
+  netHigh,
+  court,
+  isBuild,
+  isCharge,
+} = require('../utils/enum');
 const Group = require('../models/group_model');
 
 const createGroup = async (req, res) => {
@@ -40,8 +46,8 @@ const createGroup = async (req, res) => {
   res.status(200).json({ groupId });
 };
 
-const getCards = async (req, res) => {
-  const resultDB = await Group.getCards();
+const getGroups = async (req, res) => {
+  const resultDB = await Group.getGroups();
   const result = resultDB.map((i) => {
     // date 是 object 型態
     let datetime = JSON.stringify(i.date).replace('"', '');
@@ -64,8 +70,9 @@ const getCards = async (req, res) => {
   res.status(200).json({ result });
 };
 
-const filterCards = async (req, res) => {
+const filterGroups = async (req, res) => {
   const info = req.body;
+  // % 是 sql like 語法用來做相似搜尋
   const filterInfo = [
     `${info.county}%`,
     `%${info.district}`,
@@ -75,7 +82,7 @@ const filterCards = async (req, res) => {
     `%${info.isCharge}`,
   ];
 
-  const resultDB = await Group.filterCards(filterInfo);
+  const resultDB = await Group.filterGroups(filterInfo);
   const result = resultDB.map((i) => {
     // date 是 object 型態
     let datetime = JSON.stringify(i.date).replace('"', '');
@@ -98,4 +105,36 @@ const filterCards = async (req, res) => {
   res.status(200).json({ result });
 };
 
-module.exports = { createGroup, getCards, filterCards };
+const groupDetails = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await Group.groupDetails([id]);
+  const result = resultDB.map((i) => {
+    // date 是 object 型態
+    let datetime = JSON.stringify(i.date).replace('"', '');
+    return {
+      groupId: i.id,
+      userId: i.creator_id,
+      username: i.username,
+      title: i.title,
+      date: datetime.split('T')[0],
+      time: datetime.split('T')[1].slice(0, 5),
+      timeDuration: i.time_duration / 60,
+      net: netHigh[i.net],
+      place: i.place,
+      placeDescription: i.place_description,
+      court: court[i.court],
+      isCharge: isCharge[i.is_charge],
+      money: i.money,
+      groupLevel: groupLevel[i.level],
+      groupLevelDescrition: i.level_description,
+      peopleHave: i.people_have,
+      peopleNeed: i.people_need,
+      peopleLeft: i.people_left,
+      groupDescription: i.group_description,
+      isBuild: isBuild[i.is_build],
+    };
+  });
+  res.status(200).json({ result });
+};
+
+module.exports = { createGroup, getGroups, filterGroups, groupDetails };

@@ -72,6 +72,11 @@ body {
   display: flex;
 }
 
+#filter {
+  cursor: pointer;
+}
+
+/* 揪團字卡渲染*/
 .card-group {
   display: flex;
   flex-wrap: wrap;
@@ -80,9 +85,14 @@ body {
 .card {
   border: solid;
   padding: 10px;
-  margin: 4%;
 }
 
-#filter {
-  cursor: pointer;
+#card-group a {
+  text-decoration: none;
+  margin: 3%;
+}
+
+#card-group a:link,
+#card-group a:visited {
+  color: black;
 }

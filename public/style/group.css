@@ -1,0 +1,28 @@
+/* 首頁 header*/
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.vb-nav {
+  display: flex;
+  background: #28a3e7;
+  padding: 10px;
+}
+
+.vb-nav-filter {
+  display: flex;
+}
+
+.vb-nav-social {
+  display: flex;
+}
+
+/* 揪團詳細內容*/
+.group-detail {
+  border: solid;
+  width: 50%;
+  margin: 3%;
+  padding: 10px;
+}
