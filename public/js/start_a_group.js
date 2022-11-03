@@ -106,6 +106,7 @@ new TwCitySelector({
   const cardInfo = getCards.data.result;
 
   for (let i = 0; i < cardInfo.length; i++) {
+    // 按照日期，剩餘報名名額排列
     $('#card-group').prepend(
       `<div class="card">
           <div class="card-title">${cardInfo[i].title}</div>
@@ -125,16 +126,40 @@ new TwCitySelector({
   }
 })();
 
-// 篩選功能
+// 篩選字卡
 $('#filter').click(async (e) => {
   e.preventDefault();
+
   let filterInfo = {
     county: $('#filter-county').val(),
     district: $('#filter-district').val(),
     groupLevel: $('#filter-group-level').val(),
     net: $('#filter-net').val(),
     court: $('#filter-court').val(),
-    money: $('#filter-money').val(),
+    isCharge: $('#filter-is-charge').val(),
   };
-  console.log(filterInfo);
+
+  let filterCards = await axios.post('/api/1.0/filter', filterInfo);
+  const filterCardsInfo = filterCards.data.result;
+
+  $('.card').remove();
+  for (let i = 0; i < filterCardsInfo.length; i++) {
+    // 按照日期，剩餘報名名額排列
+    $('#card-group').prepend(
+      `<div class="card">
+          <div class="card-title">${filterCardsInfo[i].title}</div>
+          <div class="card-net">網高: ${filterCardsInfo[i].net}</div>
+          <div class="card-group-level">程度: ${filterCardsInfo[i].groupLevel}</div>
+          <div class="card-date">日期: ${filterCardsInfo[i].date}</div>
+          <div class="card-time">時間: ${filterCardsInfo[i].time}</div>
+          <div class="card-time-duration">可以打: ${filterCardsInfo[i].timeDuration} 小時</div>
+          <div class="card-place">地點: ${filterCardsInfo[i].place}</div>
+          <div class="card-place-des">詳細地點: ${filterCardsInfo[i].placeDescription}</div>
+          <div class="card-people-have">內建: ${filterCardsInfo[i].peopleHave} 人</div>
+          <div class="card-people-need">預計揪: ${filterCardsInfo[i].peopleNeed} 人</div>
+          <div class="card-money">費用: ${filterCardsInfo[i].money} 元</div>
+          <div class="card-creator">主揪: ${filterCardsInfo[i].username}</div>
+       </div>`
+    );
+  }
 });

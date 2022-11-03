@@ -6,6 +6,8 @@ const createGroup = async (req, res) => {
   const creatorId = 1; // 看是哪個 user
   const isBuild = 1; // 已成團
   const peopleLeft = info.peopleNeed; // 剩餘報名名額
+  let isCharge = 1; // 是否收費
+  if (info.money === '0') isCharge = 0;
 
   const groupInfo = [
     creatorId,
@@ -16,6 +18,7 @@ const createGroup = async (req, res) => {
     info.county + info.district,
     info.placeDescription,
     info.court,
+    isCharge,
     info.money,
     info.level,
     info.levelDescription,
@@ -60,4 +63,39 @@ const getCards = async (req, res) => {
   });
   res.status(200).json({ result });
 };
-module.exports = { createGroup, getCards };
+
+const filterCards = async (req, res) => {
+  const info = req.body;
+  const filterInfo = [
+    `${info.county}%`,
+    `%${info.district}`,
+    `%${info.groupLevel}`,
+    `%${info.net}`,
+    `%${info.court}`,
+    `%${info.isCharge}`,
+  ];
+
+  const resultDB = await Group.filterCards(filterInfo);
+  const result = resultDB.map((i) => {
+    // date 是 object 型態
+    let datetime = JSON.stringify(i.date).replace('"', '');
+    return {
+      groupId: i.id,
+      title: i.title,
+      date: datetime.split('T')[0],
+      time: datetime.split('T')[1].slice(0, 5),
+      timeDuration: i.time_duration / 60,
+      net: netHigh[i.net],
+      place: i.place,
+      placeDescription: i.place_description,
+      money: i.money,
+      groupLevel: groupLevel[i.level],
+      peopleHave: i.people_have,
+      peopleNeed: i.people_need,
+      username: i.username,
+    };
+  });
+  res.status(200).json({ result });
+};
+
+module.exports = { createGroup, getCards, filterCards };
