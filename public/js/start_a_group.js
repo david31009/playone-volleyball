@@ -81,12 +81,7 @@ $('#start-group').click(async (e) => {
 
   // 使用者填欄位填寫完畢，才打 API
   if (OK) {
-    let sendGroupInfo = await axios({
-      method: 'post',
-      url: '/api/1.0/group',
-      data: groupInfo,
-    });
-    console.log(sendGroupInfo.data);
+    await axios.post('/api/1.0/group', groupInfo);
   }
 });
 
@@ -107,7 +102,7 @@ new TwCitySelector({
 
   for (let i = 0; i < cardInfo.length; i++) {
     // 按照日期，剩餘報名名額排列
-    $('#card-group').prepend(
+    $('#card-group').append(
       `<a href="/group.html?id=${cardInfo[i].groupId}">
         <div class="card">
             <div class="card-title">${cardInfo[i].title}</div>
@@ -144,10 +139,10 @@ $('#filter').click(async (e) => {
   let filterCards = await axios.post('/api/1.0/filter', filterInfo);
   const filterCardsInfo = filterCards.data.result;
 
-  $('.card').remove();
+  $('#card-group a').remove();
   for (let i = 0; i < filterCardsInfo.length; i++) {
     // 按照日期，剩餘報名名額排列
-    $('#card-group').prepend(
+    $('#card-group').append(
       `<a href="/group.html?id=${filterCardsInfo[i].groupId}">
         <div class="card">
             <div class="card-title">${filterCardsInfo[i].title}</div>
@@ -163,7 +158,7 @@ $('#filter').click(async (e) => {
             <div class="card-money">費用: ${filterCardsInfo[i].money} 元</div>
             <div class="card-creator">主揪: ${filterCardsInfo[i].username}</div>
         </div>
-       <a>`
+       </a>`
     );
   }
 });

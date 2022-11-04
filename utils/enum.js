@@ -26,4 +26,17 @@ const isCharge = {
   1: '收費',
 };
 
-module.exports = { groupLevel, netHigh, court, isBuild, isCharge };
+const signupStatus = {
+  0: '報名待確認',
+  1: '報名成功',
+  2: '報名失敗',
+};
+
+module.exports = {
+  groupLevel,
+  netHigh,
+  court,
+  isBuild,
+  isCharge,
+  signupStatus,
+};

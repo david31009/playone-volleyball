@@ -1,3 +1,6 @@
+// 確認 user 身分，從 local storage 拿
+const userId = 2;
+
 // 渲染某團詳細資料
 (async () => {
   // 抓網址的 query string (?id=21)
@@ -5,90 +8,58 @@
   const id = url.search;
 
   // 打 group details API
-  let detail = await axios.get(`/api/1.0/group/details${id}`);
+  const detail = await axios.get(`/api/1.0/group/details${id}`);
   [groupDetail] = detail.data.result;
-  $('#group').append(
-    `<div class="card-title">${groupDetail.title}</div>
-        <div class="group-detail-net">網高: ${groupDetail.net}</div>
-        <div class="group-detail-date">日期: ${groupDetail.date}</div>
-        <div class="group-detail-time">時間: ${groupDetail.time}</div>
-        <div class="group-detail-place">地點: ${groupDetail.place}</div>
-        <div class="group-detail-place-des">詳細地點: ${groupDetail.placeDescription}</div>
-        <div class="group-detail-group-level">程度: ${groupDetail.groupLevel}</div>
-        <div class="group-detail-time-duration">可以打: ${groupDetail.timeDuration} 小時</div>
-        <div class="group-detail-money">費用: ${groupDetail.money} 元</div>
-        <div class="group-detail-people-left">報名剩餘名額: ${groupDetail.peopleLeft} 人</div>
-        <button id="attend" class="attend">報名</button>
-        <button id="edit" class="edit" onclick="show()">編輯表單</button>
-        <div class="group-detail-creator">主揪: ${groupDetail.username}</div>
-        <div>
-          <textarea id="msg-board" name="程度描述" rows="4" cols="30" placeholder="留言板"></textarea>
-        </div>
-        <button>留言</button>
-      </div>`
+
+  // 打報名狀態 API
+  const signupStatus = await axios.post(`/api/1.0/signup/status`, {
+    userId: userId,
+    groupId: id.split('=')[1],
+  });
+  const [status] = signupStatus.data.result;
+
+  $('.card-title').html(`${groupDetail.title}`);
+  $('.group-detail-net').html(`網高: ${groupDetail.net[1]}`);
+  $('.group-detail-date').html(`日期: ${groupDetail.date}`);
+  $('.group-detail-time').html(`網高: ${groupDetail.net[1]}`);
+  $('.group-detail-place').html(`地點: ${groupDetail.place}`);
+  $('.group-detail-place-des').html(
+    `詳細地點: ${groupDetail.placeDescription}`
+  );
+  $('.group-detail-group-level').html(`程度: ${groupDetail.groupLevel[1]}`);
+  $('.group-detail-time-duration').html(
+    `可以打: ${groupDetail.timeDuration} 小時`
+  );
+  $('.group-detail-money').html(`費用: ${groupDetail.money} 元`);
+  $('.group-detail-people-left').html(
+    `報名剩餘名額: ${groupDetail.peopleLeft} 人`
   );
 
-  // 確認 user 身分，從 local storage 拿
-  const user = 4;
-  // if user = 主揪 // edit
-  //else // view
-  if (groupDetail.userId === user) {
+  // 確認使用者報名狀態
+  if (status == undefined) {
+    // 還沒報名過
+    $('#signup').html(`報名`);
+  } else {
+    $('#signup').html(`${status.signupStatus[1]}`);
+    $('#signup').prop('disabled', true);
+  }
+  $('#edit').html(`編輯表單`);
+  $('.group-detail-creator').html(`主揪: ${groupDetail.username}`);
+
+  // if user = 主揪 => edit
+  //else => view
+  if (groupDetail.creatorId === userId) {
     $('#edit').show();
-    $('#attend').hide();
+    $('#signup').hide();
   } else {
     $('#edit').hide();
-    $('#attend').show();
+    $('#signup').show();
   }
 })();
 
-// 編輯表單
-function show() {
+// 彈出編輯表單
+async function edit() {
   $('#background-pop').show();
-
-  $('#edit-form').prepend(
-    `<div>揪團標題 
-      <input id="title" name="揪團標題" required />
-    </div>
-    <div>揪團日期 <input id="date" type="date" name="揪團日期" required /></div>
-    <div>揪團時間 <input id="time" type="time" name="揪團時間" required /></div>
-    <div>打多久 <select id="time-duration" name="打多久" required></select>小時</div>
-    <div>網高 <select id="net" name="網高" required><option value="1">男網</option><option value="0">女網</option></select></div>
-    <div>揪團地點 
-      <div class="tw-city-selector">
-        <select id="county" class="county" required></select>
-        <select id="district" class="district" required></select>
-      </div>
-      <input id="place-description" name="詳細地點" placeholder="詳細地點" required />
-    </div>
-    <div>場地
-      <select id="court" name="場地" required><option value="0">室內</option><option value="1">室外</option></select>
-    </div>
-    <div>費用
-      <input id="money" name="費用" placeholder="請輸入數字，免費請輸入 0" required />
-    </div>
-    <div>程度
-        <select id="level" name="程度" required>
-            <option value="4">職業</option>
-            <option value="3" >校隊</option>
-            <option value="2">系隊</option>
-            <option value="1">新手</option>
-            <option value="0">快樂排球</option>
-        </select>
-    </div>
-    <div>程度描述
-      <br />
-      <textarea id="level-description" name="程度描述" rows="4" cols="30" required></textarea>
-    </div>
-    <div>人數
-     <span>內建 </span><select id="people-have" name="內建人數" required></select><span>人</span>
-     <span>預計揪 </span><select id="people-need" name="預計揪人數" required></select><span>人</span>
-    </div>
-    <div>揪團描述
-     <br />
-     <textarea id="group-description" name="揪團描述" rows="4" cols="30" required></textarea>
-    </div>
-    `
-  );
 
   // 先渲染下拉式選單選項
   for (let i = 0.5; i < 6.5; i += 0.5) {
@@ -115,19 +86,24 @@ function show() {
   }
 
   // 抓之前主揪填寫的資料，填入 value 值
-  $('#title').val('我想打球');
-  $('#date').val('2022-11-04');
-  $('#time').val('13:35');
-  $('#time-duration').val('1.5');
-  $('#net').val('0');
-  $('#place-description').val('大安森林公園');
-  $('#court').val('1');
-  $('#money').val('600');
-  $('#level').val('2');
-  $('textarea#level-description').val('拜託');
-  $('#people-have').val('6');
-  $('#people-need').val('8');
-  $('textarea#group-description').val('拜託');
+  const url = new URL(window.location.href);
+  const id = url.search;
+  const detail = await axios.get(`/api/1.0/group/details${id}`);
+  [groupDetail] = detail.data.result;
+
+  $('#title').val(`${groupDetail.title}`);
+  $('#date').val(`${groupDetail.date}`);
+  $('#time').val(`${groupDetail.time}`);
+  $('#time-duration').val(`${groupDetail.timeDuration}`);
+  $('#net').val(`${groupDetail.net[0]}`);
+  $('#place-description').val(`${groupDetail.placeDescription}`);
+  $('#court').val(`${groupDetail.court[0]}`);
+  $('#money').val(`${groupDetail.money}`);
+  $('#level').val(`${groupDetail.groupLevel[0]}`);
+  $('textarea#level-description').val(`${groupDetail.groupLevelDescription}`);
+  $('#people-have').val(`${groupDetail.peopleHave}`);
+  $('#people-need').val(`${groupDetail.peopleNeed}`);
+  $('textarea#group-description').val(`${groupDetail.groupDescription}`);
 
   // 選擇台灣、地區
   new TwCitySelector({
@@ -136,48 +112,52 @@ function show() {
     elDistrict: '.district', // 在 el 裡查找 element
     countyFieldName: '縣市', // 該欄位的 name
     districtFieldName: '區域', // 該欄位的 name
-    countyValue: '台北市', // 預設 value
-    districtValue: '大安區', // 預設 value
+    countyValue: `${groupDetail.place.slice(0, 3)}`, // 預設 value
+    districtValue: `${groupDetail.place.slice(3, 10)}`, // 預設 value
   });
 }
 
-$('#save').click((e) => {
+// 儲存編輯表單
+$('#save').click(async (e) => {
   e.preventDefault();
-  const newTitle = $('#title').val();
-  const newDate = $('#date').val();
-  const newTime = $('#time').val();
-  const newTimeduration = $('#time-duration').val();
-  const newNet = $('#net').val();
-  const newCounty = $('#county').val();
-  const newdistrict = $('#district').val();
-  const newPlaceDescription = $('#place-description').val();
-  const newCourt = $('#court').val();
-  const newMoney = $('#money').val();
-  const newLevel = $('#level').val();
-  const newLevelDescription = $('#level-description').val();
-  const newPeopleHave = $('#people-have').val();
-  const newPeopleNeed = $('#people-need').val();
-  const newGroupDescription = $('#group-description').val();
+  const url = new URL(window.location.href);
+  const id = url.search;
 
-  console.log(
-    newTitle,
-    newDate,
-    newTime,
-    newTimeduration,
-    newNet,
-    newCounty,
-    newdistrict,
-    newPlaceDescription,
-    newCourt,
-    newMoney,
-    newLevel,
-    newLevelDescription,
-    newPeopleHave,
-    newPeopleNeed,
-    newGroupDescription
-  );
+  let updateInfo = {
+    groupId: id.split('=')[1],
+    title: $('#title').val(),
+    date: $('#date').val(),
+    time: $('#time').val(),
+    timeDuration: $('#time-duration').val(),
+    net: $('#net').val(),
+    county: $('#county').val(),
+    district: $('#district').val(),
+    placeDescription: $('#place-description').val(),
+    court: $('#court').val(),
+    money: $('#money').val(),
+    level: $('#level').val(),
+    levelDescription: $('#level-description').val(),
+    peopleHave: $('#people-have').val(),
+    peopleNeed: $('#people-need').val(),
+    groupDescription: $('#group-description').val(),
+  };
+
+  // 使用者未填欄位，發出 alert
+  let OK = true;
+  $('input, textarea, select')
+    .filter('[required]') // 找出有 required 的屬性
+    .each((i, requiredField) => {
+      if (!$(requiredField).val()) {
+        OK = false;
+        alert(`請輸入 "${$(requiredField).attr('name')}" 欄位`);
+        return false; // break
+      }
+    });
+
   // 更新資料庫表單
-  console.log('hi');
+  if (OK) {
+    await axios.post('/api/1.0/update/group', updateInfo);
+  }
 });
 
 // 編輯彈窗按鈕
@@ -189,4 +169,24 @@ $(window).click((e) => {
   if (e.target.id === 'background-pop') {
     $('#background-pop').hide();
   }
+});
+
+// 報名揪團
+$('#signup').click(async () => {
+  // 抓網址的 query string (?id=21)
+  const url = new URL(window.location.href);
+  const id = url.search;
+
+  signupInfo = {
+    groupId: id.split('=')[1],
+    userId: userId,
+    signupStatus: 0,
+  };
+
+  await axios.post('/api/1.0/signup/group', signupInfo);
+
+  // 報名成功按鈕顯示
+  $('button[id*=signup]').html('報名待確認');
+  // 按鈕不能再點擊
+  $('#signup').prop('disabled', true);
 });

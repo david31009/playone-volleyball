@@ -26,7 +26,26 @@
         </div>
       </div>
     </div>
-    <div id="group" class="group-detail"></div>
+    <div id="group" class="group-detail">
+      <div class="card-title"></div>
+        <div class="group-detail-net"></div>
+        <div class="group-detail-date"></div>
+        <div class="group-detail-time"></div>
+        <div class="group-detail-place"></div>
+        <div class="group-detail-place-des"></div>
+        <div class="group-detail-group-level"></div>
+        <div class="group-detail-time-duration"></div>
+        <div class="group-detail-money"></div>
+        <div class="group-detail-people-left"></div>
+        <button id="signup" class="signup"></button>
+        <button id="edit" class="edit" onclick="edit()"></button>
+        <div class="group-detail-creator"></div>
+        <div>
+          <textarea id="msg-board" name="程度描述" rows="4" cols="30" placeholder="留言板"></textarea>
+        </div>
+        <button id="leave-msg">留言</button>
+      </div>
+    </div>
     <div id="background-pop">
       <div id="div-pop">
         <div class="div-top">
@@ -35,31 +54,31 @@
         </div>
         <div class="div-content">
           <form id="edit-form" action="post">
-            <!-- <div>
+            <div>
               揪團標題
               <input id="title" name="揪團標題" required />
-            </div> -->
-            <!-- <div>
+            </div>
+            <div>
               揪團日期
               <input id="date" type="date" name="揪團日期" required />
-            </div> -->
-            <!-- <div>
+            </div>
+            <div>
               揪團時間
               <input id="time" type="time" name="揪團時間" required />
-            </div> -->
-            <!-- <div>
+            </div>
+            <div>
               打多久
               <select id="time-duration" name="打多久" required></select>
               小時
-            </div> -->
-            <!-- <div>
+            </div>
+            <div>
               網高
               <select id="net" name="網高" required>
                 <option value="1">男網</option>
                 <option value="0">女網</option>
               </select>
-            </div> -->
-            <!-- <div>
+            </div>
+            <div>
               揪團地點
               <div class="tw-city-selector">
                 <select id="county" class="county" required></select>
@@ -71,8 +90,8 @@
                 placeholder="詳細地點"
                 required
               />
-            </div> -->
-            <!-- <div>
+            </div>
+            <div>
               場地
               <select id="court" name="場地" required>
                 <option value="0">室內</option>
@@ -128,7 +147,7 @@
                 cols="30"
                 required
               ></textarea>
-            </div> -->
+            </div>
             <button id="save">儲存</button>
           </form>
         </div>
