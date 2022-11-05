@@ -192,6 +192,31 @@ const getSignupStatus = async (req, res) => {
   res.status(200).json({ result });
 };
 
+const createMsg = async (req, res) => {
+  const info = req.body;
+  const msgInfo = [info.userId, info.groupId, info.content, info.time];
+  await Group.createMsg(msgInfo);
+  res.status(200).send('ok');
+};
+
+const getMsg = async (req, res) => {
+  const { groupId } = req.body;
+  const resultDB = await Group.getMsg([groupId]);
+  // date 是 object 型態
+  const result = resultDB.map((i) => {
+    let datetime = JSON.stringify(i.time).replace('"', '');
+    return {
+      userId: i.user_id,
+      username: i.username,
+      groupId: i.group_id,
+      content: i.content,
+      time: datetime.replace('T', ' ').split('.')[0].slice(0, 16),
+    };
+  });
+
+  res.status(200).json({ result });
+};
+
 module.exports = {
   createGroup,
   getGroups,
@@ -200,4 +225,6 @@ module.exports = {
   updateGroup,
   signupGroup,
   getSignupStatus,
+  createMsg,
+  getMsg,
 };

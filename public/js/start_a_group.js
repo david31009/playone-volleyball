@@ -86,7 +86,6 @@ $('#start-group').click(async (e) => {
   // 使用者填欄位填寫完畢，才打 API
   if (OK) {
     const result = await axios.post('/api/1.0/group', groupInfo);
-
     // 成功建立揪團，跳轉到揪團詳細頁面
     if (result.data.groupId) {
       window.location.href = `/group.html?id=${result.data.groupId}`;

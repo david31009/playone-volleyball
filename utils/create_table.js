@@ -28,19 +28,19 @@ const createTable = async () => {
       'CREATE TABLE `comment`(`id` INT UNSIGNED, `user_id` INT UNSIGNED, `commenter_id` INT UNSIGNED, `score` TINYINT UNSIGNED, `content` VARCHAR(45), `date` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`commenter_id`) REFERENCES `user` (`id`) ON DELETE CASCADE)'
     );
     await pool.execute(
-      'CREATE TABLE `msg_board`(`id` INT UNSIGNED, `user_id` INT UNSIGNED, `group_id` INT UNSIGNED, `content` VARCHAR(45), `time` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE CASCADE)'
+      'CREATE TABLE `msg_board`(`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `user_id` INT UNSIGNED, `group_id` INT UNSIGNED, `content` VARCHAR(45), `time` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE CASCADE)'
     );
     await pool.execute(
       'CREATE TABLE `fans`(`user_id` INT UNSIGNED, `follower_id` INT UNSIGNED, PRIMARY KEY (`user_id`, `follower_id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`follower_id`) REFERENCES `user` (`id`) ON DELETE CASCADE)'
     );
     await pool.execute(
-      'CREATE TABLE `chatroom`(`id` INT UNSIGNED, `name` VARCHAR(20), PRIMARY KEY (`id`))'
+      'CREATE TABLE `chatroom`(`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `name` VARCHAR(20), PRIMARY KEY (`id`))'
     );
     await pool.execute(
       'CREATE TABLE `user_chatroom`(`user_id` INT UNSIGNED, `chatroom_id` INT UNSIGNED, PRIMARY KEY (`user_id`, `chatroom_id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`chatroom_id`) REFERENCES `chatroom` (`id`) ON DELETE CASCADE)'
     );
     await pool.execute(
-      'CREATE TABLE `chat_msg`(`id` INT UNSIGNED, `user_id` INT UNSIGNED, `chatroom_id` INT UNSIGNED, `msg` VARCHAR(45), `time` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`chatroom_id`) REFERENCES `chatroom` (`id`) ON DELETE CASCADE)'
+      'CREATE TABLE `chat_msg`(`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `user_id` INT UNSIGNED, `chatroom_id` INT UNSIGNED, `msg` VARCHAR(45), `time` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`chatroom_id`) REFERENCES `chatroom` (`id`) ON DELETE CASCADE)'
     );
     console.log('table created successfully.');
     process.exit();

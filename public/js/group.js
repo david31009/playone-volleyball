@@ -1,24 +1,29 @@
 // 確認 user 身分，從 local storage 拿
 const userId = 2;
 
+// 抓網址 groupId (?id=21)
+const url = new URL(window.location.href);
+const id = url.search;
+const idSplit = id.split('=')[1];
+
 // 渲染某團詳細資料
 (async () => {
-  // 抓網址的 query string (?id=21)
-  const url = new URL(window.location.href);
-  const id = url.search;
-
   // 打 group details API
   const detail = await axios.get(`/api/1.0/group/details${id}`);
   [groupDetail] = detail.data.result;
-  console.log(groupDetail);
 
   // 打報名狀態 API
   const signupStatus = await axios.post(`/api/1.0/signup/status`, {
     userId: userId,
-    groupId: id.split('=')[1],
+    groupId: idSplit,
   });
   const [status] = signupStatus.data.result;
 
+  // 打顯示留言 API
+  const msg = await axios.post(`/api/1.0/load/msg`, { groupId: idSplit });
+  const allMsg = msg.data.result;
+
+  // 渲染揪團細節
   $('.card-title').html(`${groupDetail.title}`);
   $('.group-detail-net').html(`網高: ${groupDetail.net[1]}`);
   $('.group-detail-date').html(`日期: ${groupDetail.date}`);
@@ -41,6 +46,17 @@ const userId = 2;
   $('.group-detail-people-left').html(
     `報名剩餘名額: ${groupDetail.peopleLeft} 人`
   );
+  $('#edit').html(`編輯表單`);
+  $('.group-detail-creator').html(`主揪: ${groupDetail.username}`);
+
+  // 確認事主揪還是使用者，顯示不同按鈕 (主揪 => edit，使用者 => view)
+  if (groupDetail.creatorId === userId) {
+    $('#edit').show();
+    $('#signup').hide();
+  } else {
+    $('#edit').hide();
+    $('#signup').show();
+  }
 
   // 確認使用者報名狀態
   if (status == undefined) {
@@ -50,17 +66,17 @@ const userId = 2;
     $('#signup').html(`${status.signupStatus[1]}`);
     $('#signup').prop('disabled', true);
   }
-  $('#edit').html(`編輯表單`);
-  $('.group-detail-creator').html(`主揪: ${groupDetail.username}`);
 
-  // if user = 主揪 => edit
-  //else => view
-  if (groupDetail.creatorId === userId) {
-    $('#edit').show();
-    $('#signup').hide();
-  } else {
-    $('#edit').hide();
-    $('#signup').show();
+  // 渲染留言資料
+  for (let i = 0; i < allMsg.length; i++) {
+    $('#messages').append(
+      `<div class="user-messages">
+        <div>${allMsg[i].username}</div>
+        <div>${allMsg[i].content}</div>
+        <div>${allMsg[i].time}</div>
+      </div>
+      `
+    );
   }
 })();
 
@@ -93,8 +109,6 @@ async function edit() {
   }
 
   // 抓之前主揪填寫的資料，填入 value 值
-  const url = new URL(window.location.href);
-  const id = url.search;
   const detail = await axios.get(`/api/1.0/group/details${id}`);
   [groupDetail] = detail.data.result;
 
@@ -127,11 +141,8 @@ async function edit() {
 // 儲存編輯表單
 $('#save').click(async (e) => {
   e.preventDefault();
-  const url = new URL(window.location.href);
-  const id = url.search;
-
   let updateInfo = {
-    groupId: id.split('=')[1],
+    groupId: idSplit,
     title: $('#title').val(),
     date: $('#date').val(),
     time: $('#time').val(),
@@ -188,12 +199,8 @@ $(window).click((e) => {
 
 // 報名揪團
 $('#signup').click(async () => {
-  // 抓網址的 query string (?id=21)
-  const url = new URL(window.location.href);
-  const id = url.search;
-
   signupInfo = {
-    groupId: id.split('=')[1],
+    groupId: idSplit,
     userId: userId,
     signupStatus: 0,
   };
@@ -208,4 +215,22 @@ $('#signup').click(async () => {
   $('button[id*=signup]').html('報名待確認');
   // 按鈕不能再點擊
   $('#signup').prop('disabled', true);
+});
+
+//留言
+$('#leave-msg').click(async () => {
+  // 讀取現在時間，轉成 mysql datetime 可以存取的時間
+  const date = new Date(+new Date() + 8 * 3600 * 1000);
+  const time = date.toISOString().split('.')[0].replace('T', ' ');
+  // 打 API，儲存留言
+  msgInfo = {
+    userId: userId,
+    groupId: idSplit,
+    content: $('#msg-board').val(),
+    time: time,
+  };
+  await axios.post('/api/1.0/msg', msgInfo);
+
+  // 跳轉到揪團詳細頁面
+  window.location.href = `/group.html${id}`;
 });
