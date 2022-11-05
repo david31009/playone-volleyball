@@ -10,6 +10,7 @@ const userId = 2;
   // 打 group details API
   const detail = await axios.get(`/api/1.0/group/details${id}`);
   [groupDetail] = detail.data.result;
+  console.log(groupDetail);
 
   // 打報名狀態 API
   const signupStatus = await axios.post(`/api/1.0/signup/status`, {
@@ -27,6 +28,12 @@ const userId = 2;
     `詳細地點: ${groupDetail.placeDescription}`
   );
   $('.group-detail-group-level').html(`程度: ${groupDetail.groupLevel[1]}`);
+  $('.group-detail-group-level-description').html(
+    `程度描述: ${groupDetail.groupLevelDescription}`
+  );
+  $('.group-detail-group-description').html(
+    `揪團描述: ${groupDetail.groupDescription}`
+  );
   $('.group-detail-time-duration').html(
     `可以打: ${groupDetail.timeDuration} 小時`
   );
@@ -149,7 +156,11 @@ $('#save').click(async (e) => {
     .each((i, requiredField) => {
       if (!$(requiredField).val()) {
         OK = false;
-        alert(`請輸入 "${$(requiredField).attr('name')}" 欄位`);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`,
+        });
         return false; // break
       }
     });
@@ -157,6 +168,10 @@ $('#save').click(async (e) => {
   // 更新資料庫表單
   if (OK) {
     await axios.post('/api/1.0/update/group', updateInfo);
+    Swal.fire({
+      icon: 'success',
+      title: '已儲存揪團資訊',
+    });
   }
 });
 
@@ -186,6 +201,10 @@ $('#signup').click(async () => {
   await axios.post('/api/1.0/signup/group', signupInfo);
 
   // 報名成功按鈕顯示
+  Swal.fire({
+    icon: 'success',
+    title: '已送出報名，請耐心等候主揪確認',
+  });
   $('button[id*=signup]').html('報名待確認');
   // 按鈕不能再點擊
   $('#signup').prop('disabled', true);

@@ -10,7 +10,7 @@ const Group = require('../models/group_model');
 
 const createGroup = async (req, res) => {
   const info = req.body;
-  const creatorId = 1; // 看是哪個 user
+  const creatorId = 1; // 從前端撈 jwt，看是哪位 user
   const isBuild = 1; // 已成團
   const peopleLeft = info.peopleNeed; // 剩餘報名名額
   let isCharge = 1; // 是否收費
@@ -168,6 +168,7 @@ const updateGroup = async (req, res) => {
   }
 
   await Group.updateGroup(updateInfo);
+  res.status(200).send('ok');
 };
 
 const signupGroup = async (req, res) => {

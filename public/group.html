@@ -6,6 +6,7 @@
     <link href="style/group.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tw-city-selector@2.1.1/dist/tw-city-selector.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
     <div class="vb-nav">
@@ -28,23 +29,30 @@
     </div>
     <div id="group" class="group-detail">
       <div class="card-title"></div>
-        <div class="group-detail-net"></div>
-        <div class="group-detail-date"></div>
-        <div class="group-detail-time"></div>
-        <div class="group-detail-place"></div>
-        <div class="group-detail-place-des"></div>
-        <div class="group-detail-group-level"></div>
-        <div class="group-detail-time-duration"></div>
-        <div class="group-detail-money"></div>
-        <div class="group-detail-people-left"></div>
-        <button id="signup" class="signup"></button>
-        <button id="edit" class="edit" onclick="edit()"></button>
-        <div class="group-detail-creator"></div>
-        <div>
-          <textarea id="msg-board" name="程度描述" rows="4" cols="30" placeholder="留言板"></textarea>
-        </div>
-        <button id="leave-msg">留言</button>
+      <div class="group-detail-net"></div>
+      <div class="group-detail-date"></div>
+      <div class="group-detail-time"></div>
+      <div class="group-detail-place"></div>
+      <div class="group-detail-place-des"></div>
+      <div class="group-detail-group-level"></div>
+      <div class="group-detail-group-level-description"></div>
+      <div class="group-detail-group-description"></div>
+      <div class="group-detail-time-duration"></div>
+      <div class="group-detail-money"></div>
+      <div class="group-detail-people-left"></div>
+      <button id="signup" class="signup"></button>
+      <button id="edit" class="edit" onclick="edit()"></button>
+      <div class="group-detail-creator"></div>
+      <div>
+        <textarea
+          id="msg-board"
+          name="程度描述"
+          rows="4"
+          cols="30"
+          placeholder="留言板"
+        ></textarea>
       </div>
+      <button id="leave-msg">留言</button>
     </div>
     <div id="background-pop">
       <div id="div-pop">

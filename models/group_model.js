@@ -35,11 +35,10 @@ const groupDetails = async (groupId) => {
 };
 
 const updateGroup = async (updateInfo) => {
-  const result = await pool.execute(
+  await pool.execute(
     'UPDATE `group` SET title = ?, date = ?, time_duration = ?, net = ?, place = ?, place_description = ?, court = ?, is_charge = ?, money = ?, level = ?, level_description = ?, people_have = ?, people_need = ?, group_description= ? WHERE id = ?',
     updateInfo
   );
-  console.log(result);
 };
 
 const signupGroup = async (signupInfo) => {

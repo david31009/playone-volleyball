@@ -26,6 +26,9 @@ body {
   margin: 3%;
   padding: 10px;
 }
+.group-detail div {
+  padding: 2px;
+}
 
 /* 主揪編輯表單*/
 .btn-pop {

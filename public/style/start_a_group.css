@@ -87,6 +87,10 @@ body {
   padding: 10px;
 }
 
+.card div {
+  padding: 2px;
+}
+
 #card-group a {
   text-decoration: none;
   margin: 3%;

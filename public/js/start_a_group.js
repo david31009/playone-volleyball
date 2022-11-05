@@ -74,14 +74,30 @@ $('#start-group').click(async (e) => {
     .each((i, requiredField) => {
       if (!$(requiredField).val()) {
         OK = false;
-        alert(`請輸入 "${$(requiredField).attr('name')}" 欄位`);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`,
+        });
         return false; // break
       }
     });
 
   // 使用者填欄位填寫完畢，才打 API
   if (OK) {
-    await axios.post('/api/1.0/group', groupInfo);
+    const result = await axios.post('/api/1.0/group', groupInfo);
+
+    // 成功建立揪團，跳轉到揪團詳細頁面
+    if (result.data.groupId) {
+      window.location.href = `/group.html?id=${result.data.groupId}`;
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `建立揪團失敗`,
+      });
+      window.location.href = `/index.html`;
+    }
   }
 });
 
