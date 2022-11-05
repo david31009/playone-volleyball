@@ -211,7 +211,11 @@ $('#signup').click(async () => {
   Swal.fire({
     icon: 'success',
     title: '已送出報名，請耐心等候主揪確認',
+  }).then(() => {
+    // 刷新頁面，報名剩餘人數-1
+    location.reload();
   });
+
   $('button[id*=signup]').html('報名待確認');
   // 按鈕不能再點擊
   $('#signup').prop('disabled', true);

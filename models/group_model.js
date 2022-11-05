@@ -42,11 +42,27 @@ const updateGroup = async (updateInfo) => {
 };
 
 const signupGroup = async (signupInfo) => {
-  const result = await pool.execute(
-    'INSERT INTO `member` (user_id, group_id, signup_status) VALUES (?,?,?)',
-    signupInfo
-  );
-  return result;
+  const conn = await pool.getConnection();
+  groupId = [signupInfo[1]];
+  try {
+    await conn.execute(
+      'INSERT INTO `member` (user_id, group_id, signup_status) VALUES (?,?,?)',
+      signupInfo
+    );
+    await conn.execute(
+      'UPDATE `group` SET people_left = people_left - 1 WHERE id = ? and people_left > 0',
+      groupId
+    );
+    await conn.execute('COMMIT');
+    return true;
+  } catch (error) {
+    await conn.execute('ROLLBACK');
+    console.log(error);
+  } finally {
+    await conn.release();
+  }
+
+  // UPDATE class SET articleCount=articleCount-1 WHERE classId=12 and articleCount > 0
 };
 
 const getSignupStatus = async (groupId) => {

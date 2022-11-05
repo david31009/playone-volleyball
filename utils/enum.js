@@ -30,6 +30,7 @@ const signupStatus = {
   0: '報名待確認',
   1: '報名成功',
   2: '報名失敗',
+  3: '已額滿',
 };
 
 module.exports = {
