@@ -118,6 +118,7 @@ const groupDetails = async (req, res) => {
       creatorId: i.creator_id,
       username: i.username,
       title: i.title,
+      datetime: i.date,
       date: datetime.split('T')[0],
       time: datetime.split('T')[1].slice(0, 5),
       timeDuration: i.time_duration / 60,
@@ -180,8 +181,8 @@ const signupGroup = async (req, res) => {
 
 const getSignupStatus = async (req, res) => {
   const info = req.body;
-  const groupId = [info.userId, info.groupId];
-  const resultDB = await Group.getSignupStatus(groupId);
+  const memberInfo = [info.userId, info.groupId];
+  const resultDB = await Group.getSignupStatus(memberInfo);
   const result = resultDB.map((i) => {
     return {
       userId: i.user_id,

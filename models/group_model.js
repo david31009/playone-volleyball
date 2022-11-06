@@ -44,6 +44,7 @@ const updateGroup = async (updateInfo) => {
 const signupGroup = async (signupInfo) => {
   const conn = await pool.getConnection();
   groupId = [signupInfo[1]];
+  //報名時，剩餘報名名額會少一位
   try {
     await conn.execute(
       'INSERT INTO `member` (user_id, group_id, signup_status) VALUES (?,?,?)',
@@ -61,14 +62,12 @@ const signupGroup = async (signupInfo) => {
   } finally {
     await conn.release();
   }
-
-  // UPDATE class SET articleCount=articleCount-1 WHERE classId=12 and articleCount > 0
 };
 
-const getSignupStatus = async (groupId) => {
+const getSignupStatus = async (memberInfo) => {
   const [result] = await pool.execute(
     'SELECT * FROM `member` WHERE user_id = ? AND group_id = ?',
-    groupId
+    memberInfo
   );
   return result;
 };

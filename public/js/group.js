@@ -18,6 +18,7 @@ const idSplit = id.split('=')[1];
     groupId: idSplit,
   });
   const [status] = signupStatus.data.result;
+  console.log(status);
 
   // 打顯示留言 API
   const msg = await axios.post(`/api/1.0/load/msg`, { groupId: idSplit });
@@ -59,7 +60,14 @@ const idSplit = id.split('=')[1];
   }
 
   // 確認使用者報名狀態
-  if (status == undefined) {
+  const datenow = new Date(+new Date() + 8 * 3600 * 1000).toISOString();
+  if (groupDetail.isBuild[0] === 0 || datenow > groupDetail.datetime) {
+    $('#signup').html(`已關團`);
+    $('#signup').prop('disabled', true);
+  } else if (status == undefined && groupDetail.peopleLeft === 0) {
+    $('#signup').html(`已額滿`);
+    $('#signup').prop('disabled', true);
+  } else if (status == undefined) {
     // 還沒報名過
     $('#signup').html(`報名`);
   } else {
