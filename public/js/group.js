@@ -1,4 +1,4 @@
-// 確認 user 身分，從 local storage 拿
+// 確認 user 身分，從 local storage 拿 jwt
 const userId = 2;
 
 // 抓網址 groupId (?id=21)
@@ -53,7 +53,7 @@ const idSplit = id.split('=')[1];
   $('#edit').html(`編輯表單`);
   $('.group-detail-creator').html(`主揪: ${groupDetail.username}`);
 
-  // 確認事主揪還是使用者，顯示不同按鈕 (主揪 => edit，使用者 => view)
+  // 確認是主揪還是使用者，顯示不同按鈕 (主揪 => edit，使用者 => view)
   if (groupDetail.creatorId === userId) {
     $('#edit').show();
     $('#close-group').show();
@@ -277,6 +277,8 @@ $('#save').click(async (e) => {
     Swal.fire({
       icon: 'success',
       title: '已儲存揪團資訊',
+    }).then(() => {
+      location.reload();
     });
   }
 });

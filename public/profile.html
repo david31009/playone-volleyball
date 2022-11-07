@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="style/profile.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tw-city-selector@2.1.1/dist/tw-city-selector.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Profile</title>
+  </head>
+  <body>
+    <div class="vb-nav">
+      <div class="icon">
+        <a href="/index.html"
+          ><img src="./images/icon.png" alt="nav bar icon" height="20"
+        /></a>
+      </div>
+      <div class="vb-nav-social">
+        <div>
+          <img src="./images/chat.png" alt="chat icon" height="20" />
+        </div>
+        <div>
+          <img src="./images/notify.jpg" alt="notify icon" height="20" />
+        </div>
+        <div>
+          <a href="/profile.html"
+            ><img src="./images/personal.png" alt="personal icon" height="20"
+          /></a>
+        </div>
+      </div>
+    </div>
+    <div id="resume">
+      簡易資料
+      <button id="self-edit">編輯個人檔案</button>
+    </div>
+    <div id="icons">icon</div>
+    <div id="self-details">
+      <div id="groups-fans">數字區</div>
+      <div>
+        <div id="my-intro">自我介紹</div>
+        <div id="self-level">自評程度</div>
+      </div>
+    </div>
+    <div id="background-pop">
+      <div id="div-pop">
+        <div class="div-top">
+          <span id="close-button">×</span>
+          <div>我的檔案</div>
+        </div>
+        <div class="div-content">
+          <form id="edit-form" action="post">
+            <div>
+              姓名:
+              <input id="name" name="姓名" required />
+            </div>
+            <div id="sex">
+              生理性別:
+              <input id="male" type="radio" name="gender" value="1" />
+              <label for="male">男</label>
+              <input id="female" type="radio" name="gender" value="0" />
+              <label for="female">女</label>
+            </div>
+            <div class="tw-city-selector">
+              常出現在哪裡打球:
+              <select id="county" class="county"></select>
+              <select id="district" class="district"></select>
+            </div>
+            <div>
+              擅長位置(最多兩個):
+              <input type="checkbox" name="position" value="0" />
+              <label for="setter">舉球</label>
+              <input type="checkbox" name="position" value="1" />
+              <label for="spiker">大砲</label>
+              <input type="checkbox" name="position" value="2" />
+              <label for="middle">欄中</label>
+              <input type="checkbox" name="position" value="3" />
+              <label for="oposite">舉對</label>
+              <input type="checkbox" name="position" value="4" />
+              <label for="libero">自由</label>
+            </div>
+            <div>
+              自評程度
+              <select id="my-level">
+                <option value="0">新手</option>
+                <option value="1">中下</option>
+                <option value="2">中上</option>
+                <option value="3">專業</option>
+                <option value="4">超強</option>
+              </select>
+            </div>
+            <div>
+              自評程度描述
+              <br />
+              <textarea id="my-level-des" rows="4" cols="30"></textarea>
+            </div>
+            <div>
+              自我介紹
+              <br />
+              <textarea id="self-intro" rows="4" cols="30"></textarea>
+            </div>
+            <button id="save">儲存</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/profile.js"></script>
+  </body>
+</html>

@@ -32,6 +32,19 @@ const signupStatus = {
   2: '報名失敗',
 };
 
+const myLevel = {
+  0: '新手',
+  1: '中下',
+  2: '中上',
+  3: '專業',
+  4: '超強',
+};
+
+const gender = {
+  0: '女',
+  1: '男',
+};
+
 module.exports = {
   groupLevel,
   netHigh,
@@ -39,4 +52,6 @@ module.exports = {
   isBuild,
   isCharge,
   signupStatus,
+  myLevel,
+  gender,
 };
