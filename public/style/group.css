@@ -20,7 +20,8 @@ body {
 }
 
 /* 揪團詳細內容*/
-.group-detail {
+.group-detail,
+.signup-members {
   border: solid;
   width: 50%;
   margin: 3%;
@@ -28,6 +29,17 @@ body {
 }
 .group-detail div {
   padding: 2px;
+}
+
+/* 報名揪團者名單*/
+.group-signup,
+.member {
+  display: flex;
+}
+.signup-members div,
+.member div,
+.member button {
+  margin: 1%;
 }
 
 /* 主揪編輯表單*/

@@ -18,11 +18,14 @@ const idSplit = id.split('=')[1];
     groupId: idSplit,
   });
   const [status] = signupStatus.data.result;
-  console.log(status);
 
   // 打顯示留言 API
   const msg = await axios.post(`/api/1.0/load/msg`, { groupId: idSplit });
   const allMsg = msg.data.result;
+
+  // 打報名者的 APT 給主揪確認
+  const members = await axios.get(`/api/1.0/member${id}`);
+  const signupMembers = members.data.result;
 
   // 渲染揪團細節
   $('.card-title').html(`${groupDetail.title}`);
@@ -54,16 +57,21 @@ const idSplit = id.split('=')[1];
   if (groupDetail.creatorId === userId) {
     $('#edit').show();
     $('#signup').hide();
+    $('#signup-members').show();
   } else {
     $('#edit').hide();
     $('#signup').show();
+    $('#signup-members').hide();
   }
 
   // 確認使用者報名狀態
-  const datenow = new Date(+new Date() + 8 * 3600 * 1000).toISOString();
+  const datenow = new Date(+new Date() + 8 * 3600 * 1000).toISOString(); // 取得當下時間
   if (groupDetail.isBuild[0] === 0 || datenow > groupDetail.datetime) {
     $('#signup').html(`已關團`);
     $('#signup').prop('disabled', true);
+    $('#edit').html(`已關團`);
+    $('#edit').prop('disabled', true);
+    $('#leave-msg').prop('disabled', true);
   } else if (status == undefined && groupDetail.peopleLeft === 0) {
     $('#signup').html(`已額滿`);
     $('#signup').prop('disabled', true);
@@ -86,7 +94,70 @@ const idSplit = id.split('=')[1];
       `
     );
   }
+
+  // 渲染報名者名單 (只有主揪才能看到)
+  console.log(signupMembers);
+  for (let i = 0; i < signupMembers.length; i++) {
+    console.log(signupMembers[i].signupStatus);
+    if (signupMembers[i].signupStatus === '1') {
+      $('#signup-members').append(
+        `<div class="member">
+        <div>${signupMembers[i].username}</div>
+        <button id="${signupMembers[i].userId}-accept" onclick="decide(this)" disabled>已接受報名</button>
+      </div>`
+      );
+    } else if (signupMembers[i].signupStatus === '2') {
+      $('#signup-members').append(
+        `<div class="member">
+        <div>${signupMembers[i].username}</div>
+        <button id="${signupMembers[i].userId}-deny" onclick="decide(this)" disabled>已拒絕報名</button>
+      </div>`
+      );
+    } else {
+      $('#signup-members').append(
+        `<div class="member">
+        <div>${signupMembers[i].username}</div>
+        <button id="${signupMembers[i].userId}-accept" onclick="decide(this)">接受</button>
+        <button id="${signupMembers[i].userId}-deny" onclick="decide(this)">拒絕</button>
+      </div>`
+      );
+    }
+  }
 })();
+
+// 決定報名者是否報名成功
+async function decide(e) {
+  const buttonId = $(e).attr('id');
+  const userId = buttonId.split('-')[0];
+  const decision = buttonId.split('-')[1];
+  if (decision === 'accept') {
+    // 改報名狀態 = 1
+    // 報名剩餘人數 + 0
+    await axios.post('/api/1.0/update/signup/status', {
+      userId: userId,
+      groupId: idSplit,
+      statusCode: 1,
+      peopleLeft: 0,
+    });
+  } else {
+    // transaction
+    // 改報名狀態 = 2
+    // 報名剩餘人數 + 1
+    await axios.post('/api/1.0/update/signup/status', {
+      userId: userId,
+      groupId: idSplit,
+      statusCode: 2,
+      peopleLeft: 1,
+    });
+  }
+
+  // $(`#${userId}-accept`).hide();
+  // $(`#${userId}-deny`).hide();
+
+  // sweet alert 確定接受 / 拒絕?
+  // 刷新頁面，接受 => 報名剩餘人數不變；拒絕 => 報名剩餘人數-1
+  location.reload();
+}
 
 // 彈出編輯表單
 async function edit() {

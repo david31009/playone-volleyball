@@ -218,6 +218,31 @@ const getMsg = async (req, res) => {
   res.status(200).json({ result });
 };
 
+const getSignupMembers = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await Group.getSignupMembers([id]);
+  const result = resultDB.map((i) => {
+    return {
+      userId: i.user_id,
+      username: i.username,
+      signupStatus: i.signup_status,
+    };
+  });
+  res.status(200).json({ result });
+};
+
+const decideSignupStatus = async (req, res) => {
+  const info = req.body;
+  const updateInfo = [
+    info.userId,
+    info.groupId,
+    info.statusCode,
+    info.peopleLeft,
+  ];
+  await Group.decideSignupStatus(updateInfo);
+  res.status(200).send('ok');
+};
+
 module.exports = {
   createGroup,
   getGroups,
@@ -228,4 +253,6 @@ module.exports = {
   getSignupStatus,
   createMsg,
   getMsg,
+  getSignupMembers,
+  decideSignupStatus,
 };
