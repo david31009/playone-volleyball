@@ -96,29 +96,27 @@ const idSplit = id.split('=')[1];
   }
 
   // 渲染報名者名單 (只有主揪才能看到)
-  console.log(signupMembers);
   for (let i = 0; i < signupMembers.length; i++) {
-    console.log(signupMembers[i].signupStatus);
     if (signupMembers[i].signupStatus === '1') {
       $('#signup-members').append(
         `<div class="member">
         <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].userId}-accept" onclick="decide(this)" disabled>已接受報名</button>
+        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" onclick="decide(this)" disabled>已接受報名</button>
       </div>`
       );
     } else if (signupMembers[i].signupStatus === '2') {
       $('#signup-members').append(
         `<div class="member">
         <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].userId}-deny" onclick="decide(this)" disabled>已拒絕報名</button>
+        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" onclick="decide(this)" disabled>已拒絕報名</button>
       </div>`
       );
     } else {
       $('#signup-members').append(
         `<div class="member">
         <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].userId}-accept" onclick="decide(this)">接受</button>
-        <button id="${signupMembers[i].userId}-deny" onclick="decide(this)">拒絕</button>
+        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" onclick="decide(this)">接受</button>
+        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" onclick="decide(this)">拒絕</button>
       </div>`
       );
     }
@@ -128,35 +126,50 @@ const idSplit = id.split('=')[1];
 // 決定報名者是否報名成功
 async function decide(e) {
   const buttonId = $(e).attr('id');
-  const userId = buttonId.split('-')[0];
-  const decision = buttonId.split('-')[1];
-  if (decision === 'accept') {
-    // 改報名狀態 = 1
-    // 報名剩餘人數 + 0
-    await axios.post('/api/1.0/update/signup/status', {
-      userId: userId,
-      groupId: idSplit,
-      statusCode: 1,
-      peopleLeft: 0,
-    });
-  } else {
-    // transaction
-    // 改報名狀態 = 2
-    // 報名剩餘人數 + 1
-    await axios.post('/api/1.0/update/signup/status', {
-      userId: userId,
-      groupId: idSplit,
-      statusCode: 2,
-      peopleLeft: 1,
-    });
-  }
-
-  // $(`#${userId}-accept`).hide();
-  // $(`#${userId}-deny`).hide();
+  const username = buttonId.split('-')[0];
+  const userId = buttonId.split('-')[1];
+  const decision = buttonId.split('-')[2];
+  let decisionChi = decision === 'accept' ? '接受' : '拒絕';
 
   // sweet alert 確定接受 / 拒絕?
-  // 刷新頁面，接受 => 報名剩餘人數不變；拒絕 => 報名剩餘人數-1
-  location.reload();
+  Swal.fire({
+    title: `確定${decisionChi} ${username} 的報名?`,
+    text: '這個動作無法再做更改',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: '確定',
+    cancelButtonText: '再想想',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      if (decision === 'accept') {
+        // 改報名狀態 = 1;報名剩餘人數 + 0
+        await axios.post('/api/1.0/update/signup/status', {
+          userId: userId,
+          groupId: idSplit,
+          statusCode: 1,
+          peopleLeft: 0,
+        });
+      } else {
+        // 改報名狀態 = 2; // 報名剩餘人數 + 1
+        await axios.post('/api/1.0/update/signup/status', {
+          userId: userId,
+          groupId: idSplit,
+          statusCode: 2,
+          peopleLeft: 1,
+        });
+      }
+      Swal.fire(
+        `${decisionChi}`,
+        `已${decisionChi} ${username} 的報名`,
+        'success'
+      ).then(() => {
+        // 刷新頁面，接受 => 報名剩餘人數不變；拒絕 => 報名剩餘人數-1
+        location.reload();
+      });
+    }
+  });
 }
 
 // 彈出編輯表單
