@@ -195,14 +195,18 @@ const getSignupStatus = async (req, res) => {
 
 const createMsg = async (req, res) => {
   const info = req.body;
+  // 阻擋留言為空狀況
+  if (info.content === '') {
+    return res.status(400).json({ error: 'message is blank' });
+  }
   const msgInfo = [info.userId, info.groupId, info.content, info.time];
   await Group.createMsg(msgInfo);
   res.status(200).send('ok');
 };
 
 const getMsg = async (req, res) => {
-  const { groupId } = req.body;
-  const resultDB = await Group.getMsg([groupId]);
+  const { id } = req.query;
+  const resultDB = await Group.getMsg([id]);
   // date 是 object 型態
   const result = resultDB.map((i) => {
     let datetime = JSON.stringify(i.time).replace('"', '');

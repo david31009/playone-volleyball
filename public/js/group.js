@@ -20,7 +20,7 @@ const idSplit = id.split('=')[1];
   const [status] = signupStatus.data.result;
 
   // 打顯示留言 API
-  const msg = await axios.post(`/api/1.0/load/msg`, { groupId: idSplit });
+  const msg = await axios.get(`/api/1.0/msg${id}`);
   const allMsg = msg.data.result;
 
   // 打報名者的 APT 給主揪確認
@@ -318,6 +318,17 @@ $('#leave-msg').click(async () => {
   // 讀取現在時間，轉成 mysql datetime 可以存取的時間
   const date = new Date(+new Date() + 8 * 3600 * 1000);
   const time = date.toISOString().split('.')[0].replace('T', ' ');
+
+  // 阻擋留言為空的狀況
+  if ($('#msg-board').val() === '') {
+    Swal.fire({
+      icon: 'error',
+      title: '錯誤',
+      text: '你還沒留言唷~',
+    });
+    return;
+  }
+
   // 打 API，儲存留言
   msgInfo = {
     userId: userId,
@@ -327,6 +338,6 @@ $('#leave-msg').click(async () => {
   };
   await axios.post('/api/1.0/msg', msgInfo);
 
-  // 跳轉到揪團詳細頁面
-  window.location.href = `/group.html${id}`;
+  // 刷新頁面
+  location.reload();
 });
