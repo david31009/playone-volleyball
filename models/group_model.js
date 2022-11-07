@@ -127,6 +127,10 @@ const decideSignupStatus = async (updateInfo) => {
   }
 };
 
+const closeGroup = async (groupId) => {
+  await pool.execute('UPDATE `group` SET is_build = 0 WHERE id = ? ', groupId);
+};
+
 module.exports = {
   createGroup,
   getGroups,
@@ -139,4 +143,5 @@ module.exports = {
   getMsg,
   getSignupMembers,
   decideSignupStatus,
+  closeGroup,
 };

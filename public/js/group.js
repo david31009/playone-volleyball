@@ -56,10 +56,12 @@ const idSplit = id.split('=')[1];
   // 確認事主揪還是使用者，顯示不同按鈕 (主揪 => edit，使用者 => view)
   if (groupDetail.creatorId === userId) {
     $('#edit').show();
+    $('#close-group').show();
     $('#signup').hide();
     $('#signup-members').show();
   } else {
     $('#edit').hide();
+    $('#close-group').hide();
     $('#signup').show();
     $('#signup-members').hide();
   }
@@ -71,6 +73,7 @@ const idSplit = id.split('=')[1];
     $('#signup').prop('disabled', true);
     $('#edit').html(`已關團`);
     $('#edit').prop('disabled', true);
+    $('#close-group').prop('disabled', true);
     $('#leave-msg').prop('disabled', true);
   } else if (status == undefined && groupDetail.peopleLeft === 0) {
     $('#signup').html(`已額滿`);
@@ -296,7 +299,6 @@ $('#signup').click(async () => {
     userId: userId,
     signupStatus: 0,
   };
-
   await axios.post('/api/1.0/signup/group', signupInfo);
 
   // 報名成功按鈕顯示
@@ -307,10 +309,6 @@ $('#signup').click(async () => {
     // 刷新頁面，報名剩餘人數-1
     location.reload();
   });
-
-  $('button[id*=signup]').html('報名待確認');
-  // 按鈕不能再點擊
-  $('#signup').prop('disabled', true);
 });
 
 //留言
@@ -340,4 +338,26 @@ $('#leave-msg').click(async () => {
 
   // 刷新頁面
   location.reload();
+});
+
+// 主揪自行關團
+$('#close-group').click(async () => {
+  Swal.fire({
+    title: `確定關閉這個揪團?`,
+    text: '這個動作無法再做更改',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: '確定',
+    cancelButtonText: '再想想',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await axios.post('/api/1.0/close/group', { groupId: idSplit });
+      Swal.fire(`關團成功`, `已關閉揪團`, 'success').then(() => {
+        // 刷新頁面
+        location.reload();
+      });
+    }
+  });
 });

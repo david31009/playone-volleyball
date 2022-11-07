@@ -247,6 +247,12 @@ const decideSignupStatus = async (req, res) => {
   res.status(200).send('ok');
 };
 
+const closeGroup = async (req, res) => {
+  const { groupId } = req.body;
+  await Group.closeGroup([groupId]);
+  res.status(200).send('ok');
+};
+
 module.exports = {
   createGroup,
   getGroups,
@@ -259,4 +265,5 @@ module.exports = {
   getMsg,
   getSignupMembers,
   decideSignupStatus,
+  closeGroup,
 };
