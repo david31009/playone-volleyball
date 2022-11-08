@@ -25,22 +25,62 @@
           <img src="./images/notify.jpg" alt="notify icon" height="20" />
         </div>
         <div>
-          <a href="/profile.html"
+          <a id="my-profile"
             ><img src="./images/personal.png" alt="personal icon" height="20"
           /></a>
         </div>
       </div>
     </div>
     <div id="resume">
-      簡易資料
-      <button id="self-edit">編輯個人檔案</button>
+      <div id="resume-top">
+        <div id="resume-top-username"></div>
+        <div id="resume-top-gender"></div>
+        <button id="follow-btn">追蹤</button>
+      </div>
+      <div id="resume-mid">
+        <div>最常在哪裡打球:</div>
+        <div id="resume-mid-county"></div>
+        <div id="resume-mid-position-1"></div>
+        <div id="resume-mid-position-2"></div>
+      </div>
+      <div id="resume-bottom">
+        <div>程度:</div>
+        <div id="resume-bottom-level"></div>
+        <button id="self-edit">編輯個人檔案</button>
+      </div>
     </div>
-    <div id="icons">icon</div>
+    <div id="icons">
+      <img src="images/profile.png" height="50" alt="my profile" />
+      <img src="images/star.png" height="50" alt="my comments" />
+    </div>
     <div id="self-details">
-      <div id="groups-fans">數字區</div>
+      <div id="groups-fans">
+        <div>
+          <div id="group-ing">3</div>
+          <div>揪團 ING</div>
+        </div>
+        <div>
+          <div id="group-over">12</div>
+          <div>過去揪團</div>
+        </div>
+        <div>
+          <div id="follow"></div>
+          <div>追蹤</div>
+        </div>
+        <div>
+          <div id="fans"></div>
+          <div>粉絲</div>
+        </div>
+      </div>
       <div>
-        <div id="my-intro">自我介紹</div>
-        <div id="self-level">自評程度</div>
+        <div id="my-intro">
+          自我介紹:
+          <div id="intro"></div>
+        </div>
+        <div id="self-level">
+          自評程度:
+          <div id="level-des"></div>
+        </div>
       </div>
     </div>
     <div id="background-pop">
@@ -93,12 +133,12 @@
             <div>
               自評程度描述
               <br />
-              <textarea id="my-level-des" rows="4" cols="30"></textarea>
+              <textarea id="my-level-des" rows="8" cols="50"></textarea>
             </div>
             <div>
               自我介紹
               <br />
-              <textarea id="self-intro" rows="4" cols="30"></textarea>
+              <textarea id="self-intro" rows="8" cols="50"></textarea>
             </div>
             <button id="save">儲存</button>
           </form>

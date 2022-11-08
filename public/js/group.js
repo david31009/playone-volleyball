@@ -31,7 +31,7 @@ const idSplit = id.split('=')[1];
   $('.card-title').html(`${groupDetail.title}`);
   $('.group-detail-net').html(`網高: ${groupDetail.net[1]}`);
   $('.group-detail-date').html(`日期: ${groupDetail.date}`);
-  $('.group-detail-time').html(`網高: ${groupDetail.net[1]}`);
+  $('.group-detail-time').html(`時間: ${groupDetail.time}`);
   $('.group-detail-place').html(`地點: ${groupDetail.place}`);
   $('.group-detail-place-des').html(
     `詳細地點: ${groupDetail.placeDescription}`
@@ -52,6 +52,7 @@ const idSplit = id.split('=')[1];
   );
   $('#edit').html(`編輯表單`);
   $('.group-detail-creator').html(`主揪: ${groupDetail.username}`);
+  $('#creator-id').attr('href', `/profile.html?id=${groupDetail.creatorId}`);
 
   // 確認是主揪還是使用者，顯示不同按鈕 (主揪 => edit，使用者 => view)
   if (groupDetail.creatorId === userId) {
@@ -66,6 +67,33 @@ const idSplit = id.split('=')[1];
     $('#signup-members').hide();
   }
 
+  // 渲染報名者名單 (只有主揪才能看到)
+  for (let i = 0; i < signupMembers.length; i++) {
+    if (signupMembers[i].signupStatus === '1') {
+      $('#signup-members').append(
+        `<div class="member">
+        <div>${signupMembers[i].username}</div>
+        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)" disabled>已接受報名</button>
+      </div>`
+      );
+    } else if (signupMembers[i].signupStatus === '2') {
+      $('#signup-members').append(
+        `<div class="member">
+        <div>${signupMembers[i].username}</div>
+        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)" disabled>已拒絕報名</button>
+      </div>`
+      );
+    } else {
+      $('#signup-members').append(
+        `<div class="member">
+        <div>${signupMembers[i].username}</div>
+        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)">接受</button>
+        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)">拒絕</button>
+      </div>`
+      );
+    }
+  }
+
   // 確認使用者報名狀態
   const datenow = new Date(+new Date() + 8 * 3600 * 1000).toISOString(); // 取得當下時間
   if (groupDetail.isBuild[0] === 0 || datenow > groupDetail.datetime) {
@@ -75,6 +103,8 @@ const idSplit = id.split('=')[1];
     $('#edit').prop('disabled', true);
     $('#close-group').prop('disabled', true);
     $('#leave-msg').prop('disabled', true);
+    $('.accept').prop('disabled', true);
+    $('.deny').prop('disabled', true);
   } else if (status == undefined && groupDetail.peopleLeft === 0) {
     $('#signup').html(`已額滿`);
     $('#signup').prop('disabled', true);
@@ -96,33 +126,6 @@ const idSplit = id.split('=')[1];
       </div>
       `
     );
-  }
-
-  // 渲染報名者名單 (只有主揪才能看到)
-  for (let i = 0; i < signupMembers.length; i++) {
-    if (signupMembers[i].signupStatus === '1') {
-      $('#signup-members').append(
-        `<div class="member">
-        <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" onclick="decide(this)" disabled>已接受報名</button>
-      </div>`
-      );
-    } else if (signupMembers[i].signupStatus === '2') {
-      $('#signup-members').append(
-        `<div class="member">
-        <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" onclick="decide(this)" disabled>已拒絕報名</button>
-      </div>`
-      );
-    } else {
-      $('#signup-members').append(
-        `<div class="member">
-        <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" onclick="decide(this)">接受</button>
-        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" onclick="decide(this)">拒絕</button>
-      </div>`
-      );
-    }
   }
 })();
 
@@ -363,3 +366,6 @@ $('#close-group').click(async () => {
     }
   });
 });
+
+// 個人檔案連結
+$('#my-profile').attr('href', `/profile.html?id=${userId}`);

@@ -7,4 +7,12 @@ const updateUser = async (userInfo) => {
   );
 };
 
-module.exports = { updateUser };
+const userProfile = async (userId) => {
+  const [result] = await pool.execute(
+    'SELECT username, gender, intro, county, my_level, my_level_description, fans, follow, position_1, position_2 FROM `user` WHERE id = ?',
+    userId
+  );
+  return result;
+};
+
+module.exports = { updateUser, userProfile };

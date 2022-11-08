@@ -21,10 +21,28 @@ body {
 
 /* 簡易資料*/
 #resume,
-#icons,
 #self-details {
+  width: 60%;
   border: solid;
-  margin: 2%;
+  margin: 2% auto;
+}
+
+#resume-top,
+#resume-bottom,
+#resume-mid {
+  display: flex;
+  padding: 1%;
+}
+
+#follow-btn,
+#self-edit {
+  margin-left: auto;
+}
+
+#resume-mid div,
+#resume-top div,
+#resume-bottom div {
+  margin: 1%;
 }
 
 /* 編輯個人檔案*/
@@ -71,4 +89,31 @@ body {
 }
 .div-content div {
   padding: 3px;
+}
+
+/* 揪團ing、過去揪團、粉絲區*/
+#my-intro,
+#self-level {
+  border: solid;
+  padding: 2%;
+  margin: 2%;
+}
+
+#groups-fans {
+  display: flex;
+  margin: 2%;
+  padding: 2%;
+  justify-content: space-around;
+}
+
+#groups-fans div {
+  text-align: center;
+}
+
+/* icon 區*/
+#icons {
+  display: flex;
+  justify-content: space-around;
+  width: 60%;
+  margin: 2% auto;
 }

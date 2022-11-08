@@ -1,3 +1,6 @@
+// 從前端確認身分
+const userId = 2;
+
 // ----------------------主揪揪團彈窗----------------------
 function show() {
   $('#background-pop').show();
@@ -177,3 +180,6 @@ $('#filter').click(async (e) => {
     );
   }
 });
+
+// 個人頁面連結
+$('#my-profile').attr('href', `/profile.html?id=${userId}`);

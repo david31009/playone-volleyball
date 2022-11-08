@@ -45,6 +45,14 @@ const gender = {
   1: '男',
 };
 
+const position = {
+  0: '舉球',
+  1: '大砲',
+  2: '欄中',
+  3: '舉對',
+  4: '自由',
+};
+
 module.exports = {
   groupLevel,
   netHigh,
@@ -54,4 +62,5 @@ module.exports = {
   signupStatus,
   myLevel,
   gender,
+  position,
 };

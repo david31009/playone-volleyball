@@ -23,7 +23,7 @@
           <img src="./images/notify.jpg" alt="notify icon" height="20" />
         </div>
         <div>
-          <a href="/profile.html"
+          <a id="my-profile"
             ><img src="./images/personal.png" alt="personal icon" height="20"
           /></a>
         </div>
@@ -46,7 +46,7 @@
         <button id="signup" class="signup"></button>
         <button id="edit" class="edit" onclick="edit()"></button>
         <button id="close-group" class="close-group">關閉揪團</button>
-        <div class="group-detail-creator"></div>
+        <a id="creator-id"><div class="group-detail-creator"></div></a>
         <div>
           <textarea
             id="msg-board"
@@ -140,7 +140,7 @@
               <textarea
                 id="level-description"
                 name="程度描述"
-                rows="4"
+                rows="8"
                 cols="30"
                 required
               ></textarea>
@@ -160,7 +160,7 @@
               <textarea
                 id="group-description"
                 name="揪團描述"
-                rows="4"
+                rows="8"
                 cols="30"
                 required
               ></textarea>

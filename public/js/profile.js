@@ -1,13 +1,74 @@
-// 確認 user 身分，從 res 拿 userId
+// 確認 user 身分，從 res 拿 userId (自己)
 const userId = 2;
 
+// 抓網址 userId (?id=21)，可以連到別人頁面
+const url = new URL(window.location.href);
+const id = url.search;
+const idSplit = parseInt(id.split('=')[1]);
+
+// 渲染個人頁面
+(async () => {
+  const info = await axios.get(`/api/1.0/user${id}`);
+  const [userInfo] = info.data.result;
+
+  const position_1 =
+    userInfo.position_1[1] === null ? '' : `#${userInfo.position_1[1]}`;
+  const position_2 =
+    userInfo.position_2[1] === null ? '' : `#${userInfo.position_2[1]}`;
+  if (userInfo.fans === null) userInfo.fans = 0;
+  if (userInfo.follow === null) userInfo.follow = 0;
+  if (userInfo.gender[1] === null) userInfo.gender[1] = '';
+  if (userInfo.county === null) userInfo.county = '';
+
+  $('#resume-top-username').html(`${userInfo.username}`);
+  $('#resume-top-gender').html(`${userInfo.gender[1]}`);
+  $('#resume-mid-county').html(`${userInfo.county}`);
+  $('#resume-mid-position-1').html(position_1);
+  $('#resume-mid-position-2').html(position_2);
+  $('#resume-bottom-level').html(userInfo.myLevel[1]);
+  $('#fans').html(userInfo.fans);
+  $('#follow').html(userInfo.fans);
+  $('#intro').html(userInfo.intro);
+  $('#level-des').html(userInfo.myLevelDes);
+
+  console.log(userId, id, idSplit);
+  if (userId === idSplit) {
+    $('#follow-btn').hide();
+    $('#self-edit').show();
+  } else {
+    $('#follow-btn').show();
+    $('#self-edit').hide();
+  }
+})();
+
 // 彈出編輯表單
-$('#self-edit').click(() => {
+$('#self-edit').click(async () => {
   $('#background-pop').show();
+
+  const info = await axios.get(`/api/1.0/user?id=${userId}`);
+  const [userInfo] = info.data.result;
+  if (userInfo.position_1[0] === null) userInfo.position_1[0] = '';
+  if (userInfo.position_2[0] === null) userInfo.position_2[0] = '';
+  if (userInfo.county === null) userInfo.county = '';
+  if (userInfo.myLevelDes === null) userInfo.myLevelDes = '';
+  if (userInfo.intro === null) userInfo.intro = '';
+
+  $('#name').val(`${userInfo.username}`);
+  $('input:radio[name=gender]').val([`${userInfo.gender[0]}`]);
+  $('input:checkbox[name=position]').val([
+    `${userInfo.position_1[0]}`,
+    `${userInfo.position_2[0]}`,
+  ]);
+  $('#my-level').val(`${userInfo.myLevel[0]}`);
+  $('#my-level-des').val(`${userInfo.myLevelDes}`);
+  $('#self-intro').val(`${userInfo.intro}`);
+
+  console.log(userInfo);
   new TwCitySelector({
     el: '.tw-city-selector',
     elCounty: '.county', // 在 el 裡查找 element
     elDistrict: '.district', // 在 el 裡查找 element
+    countyValue: `${userInfo.county}`,
   });
 });
 
@@ -78,3 +139,6 @@ $('#save').click(async (e) => {
     });
   }
 });
+
+// 個人頁面連結
+$('#my-profile').attr('href', `/profile.html?id=${userId}`);
