@@ -1,24 +1,29 @@
 // 確認 user 身分，從 res 拿 userId (自己)
 const userId = 2;
 
-// 抓網址 userId (?id=21)，可以連到別人頁面
+// 抓網址 userId (?id=21)，可以連到別人頁面 (到誰的個人頁面)
 const url = new URL(window.location.href);
 const id = url.search;
 const idSplit = parseInt(id.split('=')[1]);
 
 // 渲染個人頁面
 (async () => {
+  // 打 user api 獲取 user 資料
   const info = await axios.get(`/api/1.0/user${id}`);
   const [userInfo] = info.data.result;
-
   const position_1 =
     userInfo.position_1[1] === null ? '' : `#${userInfo.position_1[1]}`;
   const position_2 =
     userInfo.position_2[1] === null ? '' : `#${userInfo.position_2[1]}`;
-  if (userInfo.fans === null) userInfo.fans = 0;
-  if (userInfo.follow === null) userInfo.follow = 0;
   if (userInfo.gender[1] === null) userInfo.gender[1] = '';
   if (userInfo.county === null) userInfo.county = '';
+
+  // 取得追蹤狀態 API
+  const follow = await axios.post('/api/1.0/follow/status', {
+    userId: userId,
+    followId: idSplit,
+  });
+  console.log(follow.data.result);
 
   $('#resume-top-username').html(`${userInfo.username}`);
   $('#resume-top-gender').html(`${userInfo.gender[1]}`);
@@ -31,13 +36,22 @@ const idSplit = parseInt(id.split('=')[1]);
   $('#intro').html(userInfo.intro);
   $('#level-des').html(userInfo.myLevelDes);
 
-  console.log(userId, id, idSplit);
+  // 確認是不是本人的個人頁面， (是 => 可編輯；否 => 可追蹤)
   if (userId === idSplit) {
     $('#follow-btn').hide();
     $('#self-edit').show();
   } else {
     $('#follow-btn').show();
     $('#self-edit').hide();
+  }
+
+  // 確認追蹤按鈕是否追蹤
+  const followStatus = follow.data.result;
+  if (followStatus !== undefined) {
+    $('#follow-btn').html('已追蹤');
+  } else {
+    $('#follow-btn').html('追蹤');
+    $('#follow-btn').addClass('able-follow');
   }
 })();
 
@@ -142,3 +156,37 @@ $('#save').click(async (e) => {
 
 // 個人頁面連結
 $('#my-profile').attr('href', `/profile.html?id=${userId}`);
+
+// 追蹤與退追
+$('#follow-btn').click(async (e) => {
+  // class = able-follow => 可追蹤
+  if (e.target.className === 'able-follow') {
+    await axios.post('/api/1.0/follow', { userId: userId, followId: idSplit });
+    location.reload();
+  } else {
+    // 無class => 可取消追蹤
+    Swal.fire({
+      title: '確定要取消追蹤?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '確定',
+      cancelButtonText: '再想想',
+    })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await axios.post('/api/1.0/unfollow', {
+            userId: userId,
+            followId: idSplit,
+          });
+          Swal.fire('成功', '已取消追蹤', 'success');
+        }
+      })
+      .then(() => {
+        location.reload();
+      });
+  }
+
+  // 有 class => 可退追
+});

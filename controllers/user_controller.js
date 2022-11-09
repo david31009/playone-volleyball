@@ -44,4 +44,22 @@ const userProfile = async (req, res) => {
   res.status(200).json({ result });
 };
 
-module.exports = { updateUser, userProfile };
+const follow = async (req, res) => {
+  const info = req.body;
+  await User.follow([info.userId, info.followId]);
+  res.status(200).send('ok');
+};
+
+const followStatus = async (req, res) => {
+  const info = req.body;
+  const [result] = await User.followStatus([info.userId, info.followId]);
+  res.status(200).json({ result });
+};
+
+const unfollow = async (req, res) => {
+  const info = req.body;
+  await User.unfollow([info.userId, info.followId]);
+  res.status(200).send('ok');
+};
+
+module.exports = { updateUser, userProfile, follow, followStatus, unfollow };

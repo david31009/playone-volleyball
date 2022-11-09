@@ -109,6 +109,7 @@ const decideSignupStatus = async (updateInfo) => {
   const statusCode = updateInfo[2];
   const peopleLeft = updateInfo[3];
   try {
+    await conn.query('START TRANSACTION');
     await conn.execute(
       'UPDATE `member` SET signup_status = ? WHERE user_id = ? ',
       [statusCode, userId]
@@ -117,10 +118,10 @@ const decideSignupStatus = async (updateInfo) => {
       'UPDATE `group` SET people_left = people_left + ? WHERE id = ? and people_left < people_need',
       [peopleLeft, groupId]
     );
-    await conn.execute('COMMIT');
+    await conn.query('COMMIT');
     return true;
   } catch (error) {
-    await conn.execute('ROLLBACK');
+    await conn.query('ROLLBACK');
     console.log(error);
   } finally {
     await conn.release();
