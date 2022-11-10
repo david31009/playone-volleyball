@@ -21,7 +21,8 @@ body {
 
 /* 簡易資料*/
 #resume,
-#self-details {
+#self-details,
+#comment {
   width: 60%;
   border: solid;
   margin: 2% auto;
@@ -126,6 +127,19 @@ body {
 
 .group-details-link {
   text-decoration: none;
+  flex-grow: 2;
+  margin-right: 2%;
+  width: 50%;
+}
+
+#past-signup-groups-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.comment-btn {
+  margin: 1% 0 1% 0;
 }
 
 /* icon 區*/

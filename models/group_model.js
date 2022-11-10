@@ -94,7 +94,7 @@ const getMsg = async (groupId) => {
 
 const getSignupMembers = async (groupId) => {
   const [result] = await pool.execute(
-    'SELECT user_id, username, signup_status FROM `member` INNER JOIN `user` ON member.user_id = user.id WHERE group_id = ?',
+    'SELECT user_id, username, group_id, signup_status FROM `member` INNER JOIN `user` ON member.user_id = user.id WHERE group_id = ?',
     groupId
   );
   return result;
@@ -109,8 +109,8 @@ const decideSignupStatus = async (updateInfo) => {
   try {
     await conn.query('START TRANSACTION');
     await conn.execute(
-      'UPDATE `member` SET signup_status = ? WHERE user_id = ? ',
-      [statusCode, userId]
+      'UPDATE `member` SET signup_status = ? WHERE user_id = ? AND group_id = ?',
+      [statusCode, userId, groupId]
     );
     await conn.execute(
       'UPDATE `group` SET people_left = people_left + ? WHERE id = ? and people_left < people_need',

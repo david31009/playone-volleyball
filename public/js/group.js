@@ -1,5 +1,5 @@
 // 確認 user 身分，從 local storage 拿 jwt
-const userId = 2;
+const userId = 3;
 
 // 抓網址 groupId (?id=21)
 const url = new URL(window.location.href);
@@ -68,6 +68,7 @@ const idSplit = id.split('=')[1];
   }
 
   // 渲染報名者名單 (只有主揪才能看到)
+  console.log(signupMembers);
   for (let i = 0; i < signupMembers.length; i++) {
     if (signupMembers[i].signupStatus === '1') {
       $('#signup-members').append(
@@ -140,10 +141,10 @@ const idSplit = id.split('=')[1];
 
 // 決定報名者是否報名成功
 async function decide(e) {
-  const buttonId = $(e).attr('id');
-  const username = buttonId.split('-')[0];
-  const userId = buttonId.split('-')[1];
-  const decision = buttonId.split('-')[2];
+  const buttonId = $(e).attr('id').split('-');
+  const username = buttonId[0];
+  const userId = buttonId[1];
+  const decision = buttonId[2];
   let decisionChi = decision === 'accept' ? '接受' : '拒絕';
 
   // sweet alert 確定接受 / 拒絕?

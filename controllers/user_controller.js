@@ -119,6 +119,7 @@ const pastSignup = async (req, res) => {
     return {
       groupId: i.group_id,
       title: i.title,
+      creatorId: i.creator_id,
       date: datetime.split('T')[0],
       time: datetime.split('T')[1].slice(0, 5),
     };

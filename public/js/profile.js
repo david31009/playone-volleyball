@@ -1,5 +1,5 @@
 // 確認 user 身分，從 res 拿 userId (自己)
-const userId = 2;
+const userId = 3;
 
 // 抓網址 userId (?id=21)，可以連到別人頁面 (到誰的個人頁面)
 const url = new URL(window.location.href);
@@ -8,7 +8,7 @@ const idSplit = parseInt(id.split('=')[1]);
 
 // 渲染個人頁面
 (async () => {
-  // 揪團 ING、過去揪團隱藏起來
+  // 顯示個人資料
   $('#intro-part').show();
   $('#i-create').hide();
   $('#i-signup').hide();
@@ -86,7 +86,7 @@ const idSplit = parseInt(id.split('=')[1]);
   $('#i-signup-num').html(`${nowSignup.length}`);
 
   // 渲染過去報名的團數量
-  $('#past-signup-num').html(`${nowSignup.length}`);
+  $('#past-signup-num').html(`${pastSignup.length}`);
 })();
 
 // 彈出編輯表單
@@ -319,5 +319,10 @@ $('#past-signup-link').click(async (e) => {
         </div></a>
         `
     );
+    if (userId === idSplit) {
+      $('#past-signup-groups-details').append(
+        `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn">待評價</button>`
+      );
+    }
   }
 });

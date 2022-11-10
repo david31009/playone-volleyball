@@ -25,7 +25,7 @@ const createTable = async () => {
       'CREATE TABLE `member`(`user_id` INT UNSIGNED, `group_id` INT UNSIGNED, `signup_status` CHAR(1), PRIMARY KEY (`user_id`, `group_id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE CASCADE)'
     );
     await pool.execute(
-      'CREATE TABLE `comment`(`id` INT UNSIGNED, `user_id` INT UNSIGNED, `commenter_id` INT UNSIGNED, `score` TINYINT UNSIGNED, `content` VARCHAR(45), `date` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`commenter_id`) REFERENCES `user` (`id`) ON DELETE CASCADE)'
+      'CREATE TABLE `comment`(`id` INT UNSIGNED, `user_id` INT UNSIGNED, `commenter_id` INT UNSIGNED, `group_id` INT UNSIGNED, `score` TINYINT UNSIGNED, `content` VARCHAR(45), `date` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`commenter_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE CASCADE)'
     );
     await pool.execute(
       'CREATE TABLE `msg_board`(`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `user_id` INT UNSIGNED, `group_id` INT UNSIGNED, `content` VARCHAR(45), `time` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE CASCADE)'

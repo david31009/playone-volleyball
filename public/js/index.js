@@ -1,5 +1,5 @@
 // 從前端確認身分
-const userId = 2;
+const userId = 3;
 
 // ----------------------主揪揪團彈窗----------------------
 function show() {
@@ -53,6 +53,7 @@ new TwCitySelector({
 $('#start-group').click(async (e) => {
   e.preventDefault();
   let groupInfo = {
+    creatorId: userId,
     title: $('#title').val(),
     date: $('#date').val(),
     time: $('#time').val(),
