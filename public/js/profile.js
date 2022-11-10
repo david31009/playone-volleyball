@@ -1,5 +1,5 @@
 // 確認 user 身分，從 res 拿 userId (自己)
-const userId = 3;
+const userId = 2;
 
 // 抓網址 userId (?id=21)，可以連到別人頁面 (到誰的個人頁面)
 const url = new URL(window.location.href);
@@ -119,12 +119,12 @@ $('#self-edit').click(async () => {
   });
 });
 
-// 關閉彈窗按鈕
+// 關閉編輯表單彈窗按鈕
 $('#close-button').click(() => {
   $('#background-pop').hide();
 });
 
-// 點畫面其他處關閉談窗
+// 點畫面其他處關閉編輯表單彈窗
 $(window).click((e) => {
   if (e.target.id === 'background-pop') {
     $('#background-pop').hide();
@@ -307,7 +307,7 @@ $('#past-signup-link').click(async (e) => {
   $('#past-signup').show();
 
   // 打 pastSignup api
-  const result = await axios(`/api/1.0/past/signup${id}`);
+  const result = await axios.get(`/api/1.0/past/signup${id}`);
   const pastSignup = result.data.result;
 
   $('#past-signup-groups-details').empty();
@@ -319,10 +319,100 @@ $('#past-signup-link').click(async (e) => {
         </div></a>
         `
     );
+    // 打 getComment api
+    const comment = await axios.post(`/api/1.0/comment/status`, {
+      commenterId: userId,
+      groupId: `${pastSignup[i].groupId}`,
+    });
+    const [commentStatus] = comment.data.result;
+
     if (userId === idSplit) {
-      $('#past-signup-groups-details').append(
-        `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn">待評價</button>`
-      );
+      if (commentStatus) {
+        $('#past-signup-groups-details').append(
+          `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn" onclick="comment(this)" disabled>已評價</button>`
+        );
+      } else {
+        $('#past-signup-groups-details').append(
+          `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn" onclick="comment(this)">待評價</button>`
+        );
+      }
     }
+  }
+});
+
+// 待評價彈窗
+async function comment(e) {
+  $('#comment-pop').show();
+  const id = $(e).attr('id').split('-');
+  const groupId = id[1];
+
+  const result = await axios.post('/api/1.0/group/info', { groupId });
+  const [groupInfo] = result.data.result;
+  $('#comment-title').html(`${groupInfo.title}`);
+  $('#comment-time').html(`活動時間: ${groupInfo.date} ${groupInfo.time}`);
+
+  // 新增 class 給 send comment button
+  $('#send-comment').addClass(`${$(e).attr('id')}`);
+}
+
+// 關閉評價彈窗按鈕
+$('#comment-close-button').click(() => {
+  $('#comment-pop').hide();
+});
+
+// 點畫面其他處關閉評價彈窗
+$(window).click((e) => {
+  if (e.target.id === 'comment-pop') {
+    $('#comment-pop').hide();
+  }
+});
+
+$('#send-comment').click(async (e) => {
+  e.preventDefault();
+  // 用 class 去抓 creator_id, group_id
+  const className = e.target.className.split('-');
+  const commentInfo = {
+    creatorId: className[3],
+    commentorId: userId,
+    groupId: className[1],
+    score: $('#score').val(),
+    content: $('#content').val(),
+  };
+
+  // 使用者未填評價，發出 alert
+  let OK = true;
+  $('textarea')
+    .filter('[required]') // 找出有 required 的屬性
+    .each((i, requiredField) => {
+      if (!$(requiredField).val()) {
+        OK = false;
+        Swal.fire({
+          icon: 'error',
+          title: `請輸入 ${$(requiredField).attr('name')} 欄位`,
+        });
+        return false; // break
+      }
+    });
+
+  // 使用者填欄位填寫完畢，才打 API
+  if (OK) {
+    Swal.fire({
+      title: `確定送出評價?`,
+      text: '這個動作無法再做更改',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '確定',
+      cancelButtonText: '再想想',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // 打 comment api
+        await axios.post('/api/1.0/comment', commentInfo);
+        Swal.fire('成功', '已送出評價', 'success').then(() => {
+          location.reload();
+        });
+      }
+    });
   }
 });

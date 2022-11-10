@@ -1,5 +1,6 @@
 const { myLevel, gender, position } = require('../utils/enum');
 const User = require('../models/user_model');
+const moment = require('moment');
 
 const updateUser = async (req, res) => {
   const info = req.body;
@@ -127,6 +128,42 @@ const pastSignup = async (req, res) => {
   res.status(200).json({ result });
 };
 
+const groupInfo = async (req, res) => {
+  const { groupId } = req.body;
+  const [resultDB] = await User.groupInfo([groupId]);
+  let datetime = JSON.stringify(resultDB.date).replace('"', '');
+  const result = [
+    {
+      groupId: resultDB.id,
+      title: resultDB.title,
+      date: datetime.split('T')[0],
+      time: datetime.split('T')[1].slice(0, 5),
+    },
+  ];
+  res.status(200).json({ result });
+};
+
+const storeComment = async (req, res) => {
+  const info = req.body;
+  const currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
+  const comment = [
+    info.creatorId,
+    info.commentorId,
+    info.groupId,
+    info.score,
+    info.content,
+    currentDate,
+  ];
+  await User.storeComment(comment);
+  res.status(200).send('ok');
+};
+
+const commentStatus = async (req, res) => {
+  const info = req.body;
+  const result = await User.commentStatus([info.commenterId, info.groupId]);
+  res.status(200).json({ result });
+};
+
 module.exports = {
   updateUser,
   userProfile,
@@ -137,4 +174,7 @@ module.exports = {
   pastCreate,
   nowSignup,
   pastSignup,
+  groupInfo,
+  storeComment,
+  commentStatus,
 };

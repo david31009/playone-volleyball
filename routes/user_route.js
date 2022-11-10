@@ -10,6 +10,9 @@ const {
   pastCreate,
   nowSignup,
   pastSignup,
+  groupInfo,
+  storeComment,
+  commentStatus,
 } = require('../controllers/user_controller');
 
 router.route('/user').put(wrapAsync(updateUser));
@@ -21,5 +24,8 @@ router.route('/now/create').get(wrapAsync(nowCreate));
 router.route('/past/create').get(wrapAsync(pastCreate));
 router.route('/now/signup').get(wrapAsync(nowSignup));
 router.route('/past/signup').get(wrapAsync(pastSignup));
+router.route('/group/info').post(wrapAsync(groupInfo));
+router.route('/comment').post(wrapAsync(storeComment));
+router.route('/comment/status').post(wrapAsync(commentStatus));
 
 module.exports = router;

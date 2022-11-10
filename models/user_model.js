@@ -113,6 +113,29 @@ const pastSignup = async (userId) => {
   return result;
 };
 
+const groupInfo = async (groupId) => {
+  const [result] = await pool.execute(
+    'SELECT id, title, date FROM `group` WHERE id = ?',
+    groupId
+  );
+  return result;
+};
+
+const storeComment = async (comment) => {
+  await pool.execute(
+    'INSERT INTO `comment` (user_id, commenter_id, group_id, score, content, date) VALUES (?, ?, ?, ?, ?, ?)',
+    comment
+  );
+};
+
+const commentStatus = async (comment) => {
+  const [result] = await pool.execute(
+    'SELECT * FROM `comment` WHERE commenter_id = ? AND group_id = ?',
+    comment
+  );
+  return result;
+};
+
 module.exports = {
   updateUser,
   userProfile,
@@ -123,4 +146,7 @@ module.exports = {
   pastCreate,
   nowSignup,
   pastSignup,
+  groupInfo,
+  storeComment,
+  commentStatus,
 };

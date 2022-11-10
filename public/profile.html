@@ -8,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tw-city-selector@2.1.1/dist/tw-city-selector.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <title>Profile</title>
   </head>
   <body>
@@ -185,6 +186,43 @@
               <textarea id="self-intro" rows="8" cols="50"></textarea>
             </div>
             <button id="save">儲存</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="comment-pop">
+      <div id="comment-div-pop">
+        <div class="comment-div-top">
+          <span id="comment-close-button">×</span>
+          <div>我的評價</div>
+        </div>
+        <div class="comment-div-content">
+          <form id="comment-form">
+            <div id="comment-title"></div>
+            <div id="comment-time"></div>
+            <div>
+              分數
+              <select id="score" name="分數" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div>
+              評價
+              <br />
+              <textarea
+                id="content"
+                rows="8"
+                cols="30"
+                name="評價"
+                required
+              ></textarea>
+            </div>
+            <br />
+            <button id="send-comment">送出評價</button>
           </form>
         </div>
       </div>
