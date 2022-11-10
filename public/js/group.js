@@ -1,5 +1,5 @@
 // 確認 user 身分，從 local storage 拿 jwt
-const userId = 3;
+const userId = 2;
 
 // 抓網址 groupId (?id=21)
 const url = new URL(window.location.href);
@@ -96,10 +96,19 @@ const idSplit = id.split('=')[1];
 
   // 確認使用者報名狀態
   const datenow = new Date(+new Date() + 8 * 3600 * 1000).toISOString(); // 取得當下時間
-  if (groupDetail.isBuild[0] === 0 || datenow > groupDetail.datetime) {
-    $('#signup').html(`已關團`);
+  if (groupDetail.isBuild[0] === 0) {
+    $('#signup').html(`主揪已關閉揪團`);
     $('#signup').prop('disabled', true);
-    $('#edit').html(`已關團`);
+    $('#edit').html(`您已關閉揪團`);
+    $('#edit').prop('disabled', true);
+    $('#close-group').prop('disabled', true);
+    $('#leave-msg').prop('disabled', true);
+    $('.accept').prop('disabled', true);
+    $('.deny').prop('disabled', true);
+  } else if (datenow > groupDetail.datetime) {
+    $('#signup').html(`揪團已結束`);
+    $('#signup').prop('disabled', true);
+    $('#edit').html(`揪團已結束`);
     $('#edit').prop('disabled', true);
     $('#close-group').prop('disabled', true);
     $('#leave-msg').prop('disabled', true);

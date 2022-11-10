@@ -62,4 +62,78 @@ const unfollow = async (req, res) => {
   res.status(200).send('ok');
 };
 
-module.exports = { updateUser, userProfile, follow, followStatus, unfollow };
+const nowCreate = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await User.nowCreate(id);
+  const result = resultDB.map((i) => {
+    // date 是 object 型態
+    let datetime = JSON.stringify(i.date).replace('"', '');
+    return {
+      groupId: i.id,
+      title: i.title,
+      date: datetime.split('T')[0],
+      time: datetime.split('T')[1].slice(0, 5),
+    };
+  });
+  res.status(200).json({ result });
+};
+
+const pastCreate = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await User.pastCreate(id);
+  const result = resultDB.map((i) => {
+    // date 是 object 型態
+    let datetime = JSON.stringify(i.date).replace('"', '');
+    return {
+      groupId: i.id,
+      title: i.title,
+      date: datetime.split('T')[0],
+      time: datetime.split('T')[1].slice(0, 5),
+    };
+  });
+  res.status(200).json({ result });
+};
+
+const nowSignup = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await User.nowSignup(id);
+  const result = resultDB.map((i) => {
+    // date 是 object 型態
+    let datetime = JSON.stringify(i.date).replace('"', '');
+    return {
+      groupId: i.group_id,
+      title: i.title,
+      date: datetime.split('T')[0],
+      time: datetime.split('T')[1].slice(0, 5),
+    };
+  });
+  res.status(200).json({ result });
+};
+
+const pastSignup = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await User.pastSignup(id);
+  const result = resultDB.map((i) => {
+    // date 是 object 型態
+    let datetime = JSON.stringify(i.date).replace('"', '');
+    return {
+      groupId: i.group_id,
+      title: i.title,
+      date: datetime.split('T')[0],
+      time: datetime.split('T')[1].slice(0, 5),
+    };
+  });
+  res.status(200).json({ result });
+};
+
+module.exports = {
+  updateUser,
+  userProfile,
+  follow,
+  followStatus,
+  unfollow,
+  nowCreate,
+  pastCreate,
+  nowSignup,
+  pastSignup,
+};

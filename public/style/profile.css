@@ -93,7 +93,11 @@ body {
 
 /* 揪團ing、過去揪團、粉絲區*/
 #my-intro,
-#self-level {
+#self-level,
+#i-create-groups,
+#i-signup-groups,
+#past-create-groups,
+#past-signup-groups {
   border: solid;
   padding: 2%;
   margin: 2%;
@@ -108,6 +112,20 @@ body {
 
 #groups-fans div {
   text-align: center;
+}
+
+#groups-fans div a {
+  text-decoration: none;
+}
+
+.group-details {
+  padding: 1%;
+  margin: 1% 0 1% 0;
+  border: solid;
+}
+
+.group-details-link {
+  text-decoration: none;
 }
 
 /* icon 區*/
