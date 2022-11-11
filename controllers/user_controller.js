@@ -67,13 +67,12 @@ const nowCreate = async (req, res) => {
   const { id } = req.query;
   const resultDB = await User.nowCreate(id);
   const result = resultDB.map((i) => {
-    // date 是 object 型態
-    let datetime = JSON.stringify(i.date).replace('"', '');
+    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       groupId: i.id,
       title: i.title,
-      date: datetime.split('T')[0],
-      time: datetime.split('T')[1].slice(0, 5),
+      date: datetime.split(' ')[0],
+      time: datetime.split(' ')[1],
     };
   });
   res.status(200).json({ result });
@@ -83,13 +82,12 @@ const pastCreate = async (req, res) => {
   const { id } = req.query;
   const resultDB = await User.pastCreate(id);
   const result = resultDB.map((i) => {
-    // date 是 object 型態
-    let datetime = JSON.stringify(i.date).replace('"', '');
+    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       groupId: i.id,
       title: i.title,
-      date: datetime.split('T')[0],
-      time: datetime.split('T')[1].slice(0, 5),
+      date: datetime.split(' ')[0],
+      time: datetime.split(' ')[1],
     };
   });
   res.status(200).json({ result });
@@ -99,13 +97,12 @@ const nowSignup = async (req, res) => {
   const { id } = req.query;
   const resultDB = await User.nowSignup(id);
   const result = resultDB.map((i) => {
-    // date 是 object 型態
-    let datetime = JSON.stringify(i.date).replace('"', '');
+    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       groupId: i.group_id,
       title: i.title,
-      date: datetime.split('T')[0],
-      time: datetime.split('T')[1].slice(0, 5),
+      date: datetime.split(' ')[0],
+      time: datetime.split(' ')[1],
     };
   });
   res.status(200).json({ result });
@@ -115,14 +112,13 @@ const pastSignup = async (req, res) => {
   const { id } = req.query;
   const resultDB = await User.pastSignup(id);
   const result = resultDB.map((i) => {
-    // date 是 object 型態
-    let datetime = JSON.stringify(i.date).replace('"', '');
+    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       groupId: i.group_id,
       title: i.title,
       creatorId: i.creator_id,
-      date: datetime.split('T')[0],
-      time: datetime.split('T')[1].slice(0, 5),
+      date: datetime.split(' ')[0],
+      time: datetime.split(' ')[1],
     };
   });
   res.status(200).json({ result });
@@ -168,13 +164,13 @@ const getComments = async (req, res) => {
   const { id } = req.query;
   const resultDB = await User.getComments([id]);
   const result = resultDB.map((i) => {
-    let datetime = JSON.stringify(i.date).replaceAll('"', '');
+    const date = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       commenterId: i.commenter_id,
       commenterName: i.username,
       groupId: i.group_id,
       score: i.score,
-      date: `${datetime.split('T')[0]} ${datetime.split('T')[1].slice(0, 5)}`,
+      date: date,
       title: i.title,
       content: i.content,
     };

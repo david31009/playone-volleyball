@@ -328,10 +328,6 @@ $('#signup').click(async () => {
 
 //留言
 $('#leave-msg').click(async () => {
-  // 讀取現在時間，轉成 mysql datetime 可以存取的時間
-  const date = new Date(+new Date() + 8 * 3600 * 1000);
-  const time = date.toISOString().split('.')[0].replace('T', ' ');
-
   // 阻擋留言為空的狀況
   if ($('#msg-board').val() === '') {
     Swal.fire({
@@ -347,7 +343,6 @@ $('#leave-msg').click(async () => {
     userId: userId,
     groupId: idSplit,
     content: $('#msg-board').val(),
-    time: time,
   };
   await axios.post('/api/1.0/msg', msgInfo);
 

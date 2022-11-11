@@ -6,6 +6,7 @@ const {
   isCharge,
   signupStatus,
 } = require('../utils/enum');
+const moment = require('moment');
 const Group = require('../models/group_model');
 
 const createGroup = async (req, res) => {
@@ -49,13 +50,12 @@ const createGroup = async (req, res) => {
 const getGroups = async (req, res) => {
   const resultDB = await Group.getGroups();
   const result = resultDB.map((i) => {
-    // date 是 object 型態
-    let datetime = JSON.stringify(i.date).replace('"', '');
+    let datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       groupId: i.id,
       title: i.title,
-      date: datetime.split('T')[0],
-      time: datetime.split('T')[1].slice(0, 5),
+      date: datetime.split(' ')[0],
+      time: datetime.split(' ')[1],
       timeDuration: i.time_duration / 60,
       net: netHigh[i.net],
       place: i.place,
@@ -84,13 +84,12 @@ const filterGroups = async (req, res) => {
 
   const resultDB = await Group.filterGroups(filterInfo);
   const result = resultDB.map((i) => {
-    // date 是 object 型態
-    let datetime = JSON.stringify(i.date).replace('"', '');
+    let datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       groupId: i.id,
       title: i.title,
-      date: datetime.split('T')[0],
-      time: datetime.split('T')[1].slice(0, 5),
+      date: datetime.split(' ')[0],
+      time: datetime.split(' ')[1],
       timeDuration: i.time_duration / 60,
       net: netHigh[i.net],
       place: i.place,
@@ -109,8 +108,7 @@ const groupDetails = async (req, res) => {
   const { id } = req.query;
   const resultDB = await Group.groupDetails([id]);
   const result = resultDB.map((i) => {
-    // date 是 object 型態
-    let datetime = JSON.stringify(i.date).replace('"', '');
+    let datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     // 對照表，數字跟中文都給
     return {
       groupId: i.id,
@@ -118,8 +116,8 @@ const groupDetails = async (req, res) => {
       username: i.username,
       title: i.title,
       datetime: i.date,
-      date: datetime.split('T')[0],
-      time: datetime.split('T')[1].slice(0, 5),
+      date: datetime.split(' ')[0],
+      time: datetime.split(' ')[1],
       timeDuration: i.time_duration / 60,
       net: [i.net, netHigh[i.net]],
       place: i.place,
@@ -198,7 +196,10 @@ const createMsg = async (req, res) => {
   if (info.content === '') {
     return res.status(400).json({ error: 'message is blank' });
   }
-  const msgInfo = [info.userId, info.groupId, info.content, info.time];
+
+  // 取得現在時間
+  let datetime = moment().format('YYYY-MM-DD HH:mm:ss');
+  const msgInfo = [info.userId, info.groupId, info.content, datetime];
   await Group.createMsg(msgInfo);
   res.status(200).send('ok');
 };
@@ -206,15 +207,13 @@ const createMsg = async (req, res) => {
 const getMsg = async (req, res) => {
   const { id } = req.query;
   const resultDB = await Group.getMsg([id]);
-  // date 是 object 型態
   const result = resultDB.map((i) => {
-    let datetime = JSON.stringify(i.time).replace('"', '');
     return {
       userId: i.user_id,
       username: i.username,
       groupId: i.group_id,
       content: i.content,
-      time: datetime.replace('T', ' ').split('.')[0].slice(0, 16),
+      time: i.time,
     };
   });
 

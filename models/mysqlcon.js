@@ -5,7 +5,9 @@ const options = {
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  timezone: process.env.DB_TIMEZONE,
+
+  // 存時間進去會以 string 儲存，而非 object
+  dateStrings: true, //
 
   // 無可用連線時是否等待pool連線釋放 (預設為 true)
   waitForConnections: true,
