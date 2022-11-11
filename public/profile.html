@@ -5,9 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="style/profile.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css"
+    />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tw-city-selector@2.1.1/dist/tw-city-selector.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
 
     <title>Profile</title>
   </head>
@@ -54,7 +59,7 @@
       <a href=""
         ><img src="images/profile.png" height="50" alt="my profile"
       /></a>
-      <img src="images/star.png" height="50" alt="my comments" />
+      <img id="star" src="images/star.png" height="50" alt="my comments" />
     </div>
     <div id="self-details">
       <div id="groups-fans">
@@ -119,14 +124,29 @@
       </div>
     </div>
     <div id="comment">
-      <div>
-        <div>
-          <div>4.8</div>
-          <div>(58)</div>
-        </div>
-        <div></div>
+      <div id="comment-score">
+        <div id="avg-score">4.5</div>
+        <div id="rateYo"></div>
+        <div id="comment-num">(58)</div>
       </div>
-      <div>評價區</div>
+      <div id="comment-block-container">
+        <!-- <div class="comment-block">
+          <div class="commenter">
+            <div>Lisa</div>
+            <div>2022/09/08</div>
+            <div>揪團標題</div>
+          </div>
+          <div>超讚，主揪人很好、很友善 !!</div>
+        </div> -->
+        <!-- <div class="comment-block">
+          <div class="commenter">
+            <div>Lisa</div>
+            <div>2022/09/08</div>
+            <div>揪團標題</div>
+          </div>
+          <div>超讚，主揪人很好、很友善 !!</div>
+        </div> -->
+      </div>
     </div>
     <div id="background-pop">
       <div id="div-pop">

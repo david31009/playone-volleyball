@@ -13,6 +13,7 @@ const {
   groupInfo,
   storeComment,
   commentStatus,
+  getComments,
 } = require('../controllers/user_controller');
 
 router.route('/user').put(wrapAsync(updateUser));
@@ -27,5 +28,6 @@ router.route('/past/signup').get(wrapAsync(pastSignup));
 router.route('/group/info').post(wrapAsync(groupInfo));
 router.route('/comment').post(wrapAsync(storeComment));
 router.route('/comment/status').post(wrapAsync(commentStatus));
+router.route('/comment').get(wrapAsync(getComments));
 
 module.exports = router;

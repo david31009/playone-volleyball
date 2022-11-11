@@ -367,6 +367,7 @@ $(window).click((e) => {
   }
 });
 
+// 送出評價
 $('#send-comment').click(async (e) => {
   e.preventDefault();
   // 用 class 去抓 creator_id, group_id
@@ -410,9 +411,53 @@ $('#send-comment').click(async (e) => {
         // 打 comment api
         await axios.post('/api/1.0/comment', commentInfo);
         Swal.fire('成功', '已送出評價', 'success').then(() => {
-          location.reload();
+          // 送出評價後，關閉評價彈窗，再次點擊過去報名的團
+          $('#comment-pop').hide();
+          $('#past-signup-link').trigger('click');
         });
       }
     });
   }
+});
+
+// 星星 icon
+$('#star').click(async () => {
+  $('#self-details').hide();
+  $('#comment').show();
+
+  const result = await axios.get(`/api/1.0/comment${id}`);
+  const comment = result.data.result;
+
+  // 渲染評價
+  let score = 0;
+  for (let i = 0; i < comment.length; i++) {
+    score += comment[i].score;
+    $('#comment-block-container').append(
+      `<a href="/group.html?id=${comment[i].groupId}"><div class="comment-block">
+         <div class="commenter">
+           <div>${comment[i].commenterName}</div>
+           <div>${comment[i].date}</div>
+           <div>${comment[i].title}</div>
+         </div>
+         <div>${comment[i].content}</div>
+       </div></a>
+    `
+    );
+  }
+
+  // 評價分數
+  if (comment.length === 0) {
+    $('#avg-score').html(`0`);
+    $('#rateYo').rateYo({
+      rating: 0,
+      readOnly: true,
+    });
+  } else {
+    $('#avg-score').html(`${score / comment.length}`);
+    $('#rateYo').rateYo({
+      rating: score / comment.length,
+      readOnly: true,
+    });
+  }
+  $('#comment-num').html(`(${comment.length})`);
 });

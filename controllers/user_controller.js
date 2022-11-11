@@ -164,6 +164,24 @@ const commentStatus = async (req, res) => {
   res.status(200).json({ result });
 };
 
+const getComments = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await User.getComments([id]);
+  const result = resultDB.map((i) => {
+    let datetime = JSON.stringify(i.date).replaceAll('"', '');
+    return {
+      commenterId: i.commenter_id,
+      commenterName: i.username,
+      groupId: i.group_id,
+      score: i.score,
+      date: `${datetime.split('T')[0]} ${datetime.split('T')[1].slice(0, 5)}`,
+      title: i.title,
+      content: i.content,
+    };
+  });
+  res.status(200).json({ result });
+};
+
 module.exports = {
   updateUser,
   userProfile,
@@ -177,4 +195,5 @@ module.exports = {
   groupInfo,
   storeComment,
   commentStatus,
+  getComments,
 };

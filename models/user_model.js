@@ -136,6 +136,15 @@ const commentStatus = async (comment) => {
   return result;
 };
 
+const getComments = async (userId) => {
+  const [result] = await pool.execute(
+    'SELECT user_id, commenter_id, group_id, score, content, comment.date, title, username FROM `comment` INNER JOIN `user` ON comment.commenter_id = user.id INNER JOIN `group` ON comment.group_id = group.id WHERE user_id = ?',
+    userId
+  );
+  // console.log(result);
+  return result;
+};
+
 module.exports = {
   updateUser,
   userProfile,
@@ -149,4 +158,5 @@ module.exports = {
   groupInfo,
   storeComment,
   commentStatus,
+  getComments,
 };

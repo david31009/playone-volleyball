@@ -157,3 +157,44 @@ body {
   width: 60%;
   margin: 2% auto;
 }
+
+/* 評價區塊*/
+#comment {
+  display: none;
+}
+
+#comment-block-container {
+  padding: 2%;
+}
+
+.comment-block {
+  border: solid;
+  padding: 2%;
+  margin-top: 2%;
+}
+
+#comment-score {
+  text-align: center;
+  padding: 2%;
+}
+
+#avg-score {
+  font-size: xx-large;
+}
+
+#rateYo {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.commenter {
+  display: flex;
+}
+
+.commenter div {
+  margin-right: 2%;
+}
+
+#comment-block-container a {
+  text-decoration: none;
+}
