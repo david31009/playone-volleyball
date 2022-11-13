@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { wrapAsync } = require('../utils/util');
+const { wrapAsync, auth } = require('../utils/util');
 const {
   createGroup,
   getGroups,
@@ -12,10 +12,10 @@ const {
   getMsg,
   getSignupMembers,
   decideSignupStatus,
-  closeGroup,
+  closeGroup
 } = require('../controllers/group_controller');
 
-router.route('/group').post(wrapAsync(createGroup));
+router.route('/group').post(auth, wrapAsync(createGroup));
 router.route('/group').get(wrapAsync(getGroups));
 router.route('/update/group').post(wrapAsync(updateGroup));
 router.route('/filter').post(wrapAsync(filterGroups));

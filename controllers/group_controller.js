@@ -11,13 +11,16 @@ const Group = require('../models/group_model');
 
 const createGroup = async (req, res) => {
   const info = req.body;
+  const { user } = req;
+  console.log(user);
+  const creatorId = user.userId;
   const isBuild = 1; // 已成團
   const peopleLeft = info.peopleNeed; // 剩餘報名名額
   let isCharge = 1; // 是否收費
   if (info.money === '0') isCharge = 0;
 
   const groupInfo = [
-    info.creatorId,
+    creatorId,
     info.title,
     `${info.date} ${info.time}`,
     info.timeDuration * 60,

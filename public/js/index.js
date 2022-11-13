@@ -1,5 +1,40 @@
-// 從前端確認身分
-const userId = 2;
+// 從 local storage 拿 jwt token
+const { localStorage } = window;
+const token = localStorage.getItem('jwtToken');
+
+// 無 jwt token，跳轉到註冊、登入頁面
+if (token === null) {
+  Swal.fire({
+    icon: 'error',
+    title: '請先登入或註冊'
+  }).then(() => {
+    window.location.href = '/register.html';
+  });
+}
+
+// 有 jwt token，確認 token 正確與否
+let userId;
+(async () => {
+  try {
+    const getUserId = await axios.get('api/1.0/user/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    // 確認 user 身分，從 res 拿 userId (自己)
+    userId = getUserId.data.userId;
+  } catch (error) {
+    const Error = error.response.data.error;
+    if (Error === 'Wrong token') {
+      Swal.fire({
+        icon: 'error',
+        title: '請先登入或註冊'
+      }).then(() => {
+        window.location.href = '/register.html';
+      });
+    }
+  }
+})();
 
 // ----------------------主揪揪團彈窗----------------------
 function show() {
@@ -20,7 +55,7 @@ for (let i = 0.5; i < 6.5; i += 0.5) {
   $('#time-duration').append(
     $('<option>', {
       value: i,
-      text: i,
+      text: i
     })
   );
 }
@@ -29,13 +64,13 @@ for (let i = 1; i < 19; i++) {
   $('#people-have').append(
     $('<option>', {
       value: i,
-      text: i,
+      text: i
     })
   );
   $('#people-need').append(
     $('<option>', {
       value: i,
-      text: i,
+      text: i
     })
   );
 }
@@ -46,7 +81,7 @@ new TwCitySelector({
   elCounty: '.county', // 在 el 裡查找 element
   elDistrict: '.district', // 在 el 裡查找 element
   countyFieldName: '縣市', // 該欄位的 name
-  districtFieldName: '區域', // 該欄位的 name
+  districtFieldName: '區域' // 該欄位的 name
 });
 
 // 主揪建立揪團表單
@@ -68,7 +103,7 @@ $('#start-group').click(async (e) => {
     levelDescription: $('#level-description').val(),
     peopleHave: $('#people-have').val(),
     peopleNeed: $('#people-need').val(),
-    groupDescription: $('#group-description').val(),
+    groupDescription: $('#group-description').val()
   };
 
   // 使用者未填欄位，發出 alert
@@ -81,7 +116,7 @@ $('#start-group').click(async (e) => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`,
+          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`
         });
         return false; // break
       }
@@ -97,7 +132,7 @@ $('#start-group').click(async (e) => {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: `建立揪團失敗`,
+        text: `建立揪團失敗`
       });
       window.location.href = `/index.html`;
     }
@@ -111,7 +146,7 @@ new TwCitySelector({
   elCounty: '.county', // 在 el 裡查找 element
   elDistrict: '.district', // 在 el 裡查找 element
   countyFieldName: '縣市', // 該欄位的 name
-  districtFieldName: '區域', // 該欄位的 name
+  districtFieldName: '區域' // 該欄位的 name
 });
 
 // 渲染字卡
@@ -152,7 +187,7 @@ $('#filter').click(async (e) => {
     groupLevel: $('#filter-group-level').val(),
     net: $('#filter-net').val(),
     court: $('#filter-court').val(),
-    isCharge: $('#filter-is-charge').val(),
+    isCharge: $('#filter-is-charge').val()
   };
 
   let filterCards = await axios.post('/api/1.0/filter', filterInfo);
@@ -183,4 +218,6 @@ $('#filter').click(async (e) => {
 });
 
 // 個人頁面連結
-$('#my-profile').attr('href', `/profile.html?id=${userId}`);
+$('#my-profile').click(() => {
+  window.location.href = `/profile.html?id=${userId}`;
+});

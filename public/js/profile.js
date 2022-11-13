@@ -1,10 +1,40 @@
-// 確認 user 身分，從 local storage 拿 jwt token
+// 從 local storage 拿 jwt token
 const { localStorage } = window;
 const token = localStorage.getItem('jwtToken');
-console.log(token);
 
-// 確認 user 身分，從 res 拿 userId (自己)
-const userId = 2;
+// 無 jwt token，跳轉到註冊、登入頁面
+if (token === null) {
+  Swal.fire({
+    icon: 'error',
+    title: '請先登入或註冊'
+  }).then(() => {
+    window.location.href = '/register.html';
+  });
+}
+
+// 有 jwt token，確認 token 正確與否
+let userId;
+(async () => {
+  try {
+    const getUserId = await axios.get('api/1.0/user/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    // 確認 user 身分，從 res 拿 userId (自己)
+    userId = getUserId.data.userId;
+  } catch (error) {
+    const Error = error.response.data.error;
+    if (Error === 'Wrong token') {
+      Swal.fire({
+        icon: 'error',
+        title: '請先登入或註冊'
+      }).then(() => {
+        window.location.href = '/register.html';
+      });
+    }
+  }
+})();
 
 // 抓網址 userId (?id=21)，可以連到別人頁面 (到誰的個人頁面)
 const url = new URL(window.location.href);

@@ -65,4 +65,9 @@ const signin = async (req, res) => {
   res.status(200).json({ result });
 };
 
-module.exports = { signup, signin };
+const profile = async (req, res) => {
+  const { user } = req;
+  res.status(200).send({ userId: user.userId });
+};
+
+module.exports = { signup, signin, profile };
