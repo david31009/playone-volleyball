@@ -16,7 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 // API routes
 app.use('/api/' + API_VERSION, [
   require('./routes/group_route'),
-  require('./routes/profile_route')
+  require('./routes/profile_route'),
+  require('./routes/user_route')
 ]);
 
 // Error handling

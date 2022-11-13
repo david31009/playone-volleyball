@@ -1,3 +1,8 @@
+// 確認 user 身分，從 local storage 拿 jwt token
+const { localStorage } = window;
+const token = localStorage.getItem('jwtToken');
+console.log(token);
+
 // 確認 user 身分，從 res 拿 userId (自己)
 const userId = 2;
 

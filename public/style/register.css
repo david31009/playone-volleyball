@@ -1,0 +1,32 @@
+/* 首頁 header*/
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.vb-nav {
+  display: flex;
+  background: #28a3e7;
+  padding: 10px;
+}
+
+.vb-nav-social {
+  display: flex;
+}
+
+form {
+  border: solid;
+  padding: 2%;
+  width: 40%;
+}
+
+form div {
+  padding: 2%;
+}
+
+#register {
+  display: flex;
+  justify-content: space-around;
+  margin: 3%;
+}

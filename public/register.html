@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link href="style/register.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+  </head>
+  <body>
+    <div class="vb-nav">
+      <div class="icon">
+        <a href="/index.html"
+          ><img src="./images/icon.png" alt="nav bar icon" height="20"
+        /></a>
+      </div>
+      <div class="vb-nav-social">
+        <div>
+          <img src="./images/chat.png" alt="chat icon" height="20" />
+        </div>
+        <div>
+          <img src="./images/notify.jpg" alt="notify icon" height="20" />
+        </div>
+        <div>
+          <a id="my-profile"
+            ><img src="./images/personal.png" alt="personal icon" height="20"
+          /></a>
+        </div>
+      </div>
+    </div>
+    <div id="register">
+      <form id="signup">
+        <div>
+          username:
+          <input id="signup-username" name="username" required />
+        </div>
+        <div>
+          email:
+          <input id="signup-email" name="email" required />
+        </div>
+        <div>
+          password:
+          <input id="signup-password" name="password" required />
+        </div>
+        <button id="signup-btn">註冊</button>
+      </form>
+      <form id="signin">
+        <div>
+          email:
+          <input id="signin-email" name="email" required />
+        </div>
+        <div>
+          password:
+          <input id="signin-password" name="password" required />
+        </div>
+        <button id="signin-btn">登入</button>
+      </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/register.js"></script>
+  </body>
+</html>

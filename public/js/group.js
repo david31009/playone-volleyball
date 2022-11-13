@@ -15,7 +15,7 @@ const idSplit = id.split('=')[1];
   // 打報名狀態 API
   const signupStatus = await axios.post(`/api/1.0/signup/status`, {
     userId: userId,
-    groupId: idSplit,
+    groupId: idSplit
   });
   const [status] = signupStatus.data.result;
 
@@ -160,7 +160,7 @@ async function decide(e) {
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
     confirmButtonText: '確定',
-    cancelButtonText: '再想想',
+    cancelButtonText: '再想想'
   }).then(async (result) => {
     if (result.isConfirmed) {
       if (decision === 'accept') {
@@ -169,7 +169,7 @@ async function decide(e) {
           userId: userId,
           groupId: idSplit,
           statusCode: 1,
-          peopleLeft: 0,
+          peopleLeft: 0
         });
       } else {
         // 改報名狀態 = 2; // 報名剩餘人數 + 1
@@ -177,7 +177,7 @@ async function decide(e) {
           userId: userId,
           groupId: idSplit,
           statusCode: 2,
-          peopleLeft: 1,
+          peopleLeft: 1
         });
       }
       Swal.fire(
@@ -201,7 +201,7 @@ async function edit() {
     $('#time-duration').append(
       $('<option>', {
         value: i,
-        text: i,
+        text: i
       })
     );
   }
@@ -209,13 +209,13 @@ async function edit() {
     $('#people-have').append(
       $('<option>', {
         value: i,
-        text: i,
+        text: i
       })
     );
     $('#people-need').append(
       $('<option>', {
         value: i,
-        text: i,
+        text: i
       })
     );
   }
@@ -246,7 +246,7 @@ async function edit() {
     countyFieldName: '縣市', // 該欄位的 name
     districtFieldName: '區域', // 該欄位的 name
     countyValue: `${groupDetail.place.slice(0, 3)}`, // 預設 value
-    districtValue: `${groupDetail.place.slice(3, 10)}`, // 預設 value
+    districtValue: `${groupDetail.place.slice(3, 10)}` // 預設 value
   });
 }
 
@@ -269,7 +269,7 @@ $('#save').click(async (e) => {
     levelDescription: $('#level-description').val(),
     peopleHave: $('#people-have').val(),
     peopleNeed: $('#people-need').val(),
-    groupDescription: $('#group-description').val(),
+    groupDescription: $('#group-description').val()
   };
 
   // 使用者未填欄位，發出 alert
@@ -282,7 +282,7 @@ $('#save').click(async (e) => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
-          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`,
+          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`
         });
         return false; // break
       }
@@ -293,7 +293,7 @@ $('#save').click(async (e) => {
     await axios.post('/api/1.0/update/group', updateInfo);
     Swal.fire({
       icon: 'success',
-      title: '已儲存揪團資訊',
+      title: '已儲存揪團資訊'
     }).then(() => {
       location.reload();
     });
@@ -316,14 +316,14 @@ $('#signup').click(async () => {
   signupInfo = {
     groupId: idSplit,
     userId: userId,
-    signupStatus: 0,
+    signupStatus: 0
   };
   await axios.post('/api/1.0/signup/group', signupInfo);
 
   // 報名成功按鈕顯示
   Swal.fire({
     icon: 'success',
-    title: '已送出報名，請耐心等候主揪確認',
+    title: '已送出報名，請耐心等候主揪確認'
   }).then(() => {
     // 刷新頁面，報名剩餘人數-1
     location.reload();
@@ -337,7 +337,7 @@ $('#leave-msg').click(async () => {
     Swal.fire({
       icon: 'error',
       title: '錯誤',
-      text: '你還沒留言唷~',
+      text: '你還沒留言唷~'
     });
     return;
   }
@@ -346,7 +346,7 @@ $('#leave-msg').click(async () => {
   msgInfo = {
     userId: userId,
     groupId: idSplit,
-    content: $('#msg-board').val(),
+    content: $('#msg-board').val()
   };
   await axios.post('/api/1.0/msg', msgInfo);
 
@@ -364,7 +364,7 @@ $('#close-group').click(async () => {
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
     confirmButtonText: '確定',
-    cancelButtonText: '再想想',
+    cancelButtonText: '再想想'
   }).then(async (result) => {
     if (result.isConfirmed) {
       await axios.post('/api/1.0/close/group', { groupId: idSplit });
