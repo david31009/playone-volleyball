@@ -1,5 +1,5 @@
-const { pool } = require('./mysqlcon');
 const moment = require('moment');
+const { pool } = require('./mysqlcon');
 
 const createGroup = async (groupInfo) => {
   const [result] = await pool.execute(
@@ -48,8 +48,8 @@ const updateGroup = async (updateInfo) => {
 
 const signupGroup = async (signupInfo) => {
   const conn = await pool.getConnection();
-  groupId = [signupInfo[1]];
-  //報名時，剩餘報名名額會少一位
+  const groupId = [signupInfo[1]];
+  // 報名時，剩餘報名名額會少一位
   try {
     await conn.execute(
       'INSERT INTO `member` (user_id, group_id, signup_status) VALUES (?,?,?)',
@@ -143,5 +143,5 @@ module.exports = {
   getMsg,
   getSignupMembers,
   decideSignupStatus,
-  closeGroup,
+  closeGroup
 };

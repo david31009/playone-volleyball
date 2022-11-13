@@ -13,8 +13,8 @@ const {
   groupInfo,
   storeComment,
   commentStatus,
-  getComments,
-} = require('../controllers/user_controller');
+  getComments
+} = require('../controllers/profile_controller');
 
 router.route('/user').put(wrapAsync(updateUser));
 router.route('/user').get(wrapAsync(userProfile));

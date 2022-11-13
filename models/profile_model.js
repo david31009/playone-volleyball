@@ -1,5 +1,5 @@
-const { pool } = require('./mysqlcon');
 const moment = require('moment');
+const { pool } = require('./mysqlcon');
 
 const updateUser = async (userInfo) => {
   await pool.execute(

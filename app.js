@@ -1,9 +1,9 @@
 // Express Initialization
 const express = require('express');
 const cors = require('cors');
-const app = express();
-
 require('dotenv').config();
+
+const app = express();
 const { PORT, API_VERSION } = process.env;
 
 // CORS allow all
@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // API routes
 app.use('/api/' + API_VERSION, [
   require('./routes/group_route'),
-  require('./routes/user_route'),
+  require('./routes/profile_route')
 ]);
 
 // Error handling

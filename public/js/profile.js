@@ -28,7 +28,7 @@ const idSplit = parseInt(id.split('=')[1]);
   // 取得追蹤狀態 API
   const follow = await axios.post('/api/1.0/follow/status', {
     userId: userId,
-    followId: idSplit,
+    followId: idSplit
   });
 
   // 打 nowCreate api
@@ -105,7 +105,7 @@ $('#self-edit').click(async () => {
   $('input:radio[name=gender]').val([`${userInfo.gender[0]}`]);
   $('input:checkbox[name=position]').val([
     `${userInfo.position_1[0]}`,
-    `${userInfo.position_2[0]}`,
+    `${userInfo.position_2[0]}`
   ]);
   $('#my-level').val(`${userInfo.myLevel[0]}`);
   $('#my-level-des').val(`${userInfo.myLevelDes}`);
@@ -115,7 +115,7 @@ $('#self-edit').click(async () => {
     el: '.tw-city-selector',
     elCounty: '.county', // 在 el 裡查找 element
     elDistrict: '.district', // 在 el 裡查找 element
-    countyValue: `${userInfo.county}`,
+    countyValue: `${userInfo.county}`
   });
 });
 
@@ -155,7 +155,7 @@ $('#save').click(async (e) => {
     position: position,
     myLevel: $('#my-level').val(),
     myLevelDes: $('#my-level-des').val(),
-    selfIntro: $('#self-intro').val(),
+    selfIntro: $('#self-intro').val()
   };
 
   // 使用者未填欄位，發出 alert
@@ -168,7 +168,7 @@ $('#save').click(async (e) => {
         Swal.fire({
           icon: 'error',
           title: '錯誤',
-          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`,
+          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`
         });
         return false; // break
       }
@@ -180,7 +180,7 @@ $('#save').click(async (e) => {
     Swal.fire({
       icon: 'success',
       title: '已儲存您的資料',
-      showConfirmButton: true,
+      showConfirmButton: true
     }).then(() => {
       location.reload();
     });
@@ -205,13 +205,13 @@ $('#follow-btn').click(async (e) => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: '確定',
-      cancelButtonText: '再想想',
+      cancelButtonText: '再想想'
     })
       .then(async (result) => {
         if (result.isConfirmed) {
           await axios.post('/api/1.0/unfollow', {
             userId: userId,
-            followId: idSplit,
+            followId: idSplit
           });
           Swal.fire('成功', '已取消追蹤', 'success');
         }
@@ -322,7 +322,7 @@ $('#past-signup-link').click(async (e) => {
     // 打 getComment api
     const comment = await axios.post(`/api/1.0/comment/status`, {
       commenterId: userId,
-      groupId: `${pastSignup[i].groupId}`,
+      groupId: `${pastSignup[i].groupId}`
     });
     const [commentStatus] = comment.data.result;
 
@@ -377,7 +377,7 @@ $('#send-comment').click(async (e) => {
     commentorId: userId,
     groupId: className[1],
     score: $('#score').val(),
-    content: $('#content').val(),
+    content: $('#content').val()
   };
 
   // 使用者未填評價，發出 alert
@@ -389,7 +389,7 @@ $('#send-comment').click(async (e) => {
         OK = false;
         Swal.fire({
           icon: 'error',
-          title: `請輸入 ${$(requiredField).attr('name')} 欄位`,
+          title: `請輸入 ${$(requiredField).attr('name')} 欄位`
         });
         return false; // break
       }
@@ -405,7 +405,7 @@ $('#send-comment').click(async (e) => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: '確定',
-      cancelButtonText: '再想想',
+      cancelButtonText: '再想想'
     }).then(async (result) => {
       if (result.isConfirmed) {
         // 打 comment api
@@ -447,16 +447,16 @@ $('#star').click(async () => {
 
   // 評價分數
   if (comment.length === 0) {
-    $('#avg-score').html(`0`);
+    $('#avg-score').html('0');
     $('#rateYo').rateYo({
       rating: 0,
-      readOnly: true,
+      readOnly: true
     });
   } else {
     $('#avg-score').html(`${score / comment.length}`);
     $('#rateYo').rateYo({
       rating: score / comment.length,
-      readOnly: true,
+      readOnly: true
     });
   }
   $('#comment-num').html(`(${comment.length})`);

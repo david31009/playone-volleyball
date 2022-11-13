@@ -36,6 +36,11 @@ const idSplit = id.split('=')[1];
   $('.group-detail-place-des').html(
     `詳細地點: ${groupDetail.placeDescription}`
   );
+  $('.google-map-link').attr(
+    'href',
+    `https://www.google.com.tw/maps/search/${groupDetail.placeDescription}`
+  );
+
   $('.group-detail-group-level').html(`程度: ${groupDetail.groupLevel[1]}`);
   $('.group-detail-group-level-description').html(
     `程度描述: ${groupDetail.groupLevelDescription}`
@@ -68,7 +73,6 @@ const idSplit = id.split('=')[1];
   }
 
   // 渲染報名者名單 (只有主揪才能看到)
-  console.log(signupMembers);
   for (let i = 0; i < signupMembers.length; i++) {
     if (signupMembers[i].signupStatus === '1') {
       $('#signup-members').append(

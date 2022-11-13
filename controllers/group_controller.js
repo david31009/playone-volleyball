@@ -1,12 +1,12 @@
+const moment = require('moment');
 const {
   groupLevel,
   netHigh,
   court,
   isBuild,
   isCharge,
-  signupStatus,
+  signupStatus
 } = require('../utils/enum');
-const moment = require('moment');
 const Group = require('../models/group_model');
 
 const createGroup = async (req, res) => {
@@ -33,7 +33,7 @@ const createGroup = async (req, res) => {
     info.peopleNeed,
     peopleLeft,
     info.groupDescription,
-    isBuild,
+    isBuild
   ];
 
   // 阻擋欄位未輸入
@@ -43,14 +43,13 @@ const createGroup = async (req, res) => {
 
   // 存入 DB，傳入 array，回傳建立的 groupId
   const groupId = await Group.createGroup(groupInfo);
-  console.log('groupId: ', groupId);
   res.status(200).json({ groupId });
 };
 
 const getGroups = async (req, res) => {
   const resultDB = await Group.getGroups();
   const result = resultDB.map((i) => {
-    let datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       groupId: i.id,
       title: i.title,
@@ -64,7 +63,7 @@ const getGroups = async (req, res) => {
       groupLevel: groupLevel[i.level],
       peopleHave: i.people_have,
       peopleNeed: i.people_need,
-      username: i.username,
+      username: i.username
     };
   });
   res.status(200).json({ result });
@@ -79,12 +78,12 @@ const filterGroups = async (req, res) => {
     `%${info.groupLevel}`,
     `%${info.net}`,
     `%${info.court}`,
-    `%${info.isCharge}`,
+    `%${info.isCharge}`
   ];
 
   const resultDB = await Group.filterGroups(filterInfo);
   const result = resultDB.map((i) => {
-    let datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     return {
       groupId: i.id,
       title: i.title,
@@ -98,7 +97,7 @@ const filterGroups = async (req, res) => {
       groupLevel: groupLevel[i.level],
       peopleHave: i.people_have,
       peopleNeed: i.people_need,
-      username: i.username,
+      username: i.username
     };
   });
   res.status(200).json({ result });
@@ -108,7 +107,7 @@ const groupDetails = async (req, res) => {
   const { id } = req.query;
   const resultDB = await Group.groupDetails([id]);
   const result = resultDB.map((i) => {
-    let datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     // 對照表，數字跟中文都給
     return {
       groupId: i.id,
@@ -131,7 +130,7 @@ const groupDetails = async (req, res) => {
       peopleNeed: i.people_need,
       peopleLeft: i.people_left,
       groupDescription: i.group_description,
-      isBuild: [i.is_build, isBuild[i.is_build]],
+      isBuild: [i.is_build, isBuild[i.is_build]]
     };
   });
   res.status(200).json({ result });
@@ -157,7 +156,7 @@ const updateGroup = async (req, res) => {
     info.peopleHave,
     info.peopleNeed,
     info.groupDescription,
-    info.groupId,
+    info.groupId
   ];
 
   // 阻擋欄位未輸入
@@ -171,7 +170,7 @@ const updateGroup = async (req, res) => {
 
 const signupGroup = async (req, res) => {
   const info = req.body;
-  signupInfo = [info.userId, info.groupId, info.signupStatus];
+  const signupInfo = [info.userId, info.groupId, info.signupStatus];
   await Group.signupGroup(signupInfo);
   res.status(200).json({ result: 'Sign up sucessfully!' });
 };
@@ -184,7 +183,7 @@ const getSignupStatus = async (req, res) => {
     return {
       userId: i.user_id,
       groupId: i.group_id,
-      signupStatus: [i.signup_status, signupStatus[i.signup_status]],
+      signupStatus: [i.signup_status, signupStatus[i.signup_status]]
     };
   });
   res.status(200).json({ result });
@@ -198,7 +197,7 @@ const createMsg = async (req, res) => {
   }
 
   // 取得現在時間
-  let datetime = moment().format('YYYY-MM-DD HH:mm:ss');
+  const datetime = moment().format('YYYY-MM-DD HH:mm:ss');
   const msgInfo = [info.userId, info.groupId, info.content, datetime];
   await Group.createMsg(msgInfo);
   res.status(200).send('ok');
@@ -213,7 +212,7 @@ const getMsg = async (req, res) => {
       username: i.username,
       groupId: i.group_id,
       content: i.content,
-      time: i.time,
+      time: i.time
     };
   });
 
@@ -228,7 +227,7 @@ const getSignupMembers = async (req, res) => {
       userId: i.user_id,
       username: i.username,
       groupId: i.group_id,
-      signupStatus: i.signup_status,
+      signupStatus: i.signup_status
     };
   });
   res.status(200).json({ result });
@@ -240,7 +239,7 @@ const decideSignupStatus = async (req, res) => {
     info.userId,
     info.groupId,
     info.statusCode,
-    info.peopleLeft,
+    info.peopleLeft
   ];
   await Group.decideSignupStatus(updateInfo);
   res.status(200).send('ok');
@@ -264,5 +263,5 @@ module.exports = {
   getMsg,
   getSignupMembers,
   decideSignupStatus,
-  closeGroup,
+  closeGroup
 };

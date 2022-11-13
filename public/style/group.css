@@ -31,6 +31,11 @@ body {
   padding: 2px;
 }
 
+.google-map-link,
+#creator-id {
+  text-decoration: none;
+}
+
 /* 報名揪團者名單*/
 .group-signup,
 .member {
