@@ -12,7 +12,6 @@ const Group = require('../models/group_model');
 const createGroup = async (req, res) => {
   const info = req.body;
   const { user } = req;
-  console.log(user);
   const creatorId = user.userId;
   const isBuild = 1; // 已成團
   const peopleLeft = info.peopleNeed; // 剩餘報名名額
@@ -107,8 +106,16 @@ const filterGroups = async (req, res) => {
 };
 
 const groupDetails = async (req, res) => {
+  if (req.query.id === undefined) {
+    res.status(400).json({ error: 'No groupId' });
+    return;
+  }
   const { id } = req.query;
   const resultDB = await Group.groupDetails([id]);
+  if (resultDB.length === 0) {
+    res.status(400).json({ error: 'No group' });
+    return;
+  }
   const result = resultDB.map((i) => {
     const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
     // 對照表，數字跟中文都給

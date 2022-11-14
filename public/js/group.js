@@ -1,55 +1,43 @@
 // 從 local storage 拿 jwt token
 const { localStorage } = window;
-const token = localStorage.getItem('jwtToken');
-
-// 無 jwt token，跳轉到註冊、登入頁面
-if (token === null) {
-  Swal.fire({
-    icon: 'error',
-    title: '請先登入或註冊'
-  }).then(() => {
-    window.location.href = '/register.html';
-  });
-}
-
-// 有 jwt token，確認 token 正確與否
-let userId;
-(async () => {
-  try {
-    const getUserId = await axios.get('api/1.0/user/profile', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    // 確認 user 身分，從 res 拿 userId (自己)
-    userId = getUserId.data.userId;
-  } catch (error) {
-    const Error = error.response.data.error;
-    if (Error === 'Wrong token') {
-      Swal.fire({
-        icon: 'error',
-        title: '請先登入或註冊'
-      }).then(() => {
-        window.location.href = '/register.html';
-      });
-    }
-  }
-})();
+const jwtToken = localStorage.getItem('jwtToken');
 
 // 抓網址 groupId (?id=21)
 const url = new URL(window.location.href);
 const id = url.search;
 const idSplit = id.split('=')[1];
 
+// 訪客
+let userId;
+
 // 渲染某團詳細資料
 (async () => {
   // 打 group details API
-  const detail = await axios.get(`/api/1.0/group/details${id}`);
-  [groupDetail] = detail.data.result;
+  let detail;
+  try {
+    detail = await axios.get(`/api/1.0/group/details${id}`);
+  } catch {
+    window.location.href = '/index.html';
+  }
+
+  const [groupDetail] = detail.data.result;
+
+  // 確認使用者是誰，顯示不同按鈕 (主揪 => edit，使用者、訪客 => view)
+  let user;
+  try {
+    user = await axios.get('/api/1.0/user/profile', {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      }
+    });
+    userId = user.data.userId;
+  } catch {
+    userId = -1; // 訪客
+  }
 
   // 打報名狀態 API
-  const signupStatus = await axios.post(`/api/1.0/signup/status`, {
-    userId: userId,
+  const signupStatus = await axios.post('/api/1.0/signup/status', {
+    userId,
     groupId: idSplit
   });
   const [status] = signupStatus.data.result;
@@ -90,11 +78,10 @@ const idSplit = id.split('=')[1];
   $('.group-detail-people-left').html(
     `報名剩餘名額: ${groupDetail.peopleLeft} 人`
   );
-  $('#edit').html(`編輯表單`);
+  $('#edit').html('編輯表單');
   $('.group-detail-creator').html(`主揪: ${groupDetail.username}`);
   $('#creator-id').attr('href', `/profile.html?id=${groupDetail.creatorId}`);
 
-  // 確認是主揪還是使用者，顯示不同按鈕 (主揪 => edit，使用者 => view)
   if (groupDetail.creatorId === userId) {
     $('#edit').show();
     $('#close-group').show();
@@ -137,29 +124,29 @@ const idSplit = id.split('=')[1];
   // 確認使用者報名狀態
   const datenow = new Date(+new Date() + 8 * 3600 * 1000).toISOString(); // 取得當下時間
   if (groupDetail.isBuild[0] === 0) {
-    $('#signup').html(`主揪已關閉揪團`);
+    $('#signup').html('主揪已關閉揪團');
     $('#signup').prop('disabled', true);
-    $('#edit').html(`您已關閉揪團`);
+    $('#edit').html('您已關閉揪團');
     $('#edit').prop('disabled', true);
     $('#close-group').prop('disabled', true);
     $('#leave-msg').prop('disabled', true);
     $('.accept').prop('disabled', true);
     $('.deny').prop('disabled', true);
   } else if (datenow > groupDetail.datetime) {
-    $('#signup').html(`揪團已結束`);
+    $('#signup').html('揪團已結束');
     $('#signup').prop('disabled', true);
-    $('#edit').html(`揪團已結束`);
+    $('#edit').html('揪團已結束');
     $('#edit').prop('disabled', true);
     $('#close-group').prop('disabled', true);
     $('#leave-msg').prop('disabled', true);
     $('.accept').prop('disabled', true);
     $('.deny').prop('disabled', true);
-  } else if (status == undefined && groupDetail.peopleLeft === 0) {
-    $('#signup').html(`已額滿`);
+  } else if (status === undefined && groupDetail.peopleLeft === 0) {
+    $('#signup').html('已額滿');
     $('#signup').prop('disabled', true);
-  } else if (status == undefined) {
+  } else if (status === undefined) {
     // 還沒報名過
-    $('#signup').html(`報名`);
+    $('#signup').html('報名');
   } else {
     $('#signup').html(`${status.signupStatus[1]}`);
     $('#signup').prop('disabled', true);
@@ -184,7 +171,7 @@ async function decide(e) {
   const username = buttonId[0];
   const userId = buttonId[1];
   const decision = buttonId[2];
-  let decisionChi = decision === 'accept' ? '接受' : '拒絕';
+  const decisionChi = decision === 'accept' ? '接受' : '拒絕';
 
   // sweet alert 確定接受 / 拒絕?
   Swal.fire({
@@ -201,7 +188,7 @@ async function decide(e) {
       if (decision === 'accept') {
         // 改報名狀態 = 1;報名剩餘人數 + 0
         await axios.post('/api/1.0/update/signup/status', {
-          userId: userId,
+          userId,
           groupId: idSplit,
           statusCode: 1,
           peopleLeft: 0
@@ -257,7 +244,7 @@ async function edit() {
 
   // 抓之前主揪填寫的資料，填入 value 值
   const detail = await axios.get(`/api/1.0/group/details${id}`);
-  [groupDetail] = detail.data.result;
+  const [groupDetail] = detail.data.result;
 
   $('#title').val(`${groupDetail.title}`);
   $('#date').val(`${groupDetail.date}`);
@@ -288,7 +275,7 @@ async function edit() {
 // 儲存編輯表單
 $('#save').click(async (e) => {
   e.preventDefault();
-  let updateInfo = {
+  const updateInfo = {
     groupId: idSplit,
     title: $('#title').val(),
     date: $('#date').val(),
@@ -348,24 +335,42 @@ $(window).click((e) => {
 
 // 報名揪團
 $('#signup').click(async () => {
-  signupInfo = {
+  const signupInfo = {
     groupId: idSplit,
-    userId: userId,
+    userId,
     signupStatus: 0
   };
-  await axios.post('/api/1.0/signup/group', signupInfo);
 
-  // 報名成功按鈕顯示
-  Swal.fire({
-    icon: 'success',
-    title: '已送出報名，請耐心等候主揪確認'
-  }).then(() => {
-    // 刷新頁面，報名剩餘人數-1
-    location.reload();
-  });
+  // 會員才能報名
+  try {
+    await axios.post('/api/1.0/signup/group', signupInfo, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      }
+    });
+
+    // 報名成功按鈕顯示
+    Swal.fire({
+      icon: 'success',
+      title: '已送出報名，請耐心等候主揪確認'
+    }).then(() => {
+      // 刷新頁面，報名剩餘人數-1
+      location.reload();
+    });
+  } catch (error) {
+    const Error = error.response.data.error;
+    if (Error === 'Wrong token' || Error === 'No token') {
+      Swal.fire({
+        icon: 'error',
+        title: '請先登入或註冊'
+      }).then(() => {
+        window.location.href = '/register.html';
+      });
+    }
+  }
 });
 
-//留言
+// 留言
 $('#leave-msg').click(async () => {
   // 阻擋留言為空的狀況
   if ($('#msg-board').val() === '') {
@@ -378,21 +383,39 @@ $('#leave-msg').click(async () => {
   }
 
   // 打 API，儲存留言
-  msgInfo = {
-    userId: userId,
+  const msgInfo = {
+    userId,
     groupId: idSplit,
     content: $('#msg-board').val()
   };
-  await axios.post('/api/1.0/msg', msgInfo);
 
-  // 刷新頁面
-  location.reload();
+  // 會員才能留言
+  try {
+    await axios.post('/api/1.0/msg', msgInfo, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      }
+    });
+
+    // 刷新頁面
+    location.reload();
+  } catch (error) {
+    const Error = error.response.data.error;
+    if (Error === 'Wrong token' || Error === 'No token') {
+      Swal.fire({
+        icon: 'error',
+        title: '請先登入或註冊'
+      }).then(() => {
+        window.location.href = '/register.html';
+      });
+    }
+  }
 });
 
 // 主揪自行關團
 $('#close-group').click(async () => {
   Swal.fire({
-    title: `確定關閉這個揪團?`,
+    title: '確定關閉這個揪團?',
     text: '這個動作無法再做更改',
     icon: 'warning',
     showCancelButton: true,
@@ -403,7 +426,7 @@ $('#close-group').click(async () => {
   }).then(async (result) => {
     if (result.isConfirmed) {
       await axios.post('/api/1.0/close/group', { groupId: idSplit });
-      Swal.fire(`關團成功`, `已關閉揪團`, 'success').then(() => {
+      Swal.fire('關團成功', '已關閉揪團', 'success').then(() => {
         // 刷新頁面
         location.reload();
       });
@@ -412,4 +435,6 @@ $('#close-group').click(async () => {
 });
 
 // 個人檔案連結
-$('#my-profile').attr('href', `/profile.html?id=${userId}`);
+$('#my-profile').click(() => {
+  window.location.href = `/profile.html?id=${userId}`;
+});

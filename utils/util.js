@@ -13,23 +13,26 @@ const wrapAsync = (fn) => {
 };
 
 const auth = async (req, res, next) => {
-  const jwtToken = req.header('Authorization').replace('Bearer ', '');
+  let jwtToken = req.header('Authorization');
 
-  if (jwtToken === 'null') {
-    res.status(401).send({ error: 'No Token' });
+  // 沒 token，後端阻擋
+  if (jwtToken === 'Bearer null') {
+    res.status(401).json({ error: 'No token' });
+    return;
   }
+  jwtToken = jwtToken.replace('Bearer ', '');
 
   // 解 jwt token
   let user;
   try {
     user = jwt.verify(jwtToken, TOKEN_SECRET);
+
+    // 將 user 資料存進 req.user 往下傳遞
+    req.user = user;
+    next();
   } catch {
     res.status(403).json({ error: 'Wrong token' });
   }
-
-  // 將 user 資料存進 req.user 往下傳遞
-  req.user = user;
-  next();
 };
 
 module.exports = {

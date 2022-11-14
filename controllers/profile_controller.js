@@ -26,8 +26,16 @@ const updateUser = async (req, res) => {
 };
 
 const userProfile = async (req, res) => {
+  if (req.query.id === undefined) {
+    res.status(400).json({ error: 'No userId' });
+    return;
+  }
   const { id } = req.query;
   const resultDB = await Profile.userProfile([id]);
+  if (resultDB.length === 0) {
+    res.status(400).json({ error: 'No user' });
+    return;
+  }
   const result = resultDB.map((i) => {
     return {
       username: i.username,
@@ -150,7 +158,7 @@ const storeComment = async (req, res) => {
     info.content,
     currentDate
   ];
-  await User.storeComment(comment);
+  await Profile.storeComment(comment);
   res.status(200).send('ok');
 };
 

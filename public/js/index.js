@@ -1,40 +1,6 @@
 // 從 local storage 拿 jwt token
 const { localStorage } = window;
-const token = localStorage.getItem('jwtToken');
-
-// 無 jwt token，跳轉到註冊、登入頁面
-if (token === null) {
-  Swal.fire({
-    icon: 'error',
-    title: '請先登入或註冊'
-  }).then(() => {
-    window.location.href = '/register.html';
-  });
-}
-
-// 有 jwt token，確認 token 正確與否
-let userId;
-(async () => {
-  try {
-    const getUserId = await axios.get('api/1.0/user/profile', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    // 確認 user 身分，從 res 拿 userId (自己)
-    userId = getUserId.data.userId;
-  } catch (error) {
-    const Error = error.response.data.error;
-    if (Error === 'Wrong token') {
-      Swal.fire({
-        icon: 'error',
-        title: '請先登入或註冊'
-      }).then(() => {
-        window.location.href = '/register.html';
-      });
-    }
-  }
-})();
+const jwtToken = localStorage.getItem('jwtToken');
 
 // ----------------------主揪揪團彈窗----------------------
 function show() {
@@ -87,8 +53,7 @@ new TwCitySelector({
 // 主揪建立揪團表單
 $('#start-group').click(async (e) => {
   e.preventDefault();
-  let groupInfo = {
-    creatorId: userId,
+  const groupInfo = {
     title: $('#title').val(),
     date: $('#date').val(),
     time: $('#time').val(),
@@ -122,19 +87,32 @@ $('#start-group').click(async (e) => {
       }
     });
 
-  // 使用者填欄位填寫完畢，才打 API
+  // 使用者填欄位填寫完畢，才打 API，(用 header 帶 jwt token)
   if (OK) {
-    const result = await axios.post('/api/1.0/group', groupInfo);
-    // 成功建立揪團，跳轉到揪團詳細頁面
-    if (result.data.groupId) {
-      window.location.href = `/group.html?id=${result.data.groupId}`;
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: `建立揪團失敗`
+    try {
+      const result = await axios.post('/api/1.0/group', groupInfo, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
       });
-      window.location.href = `/index.html`;
+      // 成功建立揪團，跳轉到揪團詳細頁面
+      Swal.fire({
+        icon: 'success',
+        title: '成功建立揪團'
+      }).then(() => {
+        window.location.href = `/group.html?id=${result.data.groupId}`;
+      });
+    } catch (error) {
+      // 後端傳回錯誤回應處理
+      const Error = error.response.data.error;
+      if (Error === 'No token' || Error === 'Wrong token') {
+        Swal.fire({
+          icon: 'error',
+          title: '請先登入或註冊'
+        }).then(() => {
+          window.location.href = '/register.html';
+        });
+      }
     }
   }
 });
@@ -217,7 +195,38 @@ $('#filter').click(async (e) => {
   }
 });
 
-// 個人頁面連結
-$('#my-profile').click(() => {
-  window.location.href = `/profile.html?id=${userId}`;
+// 個人頁面連結，確認使用者身分，要有jwt token
+$('#my-profile').click(async () => {
+  // 無 jwt token，跳轉到註冊、登入頁面
+  if (jwtToken === null) {
+    Swal.fire({
+      icon: 'error',
+      title: '請先登入或註冊'
+    }).then(() => {
+      window.location.href = '/register.html';
+    });
+  } else {
+    // 有 jwt token，確認 token 正確與否
+    let userId;
+    try {
+      const getUserId = await axios.get('api/1.0/user/profile', {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      });
+      // 確認 user 身分，從 res 拿 userId (自己)
+      userId = getUserId.data.userId;
+      window.location.href = `/profile.html?id=${userId}`;
+    } catch (error) {
+      const Error = error.response.data.error;
+      if (Error === 'Wrong token' || Error === 'No token') {
+        Swal.fire({
+          icon: 'error',
+          title: '請先登入或註冊'
+        }).then(() => {
+          window.location.href = '/register.html';
+        });
+      }
+    }
+  }
 });

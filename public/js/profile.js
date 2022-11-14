@@ -1,31 +1,39 @@
 // 從 local storage 拿 jwt token
 const { localStorage } = window;
-const token = localStorage.getItem('jwtToken');
+const jwtToken = localStorage.getItem('jwtToken');
 
-// 無 jwt token，跳轉到註冊、登入頁面
-if (token === null) {
-  Swal.fire({
-    icon: 'error',
-    title: '請先登入或註冊'
-  }).then(() => {
-    window.location.href = '/register.html';
-  });
-}
+// 抓網址 userId (?id=21)，可以連到別人頁面 (到誰的個人頁面)
+const url = new URL(window.location.href);
+const id = url.search;
+const idSplit = parseInt(id.split('=')[1]);
 
 // 有 jwt token，確認 token 正確與否
 let userId;
 (async () => {
+  // 無 jwt token，跳轉到註冊、登入頁面
+  if (jwtToken === null) {
+    Swal.fire({
+      icon: 'error',
+      title: '請先登入或註冊'
+    }).then(() => {
+      window.location.href = '/register.html';
+    });
+  }
+
   try {
+    // 確認 user 身分，從 res 拿 userId
     const getUserId = await axios.get('api/1.0/user/profile', {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${jwtToken}`
       }
     });
-    // 確認 user 身分，從 res 拿 userId (自己)
     userId = getUserId.data.userId;
+
+    // 渲染個人頁面
+    myProfile();
   } catch (error) {
     const Error = error.response.data.error;
-    if (Error === 'Wrong token') {
+    if (Error === 'Wrong token' || Error === 'No token') {
       Swal.fire({
         icon: 'error',
         title: '請先登入或註冊'
@@ -36,13 +44,8 @@ let userId;
   }
 })();
 
-// 抓網址 userId (?id=21)，可以連到別人頁面 (到誰的個人頁面)
-const url = new URL(window.location.href);
-const id = url.search;
-const idSplit = parseInt(id.split('=')[1]);
-
 // 渲染個人頁面
-(async () => {
+async function myProfile() {
   // 顯示個人資料
   $('#intro-part').show();
   $('#i-create').hide();
@@ -51,7 +54,13 @@ const idSplit = parseInt(id.split('=')[1]);
   $('#past-signup').hide();
 
   // 打 user api 獲取 user 資料
-  const info = await axios.get(`/api/1.0/user${id}`);
+  let info;
+  try {
+    info = await axios.get(`/api/1.0/user${id}`);
+  } catch (error) {
+    // 沒有該 user 或 沒有給 userId，跳轉回自己的頁面
+    window.location.href = `/profile.html?id=${userId}`;
+  }
   const [userInfo] = info.data.result;
   const position_1 =
     userInfo.position_1[1] === null ? '' : `#${userInfo.position_1[1]}`;
@@ -62,24 +71,24 @@ const idSplit = parseInt(id.split('=')[1]);
 
   // 取得追蹤狀態 API
   const follow = await axios.post('/api/1.0/follow/status', {
-    userId: userId,
+    userId,
     followId: idSplit
   });
 
   // 打 nowCreate api
-  const iCreateResult = await axios(`/api/1.0/now/create${id}`);
+  const iCreateResult = await axios.get(`/api/1.0/now/create${id}`);
   const iCreate = iCreateResult.data.result;
 
   // 打 pastCreate api
-  const pastCreateResult = await axios(`/api/1.0/past/create${id}`);
+  const pastCreateResult = await axios.get(`/api/1.0/past/create${id}`);
   const pastCreate = pastCreateResult.data.result;
 
   // 打 nowSignup api
-  const nowSignupResult = await axios(`/api/1.0/now/signup${id}`);
+  const nowSignupResult = await axios.get(`/api/1.0/now/signup${id}`);
   const nowSignup = nowSignupResult.data.result;
 
   // 打 pastSignup api
-  const pastSignupResult = await axios(`/api/1.0/past/signup${id}`);
+  const pastSignupResult = await axios.get(`/api/1.0/past/signup${id}`);
   const pastSignup = pastSignupResult.data.result;
 
   $('#resume-top-username').html(`${userInfo.username}`);
@@ -122,7 +131,7 @@ const idSplit = parseInt(id.split('=')[1]);
 
   // 渲染過去報名的團數量
   $('#past-signup-num').html(`${pastSignup.length}`);
-})();
+}
 
 // 彈出編輯表單
 $('#self-edit').click(async () => {
@@ -223,7 +232,9 @@ $('#save').click(async (e) => {
 });
 
 // 個人頁面連結
-$('#my-profile').attr('href', `/profile.html?id=${userId}`);
+$('#my-profile').click(() => {
+  window.location.href = `/profile.html?id=${userId}`;
+});
 
 // 追蹤與退追
 $('#follow-btn').click(async (e) => {
@@ -387,6 +398,7 @@ async function comment(e) {
   $('#comment-time').html(`活動時間: ${groupInfo.date} ${groupInfo.time}`);
 
   // 新增 class 給 send comment button
+  $('#send-comment').removeClass();
   $('#send-comment').addClass(`${$(e).attr('id')}`);
 }
 
@@ -433,7 +445,7 @@ $('#send-comment').click(async (e) => {
   // 使用者填欄位填寫完畢，才打 API
   if (OK) {
     Swal.fire({
-      title: `確定送出評價?`,
+      title: '確定送出評價?',
       text: '這個動作無法再做更改',
       icon: 'warning',
       showCancelButton: true,
@@ -465,6 +477,7 @@ $('#star').click(async () => {
 
   // 渲染評價
   let score = 0;
+  $('#comment-block-container').empty();
   for (let i = 0; i < comment.length; i++) {
     score += comment[i].score;
     $('#comment-block-container').append(
