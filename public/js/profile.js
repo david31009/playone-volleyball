@@ -5,7 +5,7 @@ const jwtToken = localStorage.getItem('jwtToken');
 // 抓網址 userId (?id=21)，可以連到別人頁面 (到誰的個人頁面)
 const url = new URL(window.location.href);
 const id = url.search;
-const idSplit = parseInt(id.split('=')[1]);
+const idSplit = parseInt(id.split('=')[1], 10);
 
 // 有 jwt token，確認 token 正確與否
 let userId;
@@ -185,18 +185,18 @@ $('input:checkbox').click(() => {
 // 儲存個人檔案
 $('#save').click(async (e) => {
   e.preventDefault();
-  let position = [];
+  const position = [];
   $.each($("input[name='position']:checked"), function () {
     position.push($(this).val());
   });
 
-  let myInfo = {
-    userId: userId,
+  const myInfo = {
+    userId,
     username: $('#name').val(),
     gender: $('input[name="gender"]:checked').val(),
     county: $('#county').val(),
     district: $('#district').val(),
-    position: position,
+    position,
     myLevel: $('#my-level').val(),
     myLevelDes: $('#my-level-des').val(),
     selfIntro: $('#self-intro').val()
@@ -306,6 +306,7 @@ $('#i-signup-link').click(async (e) => {
   // 打 nowSignup api
   const nowSignupResult = await axios(`/api/1.0/now/signup${id}`);
   const nowSignup = nowSignupResult.data.result;
+
   $('#i-signup-groups-details').empty();
   for (let i = 0; i < nowSignup.length; i++) {
     $('#i-signup-groups-details').append(
@@ -481,10 +482,12 @@ $('#star').click(async () => {
   for (let i = 0; i < comment.length; i++) {
     score += comment[i].score;
     $('#comment-block-container').append(
-      `<a href="/group.html?id=${comment[i].groupId}"><div class="comment-block">
+      `<a href="/group.html?id=${comment[i].groupId}" class="comment-group-link"><div class="comment-block">
          <div class="commenter">
            <div>${comment[i].commenterName}</div>
+           <div> | </div>
            <div>${comment[i].date}</div>
+           <div> | </div>
            <div>${comment[i].title}</div>
          </div>
          <div>${comment[i].content}</div>

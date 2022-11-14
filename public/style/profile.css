@@ -140,6 +140,10 @@ body {
   width: 50%;
 }
 
+.group-details-link:link {
+  color: black;
+}
+
 #past-signup-groups-details {
   display: flex;
   flex-wrap: wrap;
@@ -197,4 +201,12 @@ body {
 
 #comment-block-container a {
   text-decoration: none;
+}
+
+.comment-group-link:link {
+  color: black;
+}
+
+.comment-block div {
+  padding: 2px;
 }

@@ -27,10 +27,10 @@ const follow = async (followInfo) => {
       followInfo
     );
     await conn.execute('UPDATE `user` SET follow = follow + 1 WHERE id = ?', [
-      userId,
+      userId
     ]);
     await conn.execute('UPDATE `user` SET fans = fans + 1 WHERE id = ?', [
-      followId,
+      followId
     ]);
     await conn.query('COMMIT');
     return true;
@@ -61,10 +61,10 @@ const unfollow = async (followInfo) => {
       followInfo
     );
     await conn.execute('UPDATE `user` SET follow = follow - 1 WHERE id = ?', [
-      userId,
+      userId
     ]);
     await conn.execute('UPDATE `user` SET fans = fans - 1 WHERE id = ?', [
-      followId,
+      followId
     ]);
     await conn.query('COMMIT');
     return true;
@@ -139,7 +139,7 @@ const commentStatus = async (comment) => {
 
 const getComments = async (userId) => {
   const [result] = await pool.execute(
-    'SELECT user_id, commenter_id, group_id, score, content, comment.date, title, username FROM `comment` INNER JOIN `user` ON comment.commenter_id = user.id INNER JOIN `group` ON comment.group_id = group.id WHERE user_id = ?',
+    'SELECT user_id, commenter_id, group_id, score, content, comment.date, title, username FROM `comment` INNER JOIN `user` ON comment.commenter_id = user.id INNER JOIN `group` ON comment.group_id = group.id WHERE user_id = ? ORDER BY date DESC',
     userId
   );
   // console.log(result);
@@ -159,5 +159,5 @@ module.exports = {
   groupInfo,
   storeComment,
   commentStatus,
-  getComments,
+  getComments
 };
