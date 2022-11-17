@@ -4,24 +4,38 @@
     <title>排球快速揪</title>
     <meta charset="utf-8" />
     <link href="style/index.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css"
+      rel="stylesheet"
+    />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tw-city-selector@2.1.1/dist/tw-city-selector.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
-    <div class="vb-nav">
-      <div class="icon">
-        <a href="/index.html"
-          ><img src="./images/icon.png" alt="nav bar icon" height="20"
-        /></a>
-      </div>
-      <form action="post" class="vb-nav-filter">
-        <div class="tw-city-filter">
-          <select id="filter-county" class="county"></select>
-          <select id="filter-district" class="district"></select>
+    <div class="main-container">
+      <div class="vb-nav">
+        <div class="logo">
+          <img src="./images/icon.png" alt="nav bar icon" height="120" />
         </div>
-        <div>
-          <select id="filter-group-level" name="程度">
+        <div class="vb-nav-mid">
+          <a href="/register.html" class="log-out">登出</a>
+          <img
+            id="my-profile"
+            src="./images/personal.png"
+            alt="personal icon"
+            height="20"
+          />
+          <button class="btn-pop" onclick="show()">當主揪</button>
+        </div>
+        <form action="post" class="vb-nav-filter">
+          <div class="underline">篩選縣市</div>
+          <div class="tw-city-filter tw-select">
+            <select id="filter-county" class="county"></select>
+            <select id="filter-district" class="district"></select>
+          </div>
+          <div class="underline">篩選程度</div>
+          <select id="filter-group-level" class="select" name="程度">
             <option value="">選擇程度</option>
             <option value="4">職業</option>
             <option value="3">校隊</option>
@@ -29,50 +43,55 @@
             <option value="1">新手</option>
             <option value="0">快樂排球</option>
           </select>
-        </div>
-        <div>
-          <select id="filter-net" name="網高">
+          <div class="underline">篩選網高</div>
+          <select id="filter-net" class="select" name="網高">
             <option value="">選擇網高</option>
             <option value="1">男網</option>
             <option value="0">女網</option>
           </select>
-        </div>
-        <div>
-          <select id="filter-court" name="場地">
+          <div class="underline">篩選場地</div>
+          <select id="filter-court" class="select" name="場地">
             <option value="">選擇場地</option>
             <option value="0">室內</option>
             <option value="1">室外</option>
           </select>
-        </div>
-        <div>
-          <select id="filter-is-charge" name="收錢與否">
+          <div class="underline">篩選收費</div>
+          <select id="filter-is-charge" class="select" name="收錢與否">
             <option value="">費用</option>
             <option value="0">免費</option>
             <option value="1">收費</option>
           </select>
-        </div>
-        <img
-          id="filter"
-          src="./images/search.png"
-          alt="search icon"
-          height="20"
-        />
-      </form>
-      <div class="vb-nav-social">
-        <div>
-          <img src="./images/chat.png" alt="chat icon" height="20" />
-        </div>
-        <div>
-          <img src="./images/notify.jpg" alt="notify icon" height="20" />
-        </div>
-        <div>
-          <a id="my-profile"
-            ><img src="./images/personal.png" alt="personal icon" height="20"
-          /></a>
-        </div>
+          <button id="filter">搜尋</button>
+        </form>
+      </div>
+      <div id="card-group" class="card-group">
+        <div class="group-top"></div>
+        <a href="" class="card" hidden="true">
+          <div class="card-left">
+            <div class="card-title"></div>
+            <div class="card-time-container">
+              <div class="card-date"></div>
+              <div>|</div>
+              <div class="card-time"></div>
+              <div>|</div>
+              <div class="card-time-duration"></div>
+            </div>
+            <div class="card-place-container">
+              <div class="card-place"></div>
+              <div>|</div>
+              <div class="card-place-des"></div>
+            </div>
+            <div class="card-creator"></div>
+          </div>
+          <div class="card-right">
+            <div class="card-net"></div>
+            <div class="card-group-level"></div>
+            <div class="card-money"></div>
+            <div class="card-people-have"></div>
+          </div>
+        </a>
       </div>
     </div>
-    <button class="btn-pop" onclick="show()">當主揪</button>
     <div id="background-pop">
       <div id="div-pop">
         <div class="div-top">
@@ -180,7 +199,7 @@
         </div>
       </div>
     </div>
-    <div id="card-group" class="card-group"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/index.js"></script>
   </body>

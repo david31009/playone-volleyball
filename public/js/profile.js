@@ -7,43 +7,6 @@ const url = new URL(window.location.href);
 const id = url.search;
 const idSplit = parseInt(id.split('=')[1], 10);
 
-// 有 jwt token，確認 token 正確與否
-let userId;
-(async () => {
-  // 無 jwt token，跳轉到註冊、登入頁面
-  if (jwtToken === null) {
-    Swal.fire({
-      icon: 'error',
-      title: '請先登入或註冊'
-    }).then(() => {
-      window.location.href = '/register.html';
-    });
-  }
-
-  try {
-    // 確認 user 身分，從 res 拿 userId
-    const getUserId = await axios.get('api/1.0/user/profile', {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      }
-    });
-    userId = getUserId.data.userId;
-
-    // 渲染個人頁面
-    myProfile();
-  } catch (error) {
-    const Error = error.response.data.error;
-    if (Error === 'Wrong token' || Error === 'No token') {
-      Swal.fire({
-        icon: 'error',
-        title: '請先登入或註冊'
-      }).then(() => {
-        window.location.href = '/register.html';
-      });
-    }
-  }
-})();
-
 // 渲染個人頁面
 async function myProfile() {
   // 顯示個人資料
@@ -132,6 +95,43 @@ async function myProfile() {
   // 渲染過去報名的團數量
   $('#past-signup-num').html(`${pastSignup.length}`);
 }
+
+// 有 jwt token，確認 token 正確與否
+let userId;
+(async () => {
+  // 無 jwt token，跳轉到註冊、登入頁面
+  if (jwtToken === null) {
+    Swal.fire({
+      icon: 'error',
+      title: '請先登入或註冊'
+    }).then(() => {
+      window.location.href = '/register.html';
+    });
+  }
+
+  try {
+    // 確認 user 身分，從 res 拿 userId
+    const getUserId = await axios.get('api/1.0/user/profile', {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      }
+    });
+    userId = getUserId.data.userId;
+
+    // 渲染個人頁面
+    myProfile();
+  } catch (error) {
+    const Error = error.response.data.error;
+    if (Error === 'Wrong token' || Error === 'No token') {
+      Swal.fire({
+        icon: 'error',
+        title: '請先登入或註冊'
+      }).then(() => {
+        window.location.href = '/register.html';
+      });
+    }
+  }
+})();
 
 // 彈出編輯表單
 $('#self-edit').click(async () => {

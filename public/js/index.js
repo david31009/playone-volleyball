@@ -132,26 +132,64 @@ new TwCitySelector({
   const getCards = await axios.get('/api/1.0/group');
   const cardInfo = getCards.data.result;
 
+  $('.group-top').html('最新揪團');
   for (let i = 0; i < cardInfo.length; i++) {
+    const newDom = $('.card').first().clone().removeAttr('hidden');
+
     // 按照日期，剩餘報名名額排列
-    $('#card-group').append(
-      `<a href="/group.html?id=${cardInfo[i].groupId}">
-        <div class="card">
-            <div class="card-title">${cardInfo[i].title}</div>
-            <div class="card-net">網高: ${cardInfo[i].net}</div>
-            <div class="card-group-level">程度: ${cardInfo[i].groupLevel}</div>
-            <div class="card-date">日期: ${cardInfo[i].date}</div>
-            <div class="card-time">時間: ${cardInfo[i].time}</div>
-            <div class="card-time-duration">可以打: ${cardInfo[i].timeDuration} 小時</div>
-            <div class="card-place">地點: ${cardInfo[i].place}</div>
-            <div class="card-place-des">詳細地點: ${cardInfo[i].placeDescription}</div>
-            <div class="card-people-have">內建: ${cardInfo[i].peopleHave} 人</div>
-            <div class="card-people-need">預計揪: ${cardInfo[i].peopleNeed} 人</div>
-            <div class="card-money">費用: ${cardInfo[i].money} 元</div>
-            <div class="card-creator">主揪: ${cardInfo[i].username}</div>
-        </div>
-       </a>`
-    );
+    newDom.addClass('no-filter');
+    newDom.attr('href', `/group.html?id=${cardInfo[i].groupId}`);
+    newDom
+      .children('.card-left')
+      .children('.card-title')
+      .html(`${cardInfo[i].title}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-date')
+      .html(`📅 ${cardInfo[i].date}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-time')
+      .html(`${cardInfo[i].time}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-time-duration')
+      .html(`${cardInfo[i].timeDuration} hr`);
+    newDom
+      .children('.card-left')
+      .children('.card-place-container')
+      .children('.card-place')
+      .html(`📍 ${cardInfo[i].place}`);
+    newDom
+      .children('.card-left')
+      .children('.card-place-container')
+      .children('.card-place-des')
+      .html(`${cardInfo[i].placeDescription}`);
+    newDom
+      .children('.card-left')
+      .children('.card-creator')
+      .html(`💁🏻‍♂️ ${cardInfo[i].username}`);
+    newDom
+      .children('.card-right')
+      .children('.card-net')
+      .html(`網高: ${cardInfo[i].net}`);
+    newDom
+      .children('.card-right')
+      .children('.card-group-level')
+      .html(`程度: ${cardInfo[i].groupLevel}`);
+    newDom
+      .children('.card-right')
+      .children('.card-money')
+      .html(`費用: ${cardInfo[i].money} 元`);
+    newDom
+      .children('.card-right')
+      .children('.card-people-have')
+      .html(`內建: ${cardInfo[i].peopleHave} 人`);
+
+    $('#card-group').append(newDom);
   }
 })();
 
@@ -159,7 +197,7 @@ new TwCitySelector({
 $('#filter').click(async (e) => {
   e.preventDefault();
 
-  let filterInfo = {
+  const filterInfo = {
     county: $('#filter-county').val(),
     district: $('#filter-district').val(),
     groupLevel: $('#filter-group-level').val(),
@@ -168,30 +206,69 @@ $('#filter').click(async (e) => {
     isCharge: $('#filter-is-charge').val()
   };
 
-  let filterCards = await axios.post('/api/1.0/filter', filterInfo);
+  const filterCards = await axios.post('/api/1.0/filter', filterInfo);
   const filterCardsInfo = filterCards.data.result;
 
-  $('#card-group a').remove();
+  $('.no-filter').remove();
+  $('.filter').remove();
+  $('.group-top').html('篩選結果');
   for (let i = 0; i < filterCardsInfo.length; i++) {
+    const newDom = $('.card').first().clone().removeAttr('hidden');
+
     // 按照日期，剩餘報名名額排列
-    $('#card-group').append(
-      `<a href="/group.html?id=${filterCardsInfo[i].groupId}">
-        <div class="card">
-            <div class="card-title">${filterCardsInfo[i].title}</div>
-            <div class="card-net">網高: ${filterCardsInfo[i].net}</div>
-            <div class="card-group-level">程度: ${filterCardsInfo[i].groupLevel}</div>
-            <div class="card-date">日期: ${filterCardsInfo[i].date}</div>
-            <div class="card-time">時間: ${filterCardsInfo[i].time}</div>
-            <div class="card-time-duration">可以打: ${filterCardsInfo[i].timeDuration} 小時</div>
-            <div class="card-place">地點: ${filterCardsInfo[i].place}</div>
-            <div class="card-place-des">詳細地點: ${filterCardsInfo[i].placeDescription}</div>
-            <div class="card-people-have">內建: ${filterCardsInfo[i].peopleHave} 人</div>
-            <div class="card-people-need">預計揪: ${filterCardsInfo[i].peopleNeed} 人</div>
-            <div class="card-money">費用: ${filterCardsInfo[i].money} 元</div>
-            <div class="card-creator">主揪: ${filterCardsInfo[i].username}</div>
-        </div>
-       </a>`
-    );
+    newDom.addClass('filter');
+    newDom.attr('href', `/group.html?id=${filterCardsInfo[i].groupId}`);
+    newDom
+      .children('.card-left')
+      .children('.card-title')
+      .html(`${filterCardsInfo[i].title}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-date')
+      .html(`📅 ${filterCardsInfo[i].date}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-time')
+      .html(`${filterCardsInfo[i].time}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-time-duration')
+      .html(`${filterCardsInfo[i].timeDuration} hr`);
+    newDom
+      .children('.card-left')
+      .children('.card-place-container')
+      .children('.card-place')
+      .html(`📍 ${filterCardsInfo[i].place}`);
+    newDom
+      .children('.card-left')
+      .children('.card-place-container')
+      .children('.card-place-des')
+      .html(`${filterCardsInfo[i].placeDescription}`);
+    newDom
+      .children('.card-left')
+      .children('.card-creator')
+      .html(`💁🏻‍♂️ ${filterCardsInfo[i].username}`);
+    newDom
+      .children('.card-right')
+      .children('.card-net')
+      .html(`網高: ${filterCardsInfo[i].net}`);
+    newDom
+      .children('.card-right')
+      .children('.card-group-level')
+      .html(`程度: ${filterCardsInfo[i].groupLevel}`);
+    newDom
+      .children('.card-right')
+      .children('.card-money')
+      .html(`費用: ${filterCardsInfo[i].money} 元`);
+    newDom
+      .children('.card-right')
+      .children('.card-people-have')
+      .html(`內建: ${filterCardsInfo[i].peopleHave} 人`);
+
+    $('#card-group').append(newDom);
   }
 });
 
@@ -229,4 +306,9 @@ $('#my-profile').click(async () => {
       }
     }
   }
+});
+
+// 點擊 logo，跳轉到首頁
+$('.logo').click(() => {
+  window.location.href = '/index.html';
 });
