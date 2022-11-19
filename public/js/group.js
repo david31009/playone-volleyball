@@ -1,11 +1,10 @@
-// 從 local storage 拿 jwt token
-const { localStorage } = window;
-const jwtToken = localStorage.getItem('jwtToken');
-
 // 抓網址 groupId (?id=21)
 const url = new URL(window.location.href);
 const id = url.search;
 const idSplit = id.split('=')[1];
+
+// 隱藏篩選區塊
+$('#card-group').hide();
 
 // 訪客
 let userId;
@@ -51,72 +50,75 @@ let userId;
   const signupMembers = members.data.result;
 
   // 渲染揪團細節
-  $('.card-title').html(`${groupDetail.title}`);
-  $('.group-detail-net').html(`網高: ${groupDetail.net[1]}`);
-  $('.group-detail-date').html(`日期: ${groupDetail.date}`);
-  $('.group-detail-time').html(`時間: ${groupDetail.time}`);
-  $('.group-detail-place').html(`地點: ${groupDetail.place}`);
-  $('.group-detail-place-des').html(
-    `詳細地點: ${groupDetail.placeDescription}`
-  );
-  $('.google-map-link').attr(
+  $('.group-detail-card-title').html(`${groupDetail.title}`);
+  $('.group-detail-net').html(`#${groupDetail.net[1]}`);
+  $('.group-detail-date').html(`📅 ${groupDetail.date}`);
+  $('.group-detail-time').html(`${groupDetail.time}`);
+  $('.group-detail-place').html(`📍 ${groupDetail.place}`);
+  $('.group-detail-place-des').html(`${groupDetail.placeDescription}`);
+  $('.group-detail-place-des').attr(
     'href',
     `https://www.google.com.tw/maps/search/${groupDetail.placeDescription}`
   );
 
-  $('.group-detail-group-level').html(`程度: ${groupDetail.groupLevel[1]}`);
+  $('.group-detail-group-level').html(`#${groupDetail.groupLevel[1]}程度`);
   $('.group-detail-group-level-description').html(
-    `程度描述: ${groupDetail.groupLevelDescription}`
+    `${groupDetail.groupLevelDescription}`
   );
-  $('.group-detail-group-description').html(
-    `揪團描述: ${groupDetail.groupDescription}`
-  );
-  $('.group-detail-time-duration').html(
-    `可以打: ${groupDetail.timeDuration} 小時`
-  );
-  $('.group-detail-money').html(`費用: ${groupDetail.money} 元`);
+  $('.group-detail-group-description').html(`${groupDetail.groupDescription}`);
+  $('.group-detail-time-duration').html(`${groupDetail.timeDuration}hr`);
+  $('.group-detail-money').html(`💲 ${groupDetail.money} 元`);
   $('.group-detail-people-left').html(
-    `報名剩餘名額: ${groupDetail.peopleLeft} 人`
+    `(剩餘名額 ${groupDetail.peopleLeft} 人)`
   );
   $('#edit').html('編輯表單');
-  $('.group-detail-creator').html(`主揪: ${groupDetail.username}`);
-  $('#creator-id').attr('href', `/profile.html?id=${groupDetail.creatorId}`);
+  $('.group-detail-creator').html(`#主揪: ${groupDetail.username}`);
+  $('.group-detail-creator').attr(
+    'href',
+    `/profile.html?id=${groupDetail.creatorId}`
+  );
 
   if (groupDetail.creatorId === userId) {
     $('#edit').show();
     $('#close-group').show();
-    $('#signup').hide();
+    $('.signup-margin').hide();
     $('#signup-members').show();
   } else {
     $('#edit').hide();
     $('#close-group').hide();
-    $('#signup').show();
+    $('.signup-margin').show();
     $('#signup-members').hide();
   }
 
   // 渲染報名者名單 (只有主揪才能看到)
   for (let i = 0; i < signupMembers.length; i++) {
     if (signupMembers[i].signupStatus === '1') {
-      $('#signup-members').append(
+      $('#member-list').append(
         `<div class="member">
-        <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)" disabled>已接受報名</button>
-      </div>`
+           <div class="member-name">${signupMembers[i].username}</div>
+           <div class="accept-deny-btn">
+             <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)" disabled>已接受報名</button>
+           </div>
+          </div>`
       );
     } else if (signupMembers[i].signupStatus === '2') {
-      $('#signup-members').append(
+      $('#member-list').append(
         `<div class="member">
-        <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)" disabled>已拒絕報名</button>
-      </div>`
+           <div class="member-name">${signupMembers[i].username}</div>
+           <div class="accept-deny-btn">
+             <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)" disabled>已拒絕報名</button>
+           </div>
+          </div>`
       );
     } else {
-      $('#signup-members').append(
+      $('#member-list').append(
         `<div class="member">
-        <div>${signupMembers[i].username}</div>
-        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)">接受</button>
-        <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)">拒絕</button>
-      </div>`
+          <div class="member-name">${signupMembers[i].username}</div>
+          <div class="accept-deny-btn">
+            <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)">接受</button>
+            <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)">拒絕</button>
+          </div>
+          </div>`
       );
     }
   }
@@ -134,6 +136,11 @@ let userId;
     $('.deny').prop('disabled', true);
   } else if (datenow > groupDetail.datetime) {
     $('#signup').html('揪團已結束');
+    $('#signup').css({
+      'background-color': 'rgba(249, 213, 167, 0.7)',
+      cursor: 'not-allowed',
+      color: 'grey'
+    });
     $('#signup').prop('disabled', true);
     $('#edit').html('揪團已結束');
     $('#edit').prop('disabled', true);
@@ -143,12 +150,22 @@ let userId;
     $('.deny').prop('disabled', true);
   } else if (status === undefined && groupDetail.peopleLeft === 0) {
     $('#signup').html('已額滿');
+    $('#signup').css({
+      'background-color': 'rgba(249, 213, 167, 0.7)',
+      cursor: 'not-allowed',
+      color: 'grey'
+    });
     $('#signup').prop('disabled', true);
   } else if (status === undefined) {
     // 還沒報名過
     $('#signup').html('報名');
   } else {
     $('#signup').html(`${status.signupStatus[1]}`);
+    $('#signup').css({
+      'background-color': 'rgba(249, 213, 167, 0.7)',
+      cursor: 'not-allowed',
+      color: 'grey'
+    });
     $('#signup').prop('disabled', true);
   }
 
@@ -216,11 +233,11 @@ async function decide(e) {
 
 // 彈出編輯表單
 async function edit() {
-  $('#background-pop').show();
+  $('#edit-pop').show();
 
   // 先渲染下拉式選單選項
   for (let i = 0.5; i < 6.5; i += 0.5) {
-    $('#time-duration').append(
+    $('#edit-time-duration').append(
       $('<option>', {
         value: i,
         text: i
@@ -228,13 +245,13 @@ async function edit() {
     );
   }
   for (let i = 1; i < 19; i++) {
-    $('#people-have').append(
+    $('#edit-people-have').append(
       $('<option>', {
         value: i,
         text: i
       })
     );
-    $('#people-need').append(
+    $('#edit-people-need').append(
       $('<option>', {
         value: i,
         text: i
@@ -246,23 +263,25 @@ async function edit() {
   const detail = await axios.get(`/api/1.0/group/details${id}`);
   const [groupDetail] = detail.data.result;
 
-  $('#title').val(`${groupDetail.title}`);
-  $('#date').val(`${groupDetail.date}`);
-  $('#time').val(`${groupDetail.time}`);
-  $('#time-duration').val(`${groupDetail.timeDuration}`);
-  $('#net').val(`${groupDetail.net[0]}`);
-  $('#place-description').val(`${groupDetail.placeDescription}`);
-  $('#court').val(`${groupDetail.court[0]}`);
-  $('#money').val(`${groupDetail.money}`);
-  $('#level').val(`${groupDetail.groupLevel[0]}`);
-  $('textarea#level-description').val(`${groupDetail.groupLevelDescription}`);
-  $('#people-have').val(`${groupDetail.peopleHave}`);
-  $('#people-need').val(`${groupDetail.peopleNeed}`);
-  $('textarea#group-description').val(`${groupDetail.groupDescription}`);
+  $('#edit-title').val(`${groupDetail.title}`);
+  $('#edit-date').val(`${groupDetail.date}`);
+  $('#edit-time').val(`${groupDetail.time}`);
+  $('#edit-time-duration').val(`${groupDetail.timeDuration}`);
+  $('#edit-net').val(`${groupDetail.net[0]}`);
+  $('#edit-place-description').val(`${groupDetail.placeDescription}`);
+  $('#edit-court').val(`${groupDetail.court[0]}`);
+  $('#edit-money').val(`${groupDetail.money}`);
+  $('#edit-level').val(`${groupDetail.groupLevel[0]}`);
+  $('textarea#edit-level-description').val(
+    `${groupDetail.groupLevelDescription}`
+  );
+  $('#edit-people-have').val(`${groupDetail.peopleHave}`);
+  $('#edit-people-need').val(`${groupDetail.peopleNeed}`);
+  $('textarea#edit-group-description').val(`${groupDetail.groupDescription}`);
 
   // 選擇台灣、地區
   new TwCitySelector({
-    el: '.tw-city-selector',
+    el: '.edit-tw-city-selector',
     elCounty: '.county', // 在 el 裡查找 element
     elDistrict: '.district', // 在 el 裡查找 element
     countyFieldName: '縣市', // 該欄位的 name
@@ -277,33 +296,34 @@ $('#save').click(async (e) => {
   e.preventDefault();
   const updateInfo = {
     groupId: idSplit,
-    title: $('#title').val(),
-    date: $('#date').val(),
-    time: $('#time').val(),
-    timeDuration: $('#time-duration').val(),
-    net: $('#net').val(),
-    county: $('#county').val(),
-    district: $('#district').val(),
-    placeDescription: $('#place-description').val(),
-    court: $('#court').val(),
-    money: $('#money').val(),
-    level: $('#level').val(),
-    levelDescription: $('#level-description').val(),
-    peopleHave: $('#people-have').val(),
-    peopleNeed: $('#people-need').val(),
-    groupDescription: $('#group-description').val()
+    title: $('#edit-title').val(),
+    date: $('#edit-date').val(),
+    time: $('#edit-time').val(),
+    timeDuration: $('#edit-time-duration').val(),
+    net: $('#edit-net').val(),
+    county: $('#edit-county').val(),
+    district: $('#edit-district').val(),
+    placeDescription: $('#edit-place-description').val(),
+    court: $('#edit-court').val(),
+    money: $('#edit-money').val(),
+    level: $('#edit-level').val(),
+    levelDescription: $('#edit-level-description').val(),
+    peopleHave: $('#edit-people-have').val(),
+    peopleNeed: $('#edit-people-need').val(),
+    groupDescription: $('#edit-group-description').val()
   };
 
   // 使用者未填欄位，發出 alert
   let OK = true;
-  $('input, textarea, select')
+  $('#edit-start-group-form')
+    .find('select, textarea, input')
     .filter('[required]') // 找出有 required 的屬性
     .each((i, requiredField) => {
       if (!$(requiredField).val()) {
         OK = false;
         Swal.fire({
           icon: 'error',
-          title: 'Oops...',
+          title: '錯誤',
           text: `請輸入 "${$(requiredField).attr('name')}" 欄位`
         });
         return false; // break
@@ -323,13 +343,13 @@ $('#save').click(async (e) => {
 });
 
 // 編輯彈窗按鈕
-$('#close-button').click(() => {
-  $('#background-pop').hide();
+$('#edit-close-button').click(() => {
+  $('#edit-pop').hide();
 });
 
 $(window).click((e) => {
-  if (e.target.id === 'background-pop') {
-    $('#background-pop').hide();
+  if (e.target.id === 'edit-pop') {
+    $('#edit-pop').hide();
   }
 });
 
@@ -435,6 +455,6 @@ $('#close-group').click(async () => {
 });
 
 // 個人檔案連結
-$('#my-profile').click(() => {
-  window.location.href = `/profile.html?id=${userId}`;
-});
+// $('#my-profile').click(() => {
+//   window.location.href = `/profile.html?id=${userId}`;
+// });

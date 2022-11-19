@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>排球快速揪</title>
+    <title>playone-volleyball</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      sizes="256x256"
+      href="/images/icon.ico"
+    />
     <meta charset="utf-8" />
+    <link href="style/general/header.css" rel="stylesheet" />
     <link href="style/index.css" rel="stylesheet" />
     <link
       href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css"
@@ -95,38 +102,37 @@
     <div id="background-pop">
       <div id="div-pop">
         <div class="div-top">
-          <span id="close-button">×</span>
-          <div>揪個團吧</div>
+          <div id="pop-title">揪個團吧</div>
+          <div id="close-button">X</div>
         </div>
         <div class="div-content">
-          <form action="post">
+          <form id="start-group-form" action="post">
             <div>
-              揪團標題
+              <div class="form-text">揪團標題</div>
               <input id="title" name="揪團標題" required />
             </div>
             <div>
-              揪團日期
+              <div class="form-text">揪團日期</div>
               <input id="date" type="date" name="揪團日期" required />
             </div>
             <div>
-              揪團時間
+              <div class="form-text">揪團時間</div>
               <input id="time" type="time" name="揪團時間" required />
             </div>
             <div>
-              打多久
+              <div class="form-text">打多久</div>
               <select id="time-duration" name="打多久" required></select>
-              小時
             </div>
             <div>
-              網高
+              <div class="form-text">網高</div>
               <select id="net" name="網高" required>
                 <option value="1">男網</option>
                 <option value="0">女網</option>
               </select>
             </div>
             <div>
-              揪團地點
-              <div class="tw-city-selector">
+              <div class="form-text">揪團地點</div>
+              <div class="start-group">
                 <select id="county" class="county" required></select>
                 <select id="district" class="district" required></select>
               </div>
@@ -138,14 +144,14 @@
               />
             </div>
             <div>
-              場地
+              <div class="form-text">場地</div>
               <select id="court" name="場地" required>
                 <option value="0">室內</option>
                 <option value="1">室外</option>
               </select>
             </div>
             <div>
-              費用
+              <div class="form-text">費用</div>
               <input
                 id="money"
                 name="費用"
@@ -154,7 +160,7 @@
               />
             </div>
             <div>
-              程度
+              <div class="form-text">程度</div>
               <select id="level" name="程度" required>
                 <option value="4">職業</option>
                 <option value="3">校隊</option>
@@ -164,8 +170,7 @@
               </select>
             </div>
             <div>
-              程度描述
-              <br />
+              <div class="form-text">程度描述</div>
               <textarea
                 id="level-description"
                 name="程度描述"
@@ -175,17 +180,14 @@
               ></textarea>
             </div>
             <div>
-              人數
-              <span>內建</span>
+              <div class="form-text">人數</div>
+              <div class="form-text">內建幾人</div>
               <select id="people-have" name="內建人數" required></select>
-              <span>人</span>
-              <span>預計揪</span>
+              <div class="form-text">預計揪幾人</div>
               <select id="people-need" name="預計揪人數" required></select>
-              <span>人</span>
             </div>
             <div>
-              揪團描述
-              <br />
+              <div class="form-text">揪團描述</div>
               <textarea
                 id="group-description"
                 name="揪團描述"
@@ -201,6 +203,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/index.js"></script>
   </body>
 </html>

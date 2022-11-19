@@ -3,103 +3,177 @@
   <head>
     <title>排球快速揪</title>
     <meta charset="utf-8" />
+    <link href="style/general/header.css" rel="stylesheet" />
     <link href="style/group.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css"
+      rel="stylesheet"
+    />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tw-city-selector@2.1.1/dist/tw-city-selector.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
-    <div class="vb-nav">
-      <div class="icon">
-        <a href="/index.html"
-          ><img src="./images/icon.png" alt="nav bar icon" height="20"
-        /></a>
+    <div class="main-container">
+      <div class="vb-nav">
+        <div class="logo">
+          <img src="./images/icon.png" alt="nav bar icon" height="120" />
+        </div>
+        <div class="vb-nav-mid">
+          <a href="/register.html" class="log-out">登出</a>
+          <img
+            id="my-profile"
+            src="./images/personal.png"
+            alt="personal icon"
+            height="20"
+          />
+          <button class="btn-pop" onclick="show()">當主揪</button>
+        </div>
+        <form action="post" class="vb-nav-filter">
+          <div class="underline">篩選縣市</div>
+          <div class="tw-city-filter tw-select">
+            <select id="filter-county" class="county"></select>
+            <select id="filter-district" class="district"></select>
+          </div>
+          <div class="underline">篩選程度</div>
+          <select id="filter-group-level" class="select" name="程度">
+            <option value="">選擇程度</option>
+            <option value="4">職業</option>
+            <option value="3">校隊</option>
+            <option value="2">系隊</option>
+            <option value="1">新手</option>
+            <option value="0">快樂排球</option>
+          </select>
+          <div class="underline">篩選網高</div>
+          <select id="filter-net" class="select" name="網高">
+            <option value="">選擇網高</option>
+            <option value="1">男網</option>
+            <option value="0">女網</option>
+          </select>
+          <div class="underline">篩選場地</div>
+          <select id="filter-court" class="select" name="場地">
+            <option value="">選擇場地</option>
+            <option value="0">室內</option>
+            <option value="1">室外</option>
+          </select>
+          <div class="underline">篩選收費</div>
+          <select id="filter-is-charge" class="select" name="收錢與否">
+            <option value="">費用</option>
+            <option value="0">免費</option>
+            <option value="1">收費</option>
+          </select>
+          <button id="filter">搜尋</button>
+        </form>
       </div>
-      <div class="vb-nav-social">
-        <div>
-          <img src="./images/chat.png" alt="chat icon" height="20" />
-        </div>
-        <div>
-          <img src="./images/notify.jpg" alt="notify icon" height="20" />
-        </div>
-        <div>
-          <a id="my-profile"
-            ><img src="./images/personal.png" alt="personal icon" height="20"
-          /></a>
-        </div>
+      <div id="card-group" class="card-group">
+        <div class="group-top"></div>
+        <a href="" class="card" hidden="true">
+          <div class="card-left">
+            <div class="card-title"></div>
+            <div class="card-time-container">
+              <div class="card-date"></div>
+              <div>|</div>
+              <div class="card-time"></div>
+              <div>|</div>
+              <div class="card-time-duration"></div>
+            </div>
+            <div class="card-place-container">
+              <div class="card-place"></div>
+              <div>|</div>
+              <div class="card-place-des"></div>
+            </div>
+            <div class="card-creator"></div>
+          </div>
+          <div class="card-right">
+            <div class="card-net"></div>
+            <div class="card-group-level"></div>
+            <div class="card-money"></div>
+            <div class="card-people-have"></div>
+          </div>
+        </a>
       </div>
-    </div>
-    <div class="group-signup">
-      <div id="group" class="group-detail">
-        <div class="card-title"></div>
-        <div class="group-detail-net"></div>
-        <div class="group-detail-date"></div>
-        <div class="group-detail-time"></div>
-        <div class="group-detail-place"></div>
-        <a class="google-map-link"
-          ><div class="group-detail-place-des"></div
-        ></a>
-        <div class="group-detail-group-level"></div>
-        <div class="group-detail-group-level-description"></div>
-        <div class="group-detail-group-description"></div>
-        <div class="group-detail-time-duration"></div>
-        <div class="group-detail-money"></div>
-        <div class="group-detail-people-left"></div>
-        <button id="signup" class="signup"></button>
-        <button id="edit" class="edit" onclick="edit()"></button>
-        <button id="close-group" class="close-group">關閉揪團</button>
-        <a id="creator-id"><div class="group-detail-creator"></div></a>
-        <div>
-          <textarea
-            id="msg-board"
-            name="程度描述"
-            rows="4"
-            cols="30"
-            placeholder="留言板"
-          ></textarea>
+      <div class="group-signup">
+        <div id="group" class="group-detail">
+          <div class="group-detail-card-title"></div>
+          <div class="net-level-creator">
+            <div class="group-detail-net nlc"></div>
+            <div class="group-detail-group-level nlc"></div>
+            <a class="group-detail-creator nlc"></a>
+          </div>
+          <div class="date-time-duration group-margin">
+            <div class="group-detail-date dtd"></div>
+            <div class="dtd">|</div>
+            <div class="group-detail-time dtd"></div>
+            <div class="dtd">|</div>
+            <div class="group-detail-time-duration dtd"></div>
+          </div>
+          <div class="place-and-des group-margin">
+            <div class="group-detail-place pad"></div>
+            <a class="group-detail-place-des pad"></a>
+          </div>
+          <div class="group-detail-money group-margin"></div>
+          <div class="edit-close">
+            <button id="edit" class="edit" onclick="edit()"></button>
+            <button id="close-group" class="close-group">關閉揪團</button>
+          </div>
+          <center class="signup-margin"><button id="signup"></button></center>
+          <div class="group-detail-people-left group-margin"></div>
+          <div class="group-level-margin group-margin">程度描述</div>
+          <div class="group-detail-group-level-description group-margin"></div>
+          <div class="group-des-margin group-margin">揪團描述</div>
+          <div class="group-detail-group-description group-margin"></div>
+          <div id="signup-members" class="signup-members">
+            <div class="list-question">有誰報名你的團 ?</div>
+            <div id="member-list"></div>
+          </div>
+          <div>
+            <textarea
+              id="msg-board"
+              name="程度描述"
+              rows="4"
+              cols="30"
+              placeholder="留言板"
+            ></textarea>
+          </div>
+          <button id="leave-msg">留言</button>
+          <div id="messages" class="messages"></div>
         </div>
-        <button id="leave-msg">留言</button>
-        <div id="messages" class="messages"></div>
-      </div>
-      <div id="signup-members" class="signup-members">
-        <div>有誰報名你的團 ?</div>
       </div>
     </div>
     <div id="background-pop">
       <div id="div-pop">
         <div class="div-top">
-          <span id="close-button">×</span>
-          <div>揪個團吧</div>
+          <div id="pop-title">揪個團吧</div>
+          <div id="close-button">X</div>
         </div>
         <div class="div-content">
-          <form id="edit-form" action="post">
+          <form id="start-group-form" action="post">
             <div>
-              揪團標題
-              <input id="title" name="揪團標題" required />
+              <div class="form-text">揪團標題</div>
+              <div><input id="title" name="揪團標題" required /></div>
             </div>
             <div>
-              揪團日期
+              <div class="form-text">揪團日期</div>
               <input id="date" type="date" name="揪團日期" required />
             </div>
             <div>
-              揪團時間
+              <div class="form-text">揪團時間</div>
               <input id="time" type="time" name="揪團時間" required />
             </div>
             <div>
-              打多久
+              <div class="form-text">打多久</div>
               <select id="time-duration" name="打多久" required></select>
-              小時
             </div>
             <div>
-              網高
+              <div class="form-text">網高</div>
               <select id="net" name="網高" required>
                 <option value="1">男網</option>
                 <option value="0">女網</option>
               </select>
             </div>
             <div>
-              揪團地點
-              <div class="tw-city-selector">
+              <div class="form-text">揪團地點</div>
+              <div class="start-group">
                 <select id="county" class="county" required></select>
                 <select id="district" class="district" required></select>
               </div>
@@ -111,14 +185,14 @@
               />
             </div>
             <div>
-              場地
+              <div class="form-text">場地</div>
               <select id="court" name="場地" required>
                 <option value="0">室內</option>
                 <option value="1">室外</option>
               </select>
             </div>
             <div>
-              費用
+              <div class="form-text">費用</div>
               <input
                 id="money"
                 name="費用"
@@ -127,7 +201,7 @@
               />
             </div>
             <div>
-              程度
+              <div class="form-text">程度</div>
               <select id="level" name="程度" required>
                 <option value="4">職業</option>
                 <option value="3">校隊</option>
@@ -137,8 +211,7 @@
               </select>
             </div>
             <div>
-              程度描述
-              <br />
+              <div class="form-text">程度描述</div>
               <textarea
                 id="level-description"
                 name="程度描述"
@@ -148,19 +221,118 @@
               ></textarea>
             </div>
             <div>
-              人數
-              <span>內建</span>
+              <div class="form-text">人數</div>
+              <div class="form-text">內建幾人</div>
               <select id="people-have" name="內建人數" required></select>
-              <span>人</span>
-              <span>預計揪</span>
+              <div class="form-text">預計揪幾人</div>
               <select id="people-need" name="預計揪人數" required></select>
-              <span>人</span>
             </div>
             <div>
-              揪團描述
-              <br />
+              <div class="form-text">揪團描述</div>
               <textarea
                 id="group-description"
+                name="揪團描述"
+                rows="8"
+                cols="30"
+                required
+              ></textarea>
+            </div>
+            <button id="start-group">建立社團</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="edit-pop">
+      <div id="edit-div-pop">
+        <div class="edit-div-top">
+          <div id="edit-pop-title">揪個團吧</div>
+          <div id="edit-close-button">X</div>
+        </div>
+        <div class="edit-div-content">
+          <form id="edit-start-group-form" action="post">
+            <div>
+              <div class="edit-form-text">揪團標題</div>
+              <input id="edit-title" name="揪團標題" required />
+            </div>
+            <div>
+              <div class="edit-form-text">揪團日期</div>
+              <input id="edit-date" type="date" name="揪團日期" required />
+            </div>
+            <div>
+              <div class="edit-form-text">揪團時間</div>
+              <input id="edit-time" type="time" name="揪團時間" required />
+            </div>
+            <div>
+              <div class="edit-form-text">打多久</div>
+              <select id="edit-time-duration" name="打多久" required></select>
+            </div>
+            <div>
+              <div class="edit-form-text">網高</div>
+              <select id="edit-net" name="網高" required>
+                <option value="1">男網</option>
+                <option value="0">女網</option>
+              </select>
+            </div>
+            <div>
+              <div class="edit-form-text">揪團地點</div>
+              <div class="edit-tw-city-selector">
+                <select id="edit-county" class="county" required></select>
+                <select id="edit-district" class="district" required></select>
+              </div>
+              <input
+                id="edit-place-description"
+                name="詳細地點"
+                placeholder="詳細地點"
+                required
+              />
+            </div>
+            <div>
+              <div class="edit-form-text">場地</div>
+              <select id="edit-court" name="場地" required>
+                <option value="0">室內</option>
+                <option value="1">室外</option>
+              </select>
+            </div>
+            <div>
+              <div class="edit-form-text">費用</div>
+              <input
+                id="edit-money"
+                name="費用"
+                placeholder="請輸入數字，免費請輸入 0"
+                required
+              />
+            </div>
+            <div>
+              <div class="edit-form-text">程度</div>
+              <select id="edit-level" name="程度" required>
+                <option value="4">職業</option>
+                <option value="3">校隊</option>
+                <option value="2">系隊</option>
+                <option value="1">新手</option>
+                <option value="0">快樂排球</option>
+              </select>
+            </div>
+            <div>
+              <div class="edit-form-text">程度描述</div>
+              <textarea
+                id="edit-level-description"
+                name="程度描述"
+                rows="8"
+                cols="30"
+                required
+              ></textarea>
+            </div>
+            <div>
+              <div class="edit-form-text">人數</div>
+              <div class="edit-form-text">內建幾人</div>
+              <select id="edit-people-have" name="內建人數" required></select>
+              <div class="edit-form-text">預計揪幾人</div>
+              <select id="edit-people-need" name="預計揪人數" required></select>
+            </div>
+            <div>
+              <div class="edit-form-text">揪團描述</div>
+              <textarea
+                id="edit-group-description"
                 name="揪團描述"
                 rows="8"
                 cols="30"
@@ -173,6 +345,7 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/group.js"></script>
   </body>
 </html>
