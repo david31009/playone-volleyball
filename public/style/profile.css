@@ -1,53 +1,169 @@
-/* 首頁 header*/
+/* 首頁左側 header*/
 html,
 body {
-  height: 100%;
+  font-family: 'Lucida Console', 'cwTeXYen';
   margin: 0;
 }
 
-.vb-nav {
+.main-container {
   display: flex;
-  background: #28a3e7;
-  padding: 10px;
+  height: 100vh;
+}
+
+.vb-nav {
+  width: 30%;
+  background-color: #fef1e6;
+  overflow-y: scroll;
+}
+
+.vb-nav::-webkit-scrollbar {
+  /* 隱藏滾動條*/
+  display: none;
+}
+
+.logo {
+  display: flex;
+  height: 150px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#my-profile {
+  cursor: pointer;
+}
+
+.vb-nav-mid {
+  display: flex;
+  height: 50px;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 10px 5% 10px 5%;
+  border-bottom: 1px solid #aa8b56;
+  padding-bottom: 20px;
+}
+
+.underline {
+  color: #aa8b56;
+  padding: 18px;
+  font-size: 20px;
+}
+
+.log-out {
+  font-size: 20px;
+  font-family: 'cwTeXYe';
 }
 
 .vb-nav-filter {
   display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin: 0 2% 0 2%;
 }
 
-.vb-nav-social {
+/* 自介、現正歷史揪團、評價*/
+.self-group-comment {
   display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #ece2e1;
 }
 
-/* 簡易資料*/
-#resume,
-#self-details,
-#comment {
-  width: 60%;
-  border: solid;
-  margin: 2% auto;
+.shift-background {
+  background-color: white;
+  border-radius: 10px;
+  padding: 6%;
+  height: 100%;
+  margin: 2.5% 5% 2.5% 5%;
+  overflow-y: scroll;
 }
 
-#resume-top,
-#resume-bottom,
-#resume-mid {
+.shift-background::-webkit-scrollbar {
+  display: none;
+}
+
+/* 追蹤、編輯按鈕*/
+.follow-btn,
+.self-edit {
   display: flex;
-  padding: 1%;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 #follow-btn,
 #self-edit {
-  margin-left: auto;
+  font-size: 18px;
+  font-family: 'cwTeXYen';
+  background-color: #f9d5a7;
+  border-radius: 5px;
+  border: 0px;
+  padding: 1%;
+  cursor: pointer;
 }
 
-#resume-mid div,
-#resume-top div,
-#resume-bottom div {
-  margin: 1%;
+/* 簡易資料 */
+#resume-top {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  font-size: 40px;
 }
 
-/* 編輯個人檔案*/
-/* 待評價*/
+#resume-mid {
+  display: flex;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.rt {
+  margin: 2% 1% 2% 1%;
+}
+
+.rm {
+  margin: 3% 1% 2% 1%;
+  border: 1.5px solid black;
+  border-radius: 30px;
+  padding: 0.5%;
+}
+
+/* 追蹤數、粉絲數 */
+#groups-fans {
+  display: flex;
+  margin: 2%;
+  padding: 2%;
+  justify-content: space-around;
+  font-size: 20px;
+}
+
+#groups-fans div {
+  text-align: center;
+}
+
+.follow,
+.fans {
+  margin-top: 8px;
+}
+
+/* 自介、自評文案 */
+#intro,
+#level-des {
+  white-space: pre-wrap;
+  line-height: 30px;
+  font-size: 22px;
+}
+
+.intro-title,
+.level-title {
+  font-size: 27px;
+  font-family: 'cwTeXYen';
+  color: #aa8b56;
+  margin: 5% 0 3% 0;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid #aa8b56;
+}
+
+/* 編輯個人檔案 */
+/* 待評價 */
 #background-pop,
 #comment-pop {
   display: none;
@@ -100,48 +216,51 @@ body {
   padding: 3px;
 }
 
-/* 揪團ing、過去揪團、粉絲區*/
-#my-intro,
-#self-level,
+/* 揪團ing、過去揪團*/
+.group-details-link:link,
+.group-details-link:visited {
+  text-decoration: none;
+  color: black;
+}
+
+.group-details-link:hover {
+  text-decoration: none;
+  color: #004aad;
+}
+
 #i-create-groups,
 #i-signup-groups,
 #past-create-groups,
 #past-signup-groups {
-  border: solid;
   padding: 2%;
   margin: 2%;
+  font-size: 20px;
 }
 
-#groups-fans {
-  display: flex;
-  margin: 2%;
-  padding: 2%;
-  justify-content: space-around;
-}
-
-#groups-fans div {
+.i-create-title,
+.i-signup-title,
+.past-create-title,
+.past-signup-title {
+  font-size: 28px;
+  color: #aa8b56;
   text-align: center;
-}
-
-#groups-fans div a {
-  text-decoration: none;
 }
 
 .group-details {
   padding: 1%;
+  margin: 3% 0 3% 0;
+  border: 1px solid;
+  border-radius: 8px;
+}
+
+.group-title {
+  font-size: 25px;
   margin: 1% 0 1% 0;
-  border: solid;
 }
 
-.group-details-link {
-  text-decoration: none;
-  flex-grow: 2;
-  margin-right: 2%;
-  width: 50%;
-}
-
-.group-details-link:link {
-  color: black;
+.group-date {
+  font-size: 18px;
+  margin: 1% 0 1% 0;
 }
 
 #past-signup-groups-details {
@@ -150,11 +269,22 @@ body {
   justify-content: space-between;
 }
 
-.comment-btn {
-  margin: 1% 0 1% 0;
+.psgd {
+  flex-basis: 88%;
 }
 
-/* icon 區*/
+.psgd-btn {
+  flex-basis: 10%;
+  font-size: 18px;
+  font-family: 'cwTeXYen';
+  background-color: #f9d5a7;
+  border-radius: 5px;
+  border: 0px;
+  cursor: pointer;
+  margin: 2.6% 0 2.6% 0;
+}
+
+/* icon 區 */
 #icons {
   display: flex;
   justify-content: space-around;
@@ -162,7 +292,7 @@ body {
   margin: 2% auto;
 }
 
-/* 評價區塊*/
+/* 評價區塊 */
 #comment {
   display: none;
 }

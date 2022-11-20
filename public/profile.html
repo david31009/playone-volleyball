@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/earlyaccess/cwtexyen.css"
+      rel="stylesheet"
+    />
     <link href="style/profile.css" rel="stylesheet" />
     <link
       rel="stylesheet"
@@ -17,119 +21,114 @@
     <title>Profile</title>
   </head>
   <body>
-    <div class="vb-nav">
-      <div class="icon">
-        <a href="/index.html"
-          ><img src="./images/icon.png" alt="nav bar icon" height="20"
-        /></a>
-      </div>
-      <div class="vb-nav-social">
-        <div>
-          <img src="./images/chat.png" alt="chat icon" height="20" />
+    <div class="main-container">
+      <div class="vb-nav">
+        <div class="logo">
+          <img src="./images/icon.png" alt="nav bar icon" height="120" />
         </div>
-        <div>
-          <img src="./images/notify.jpg" alt="notify icon" height="20" />
+        <div class="vb-nav-mid">
+          <a href="/register.html" class="log-out">登出</a>
+          <img
+            id="my-profile"
+            src="./images/personal.png"
+            alt="personal icon"
+            height="20"
+          />
+          <img id="star" src="images/star.png" height="28" alt="my comments" />
         </div>
-        <div>
-          <a id="my-profile"
-            ><img src="./images/personal.png" alt="personal icon" height="20"
-          /></a>
-        </div>
-      </div>
-    </div>
-    <div id="resume">
-      <div id="resume-top">
-        <div id="resume-top-username"></div>
-        <div id="resume-top-gender"></div>
-        <button id="follow-btn"></button>
-      </div>
-      <div id="resume-mid">
-        <div>最常在哪裡打球:</div>
-        <div id="resume-mid-county"></div>
-        <div id="resume-mid-position-1"></div>
-        <div id="resume-mid-position-2"></div>
-      </div>
-      <div id="resume-bottom">
-        <div>程度:</div>
-        <div id="resume-bottom-level"></div>
-        <button id="self-edit">編輯個人檔案</button>
-      </div>
-    </div>
-    <div id="icons">
-      <a href=""
-        ><img src="images/profile.png" height="50" alt="my profile"
-      /></a>
-      <img id="star" src="images/star.png" height="50" alt="my comments" />
-    </div>
-    <div id="self-details">
-      <div id="groups-fans">
-        <div>
-          <div id="i-create-num"></div>
-          <a id="i-create-link" href=""><div>我主揪的團</div></a>
-        </div>
-        <div>
-          <div id="i-signup-num"></div>
-          <a id="i-signup-link" href=""><div>我報名的團</div></a>
-        </div>
-        <div>
-          <div id="past-create-num"></div>
-          <a id="past-create-link" href=""><div>過去主揪的團</div></a>
-        </div>
-        <div>
-          <div id="past-signup-num"></div>
-          <a id="past-signup-link" href=""><div>過去報名的團</div></a>
-        </div>
-        <div>
-          <div id="follow"></div>
-          <div>追蹤</div>
-        </div>
-        <div>
-          <div id="fans"></div>
-          <div>粉絲</div>
+        <div class="group-dashboard">
+          <div>
+            <div id="i-create-num"></div>
+            <a id="i-create-link" href=""><div>我主揪的團</div></a>
+          </div>
+          <div>
+            <div id="i-signup-num"></div>
+            <a id="i-signup-link" href=""><div>我報名的團</div></a>
+          </div>
+          <div>
+            <div id="past-create-num"></div>
+            <a id="past-create-link" href=""><div>過去主揪的團</div></a>
+          </div>
+          <div>
+            <div id="past-signup-num"></div>
+            <a id="past-signup-link" href=""><div>過去報名的團</div></a>
+          </div>
         </div>
       </div>
-      <div id="intro-part">
-        <div id="my-intro">
-          自我介紹:
-          <div id="intro"></div>
-        </div>
-        <div id="self-level">
-          自評程度:
-          <div id="level-des"></div>
+      <div class="self-group-comment">
+        <div class="shift-background">
+          <div class="follow-btn"><button id="follow-btn"></button></div>
+          <div class="self-edit">
+            <button id="self-edit">編輯個人檔案</button>
+          </div>
+          <div id="resume">
+            <div id="resume-top">
+              <div id="resume-top-username" class="rt"></div>
+              <div id="resume-top-gender" class="rt"></div>
+            </div>
+            <div id="resume-mid">
+              <div id="resume-mid-county" class="rm"></div>
+              <div id="resume-mid-position-1" class="rm"></div>
+              <div id="resume-mid-position-2" class="rm"></div>
+              <div id="resume-bottom-level" class="rm"></div>
+            </div>
+          </div>
+          <div id="self-details">
+            <div id="groups-fans">
+              <div>
+                <div id="follow" class="follow"></div>
+                <div class="follow">追蹤</div>
+              </div>
+              <div>
+                <div id="fans" class="fans"></div>
+                <div class="fans">粉絲</div>
+              </div>
+            </div>
+            <div id="intro-part">
+              <div id="my-intro">
+                <div class="intro-title">自我介紹</div>
+                <div id="intro"></div>
+              </div>
+              <div id="self-level">
+                <div class="level-title">自評程度</div>
+                <div id="level-des"></div>
+              </div>
+            </div>
+          </div>
+          <div id="i-create">
+            <div id="i-create-groups">
+              <div class="i-create-title">我主揪的團</div>
+              <div id="i-create-groups-details"></div>
+            </div>
+          </div>
+          <div id="i-signup">
+            <div id="i-signup-groups">
+              <div class="i-signup-title">我報名的團</div>
+              <div id="i-signup-groups-details"></div>
+            </div>
+          </div>
+          <div id="past-create">
+            <div id="past-create-groups">
+              <div class="past-create-title">過去主揪的團</div>
+              <div id="past-create-groups-details"></div>
+            </div>
+          </div>
+          <div id="past-signup">
+            <div id="past-signup-groups">
+              <div class="past-signup-title">過去報名的團</div>
+              <div id="past-signup-groups-details"></div>
+            </div>
+          </div>
+          <div id="comment">
+            <div id="comment-score">
+              <div id="avg-score">4.5</div>
+              <div id="rateYo"></div>
+              <div id="comment-num">(58)</div>
+            </div>
+            <div id="comment-block-container"></div>
+          </div>
         </div>
       </div>
-      <div id="i-create">
-        <div id="i-create-groups">
-          我主揪的團:
-          <div id="i-create-groups-details"></div>
-        </div>
-      </div>
-      <div id="i-signup">
-        <div id="i-signup-groups">
-          我報名的團:
-          <div id="i-signup-groups-details"></div>
-        </div>
-      </div>
-      <div id="past-create">
-        <div id="past-create-groups">
-          過去主揪的團:
-          <div id="past-create-groups-details"></div>
-        </div>
-      </div>
-      <div id="past-signup">
-        <div id="past-signup-groups">
-          過去報名的團:
-          <div id="past-signup-groups-details"></div>
-        </div>
-      </div>
-    </div>
-    <div id="comment">
-      <div id="comment-score">
-        <div id="avg-score">4.5</div>
-        <div id="rateYo"></div>
-        <div id="comment-num">(58)</div>
-      </div>
-      <div id="comment-block-container"></div>
     </div>
     <div id="background-pop">
       <div id="div-pop">

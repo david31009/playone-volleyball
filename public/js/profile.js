@@ -29,8 +29,10 @@ async function myProfile() {
     userInfo.position_1[1] === null ? '' : `#${userInfo.position_1[1]}`;
   const position_2 =
     userInfo.position_2[1] === null ? '' : `#${userInfo.position_2[1]}`;
+  const county = userInfo.county === null ? '' : `#${userInfo.county}`;
+  const level =
+    userInfo.myLevel[1] === null ? '' : `#${userInfo.myLevel[1]}程度`;
   if (userInfo.gender[1] === null) userInfo.gender[1] = '';
-  if (userInfo.county === null) userInfo.county = '';
 
   // 取得追蹤狀態 API
   const follow = await axios.post('/api/1.0/follow/status', {
@@ -56,10 +58,10 @@ async function myProfile() {
 
   $('#resume-top-username').html(`${userInfo.username}`);
   $('#resume-top-gender').html(`${userInfo.gender[1]}`);
-  $('#resume-mid-county').html(`${userInfo.county}`);
+  $('#resume-mid-county').html(`${county}`);
   $('#resume-mid-position-1').html(position_1);
   $('#resume-mid-position-2').html(position_2);
-  $('#resume-bottom-level').html(userInfo.myLevel[1]);
+  $('#resume-bottom-level').html(`${level}`);
   $('#fans').html(userInfo.fans);
   $('#follow').html(userInfo.follow);
   $('#intro').html(userInfo.intro);
@@ -273,11 +275,12 @@ $('#follow-btn').click(async (e) => {
 // 渲染我主揪的團
 $('#i-create-link').click(async (e) => {
   e.preventDefault(); // 預設會刷新頁面
-  $('#intro-part').hide();
+  $('#self-details').hide();
   $('#i-create').show();
   $('#i-signup').hide();
   $('#past-create').hide();
   $('#past-signup').hide();
+  $('#comment').hide();
 
   // 打 nowCreate api
   const result = await axios(`/api/1.0/now/create${id}`);
@@ -286,10 +289,12 @@ $('#i-create-link').click(async (e) => {
   $('#i-create-groups-details').empty();
   for (let i = 0; i < iCreate.length; i++) {
     $('#i-create-groups-details').append(
-      `<a class="group-details-link" href="/group.html?id=${iCreate[i].groupId}"><div class="group-details">
-        <div>${iCreate[i].title}</div>
-        <div>${iCreate[i].date} ${iCreate[i].time}</div>
-      </div></a>
+      `<a class="group-details-link" href="/group.html?id=${iCreate[i].groupId}">
+        <div class="group-details">
+          <div class="group-title">${iCreate[i].title}</div>
+          <div class="group-date">${iCreate[i].date} ${iCreate[i].time}</div>
+        </div>
+       </a>
       `
     );
   }
@@ -298,11 +303,13 @@ $('#i-create-link').click(async (e) => {
 // 渲染我報名的團
 $('#i-signup-link').click(async (e) => {
   e.preventDefault();
-  $('#intro-part').hide();
+  $('#self-details').hide();
   $('#i-create').hide();
   $('#i-signup').show();
   $('#past-create').hide();
   $('#past-signup').hide();
+  $('#comment').hide();
+
   // 打 nowSignup api
   const nowSignupResult = await axios(`/api/1.0/now/signup${id}`);
   const nowSignup = nowSignupResult.data.result;
@@ -311,8 +318,8 @@ $('#i-signup-link').click(async (e) => {
   for (let i = 0; i < nowSignup.length; i++) {
     $('#i-signup-groups-details').append(
       `<a class="group-details-link" href="/group.html?id=${nowSignup[i].groupId}"><div class="group-details">
-          <div>${nowSignup[i].title}</div>
-          <div>${nowSignup[i].date} ${nowSignup[i].time}</div>
+          <div class="group-title">${nowSignup[i].title}</div>
+          <div class="group-date">${nowSignup[i].date} ${nowSignup[i].time}</div>
         </div></a>
         `
     );
@@ -322,11 +329,12 @@ $('#i-signup-link').click(async (e) => {
 // 渲染過去主揪的團
 $('#past-create-link').click(async (e) => {
   e.preventDefault();
-  $('#intro-part').hide();
+  $('#self-details').hide();
   $('#i-create').hide();
   $('#i-signup').hide();
   $('#past-create').show();
   $('#past-signup').hide();
+  $('#comment').hide();
 
   // 打 pastCreate api
   const result = await axios(`/api/1.0/past/create${id}`);
@@ -335,10 +343,12 @@ $('#past-create-link').click(async (e) => {
   $('#past-create-groups-details').empty();
   for (let i = 0; i < pastCreate.length; i++) {
     $('#past-create-groups-details').append(
-      `<a class="group-details-link" href="/group.html?id=${pastCreate[i].groupId}"><div class="group-details">
-          <div>${pastCreate[i].title}</div>
-          <div>${pastCreate[i].date} ${pastCreate[i].time}</div>
-        </div></a>
+      `<a class="group-details-link" href="/group.html?id=${pastCreate[i].groupId}">
+         <div class="group-details">
+           <div class="group-title">${pastCreate[i].title}</div>
+           <div class="group-date">${pastCreate[i].date} ${pastCreate[i].time}</div>
+         </div>
+        </a>
         `
     );
   }
@@ -347,27 +357,52 @@ $('#past-create-link').click(async (e) => {
 // 渲染過去報名的團
 $('#past-signup-link').click(async (e) => {
   e.preventDefault();
-  $('#intro-part').hide();
+  $('#self-details').hide();
   $('#i-create').hide();
   $('#i-signup').hide();
   $('#past-create').hide();
   $('#past-signup').show();
+  $('#comment').hide();
 
   // 打 pastSignup api
   const result = await axios.get(`/api/1.0/past/signup${id}`);
   const pastSignup = result.data.result;
 
+  // $('#past-signup-groups-details').empty();
+  // for (let i = 0; i < pastSignup.length; i++) {
+  //   $('#past-signup-groups-details').append(
+  //     `<a class="group-details-link" href="/group.html?id=${pastSignup[i].groupId}">
+  //       <div class="group-details">
+  //         <div class="group-title">${pastSignup[i].title}</div>
+  //         <div class="group-date">${pastSignup[i].date} ${pastSignup[i].time}</div>
+  //       </div>
+  //     </a>`
+  //   );
+
+  //   // 打 getComment api
+  //   const comment = await axios.post('/api/1.0/comment/status', {
+  //     commenterId: userId,
+  //     groupId: `${pastSignup[i].groupId}`
+  //   });
+  //   const [commentStatus] = comment.data.result;
+
+  //   if (userId === idSplit) {
+  //     if (commentStatus) {
+  //       $('#past-signup-groups-details').append(
+  //         `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn" onclick="comment(this)" disabled>已評價</button>`
+  //       );
+  //     } else {
+  //       $('#past-signup-groups-details').append(
+  //         `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn" onclick="comment(this)">待評價</button>`
+  //       );
+  //     }
+  //   }
+  // }
+
   $('#past-signup-groups-details').empty();
   for (let i = 0; i < pastSignup.length; i++) {
-    $('#past-signup-groups-details').append(
-      `<a class="group-details-link" href="/group.html?id=${pastSignup[i].groupId}"><div class="group-details">
-          <div>${pastSignup[i].title}</div>
-          <div>${pastSignup[i].date} ${pastSignup[i].time}</div>
-        </div></a>
-        `
-    );
     // 打 getComment api
-    const comment = await axios.post(`/api/1.0/comment/status`, {
+    const comment = await axios.post('/api/1.0/comment/status', {
       commenterId: userId,
       groupId: `${pastSignup[i].groupId}`
     });
@@ -376,11 +411,27 @@ $('#past-signup-link').click(async (e) => {
     if (userId === idSplit) {
       if (commentStatus) {
         $('#past-signup-groups-details').append(
-          `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn" onclick="comment(this)" disabled>已評價</button>`
+          `<a class="group-details-link psgd" href="/group.html?id=${pastSignup[i].groupId}">
+            <div class="group-details">
+             <div class="group-title">${pastSignup[i].title}</div>
+             <div class="group-date">${pastSignup[i].date} ${pastSignup[i].time}</div>
+            </div>
+           </a>
+           <button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn psgd-btn" onclick="comment(this)" disabled>已評價
+           </button>
+          `
         );
       } else {
         $('#past-signup-groups-details').append(
-          `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn" onclick="comment(this)">待評價</button>`
+          `<a class="group-details-link psgd" href="/group.html?id=${pastSignup[i].groupId}">
+            <div class="group-details">
+             <div class="group-title">${pastSignup[i].title}</div>
+             <div class="group-date">${pastSignup[i].date} ${pastSignup[i].time}</div>
+            </div>
+           </a>
+           <button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn psgd-btn" onclick="comment(this)">待評價
+           </button>
+          `
         );
       }
     }
@@ -468,9 +519,18 @@ $('#send-comment').click(async (e) => {
   }
 });
 
+// 點擊 logo，跳轉到首頁
+$('.logo').click(() => {
+  window.location.href = '/index.html';
+});
+
 // 星星 icon
 $('#star').click(async () => {
   $('#self-details').hide();
+  $('#i-create').hide();
+  $('#i-signup').hide();
+  $('#past-create').hide();
+  $('#past-signup').hide();
   $('#comment').show();
 
   const result = await axios.get(`/api/1.0/comment${id}`);
