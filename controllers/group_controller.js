@@ -216,13 +216,14 @@ const createMsg = async (req, res) => {
 const getMsg = async (req, res) => {
   const { id } = req.query;
   const resultDB = await Group.getMsg([id]);
+  moment.locale('zh-tw');
   const result = resultDB.map((i) => {
     return {
       userId: i.user_id,
       username: i.username,
       groupId: i.group_id,
       content: i.content,
-      time: i.time
+      time: moment(i.time).startOf('minute').fromNow()
     };
   });
 

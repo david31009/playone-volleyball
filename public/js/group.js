@@ -72,7 +72,7 @@ let userId;
     `(剩餘名額 ${groupDetail.peopleLeft} 人)`
   );
   $('#edit').html('編輯表單');
-  $('.group-detail-creator').html(`#主揪: ${groupDetail.username}`);
+  $('.group-detail-creator').html(`#主揪 ${groupDetail.username}`);
   $('.group-detail-creator').attr(
     'href',
     `/profile.html?id=${groupDetail.creatorId}`
@@ -97,7 +97,7 @@ let userId;
         `<div class="member">
            <div class="member-name">${signupMembers[i].username}</div>
            <div class="accept-deny-btn">
-             <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)" disabled>已接受報名</button>
+             <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)" style="background-color: rgba(211, 228, 205, 0.5); cursor:not-allowed; color: grey" disabled>已接受報名</button>
            </div>
           </div>`
       );
@@ -106,7 +106,7 @@ let userId;
         `<div class="member">
            <div class="member-name">${signupMembers[i].username}</div>
            <div class="accept-deny-btn">
-             <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)" disabled>已拒絕報名</button>
+             <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)" style="background-color: rgba(255, 209, 209, 0.5); cursor:not-allowed; color: grey" disabled>已拒絕報名</button>
            </div>
           </div>`
       );
@@ -126,27 +126,54 @@ let userId;
   // 確認使用者報名狀態
   const datenow = new Date(+new Date() + 8 * 3600 * 1000).toISOString(); // 取得當下時間
   if (groupDetail.isBuild[0] === 0) {
+    // 主揪自行關團
+    $('#leave-msg, #edit, #close-group, #signup').css({
+      'background-color': 'rgba(249, 213, 167, 0.5)',
+      cursor: 'not-allowed',
+      color: 'grey'
+    });
     $('#signup').html('主揪已關閉揪團');
     $('#signup').prop('disabled', true);
     $('#edit').html('您已關閉揪團');
     $('#edit').prop('disabled', true);
     $('#close-group').prop('disabled', true);
     $('#leave-msg').prop('disabled', true);
-    $('.accept').prop('disabled', true);
-    $('.deny').prop('disabled', true);
-  } else if (datenow > groupDetail.datetime) {
-    $('#signup').html('揪團已結束');
-    $('#signup').css({
-      'background-color': 'rgba(249, 213, 167, 0.7)',
+    $('.accept').css({
+      'background-color': 'rgba(211, 228, 205, 0.5)',
       cursor: 'not-allowed',
       color: 'grey'
     });
+    $('.accept').prop('disabled', true);
+    $('.deny').css({
+      'background-color': 'rgba(255, 209, 209, 0.5)',
+      cursor: 'not-allowed',
+      color: 'grey'
+    });
+    $('.deny').prop('disabled', true);
+  } else if (datenow > groupDetail.datetime) {
+    // 時間過期
+    $('#leave-msg, #edit, #close-group, #signup').css({
+      'background-color': 'rgba(249, 213, 167, 0.5)',
+      cursor: 'not-allowed',
+      color: 'grey'
+    });
+    $('#signup').html('揪團已結束');
     $('#signup').prop('disabled', true);
     $('#edit').html('揪團已結束');
     $('#edit').prop('disabled', true);
     $('#close-group').prop('disabled', true);
     $('#leave-msg').prop('disabled', true);
+    $('.accept').css({
+      'background-color': 'rgba(211, 228, 205, 0.5)',
+      cursor: 'not-allowed',
+      color: 'grey'
+    });
     $('.accept').prop('disabled', true);
+    $('.deny').css({
+      'background-color': 'rgba(255, 209, 209, 0.5)',
+      cursor: 'not-allowed',
+      color: 'grey'
+    });
     $('.deny').prop('disabled', true);
   } else if (status === undefined && groupDetail.peopleLeft === 0) {
     $('#signup').html('已額滿');
@@ -173,10 +200,10 @@ let userId;
   for (let i = 0; i < allMsg.length; i++) {
     $('#messages').append(
       `<div class="user-messages">
-        <div>${allMsg[i].username}</div>
-        <div>${allMsg[i].content}</div>
-        <div>${allMsg[i].time}</div>
-      </div>
+          <a href="/profile.html?id=${allMsg[i].userId}" class="username">${allMsg[i].username}</a>
+          <div class="content">${allMsg[i].content}</div>
+          <div class="time">${allMsg[i].time}</div>
+       </div>
       `
     );
   }
@@ -453,8 +480,3 @@ $('#close-group').click(async () => {
     }
   });
 });
-
-// 個人檔案連結
-// $('#my-profile').click(() => {
-//   window.location.href = `/profile.html?id=${userId}`;
-// });

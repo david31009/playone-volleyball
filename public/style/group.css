@@ -75,13 +75,9 @@
 
 .group-detail-group-level-description,
 .group-detail-group-description {
-  /* border: 1px solid rgba(0, 0, 0, 0.3);
-  border-radius: 5px; */
-  /* width: 94%; */
-  /* margin-left: 1%; */
   padding: 0 1% 1% 1%;
   resize: vertical;
-  font-size: 19px;
+  font-size: 21px;
   line-height: 30px;
   white-space: pre-wrap;
 }
@@ -100,10 +96,10 @@
   width: 97%;
   margin-left: 1%;
   margin-top: 4%;
-  font-size: 22px;
+  font-size: 26px;
   color: #aa8b56;
   padding-bottom: 1%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1.2px solid #aa8b56;
 }
 
 /* 編輯按鈕、關團按鈕*/
@@ -157,12 +153,19 @@
 .deny {
   font-size: 20px;
   font-family: 'cwTeXYen';
-  background-color: #f9d5a7;
-  border-radius: 5px;
+  border-radius: 15px;
   border: 0px;
   padding: 7px;
   margin: 0 10px 0 0;
   cursor: pointer;
+}
+
+.accept {
+  background-color: #d3e4cd;
+}
+
+.deny {
+  background-color: #ffd1d1;
 }
 
 #member-list {
@@ -174,7 +177,7 @@
   margin-left: 1%;
   padding: 2%;
   resize: vertical;
-  font-size: 19px;
+  font-size: 24px;
 }
 
 /* 主揪編輯表單*/
@@ -302,9 +305,24 @@
 }
 
 .user-messages {
-  border: solid;
-  padding: 2px;
-  margin-top: 1%;
+  padding: 2%;
+  margin: 1% 1% 1% 1%;
+  line-height: 30px;
+}
+
+.username {
+  font-size: 24px;
+}
+
+.time {
+  font-size: 16px;
+  font-family: 'Microsoft JhengHei';
+}
+
+.content {
+  font-size: 21px;
+  color: rgba(0, 0, 0, 0.8);
+  white-space: pre-wrap;
 }
 
 /* 超連結*/
