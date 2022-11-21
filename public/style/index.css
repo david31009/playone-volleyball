@@ -45,12 +45,12 @@ body {
 
 .underline {
   color: #aa8b56;
-  padding: 18px;
+  padding: 18px 18px 9px 13px;
   font-size: 20px;
 }
 
 .log-out {
-  font-size: 20px;
+  font-size: 24px;
   font-family: 'cwTeXYe';
 }
 
@@ -75,7 +75,7 @@ body {
 
 .tw-select {
   /* 下拉式選單*/
-  margin: 0 1% 2% 2%;
+  margin: 0 1% -11% 2%;
 }
 
 .tw-select select {
@@ -124,9 +124,8 @@ body {
 #div-pop {
   background: #ffffff;
   width: 70%;
-  height: 100%;
-  z-index: 1;
-  margin: auto;
+  height: 90%;
+  z-index: 1; /* 上移一層 */
   position: absolute; /* 水平垂直置中 */
   top: 0;
   left: 0;
@@ -164,7 +163,7 @@ body {
 .div-content {
   color: rgb(170, 139, 86);
   font-size: 30px;
-  padding: 5%;
+  padding: 10%;
 }
 
 #start-group {
@@ -177,7 +176,7 @@ body {
   margin-left: 45%;
 }
 
-#start-group-form div {
+.form-block {
   display: flex;
   flex-direction: column;
 }
@@ -186,17 +185,24 @@ body {
   margin: 0 0 1% 2%;
 }
 
-#start-group-form div select,
-#start-group-form div input {
+.form-block select,
+.form-block input {
   opacity: 0.8;
+  border: 1px solid rgba(0, 0, 0, 0.8);
   border-radius: 10px;
   height: 50px;
   font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
   margin: 0 1% 4% 2%;
   font-family: 'Lucida Console';
+  text-align: center;
 }
 
-#start-group-form div textarea {
+.form-block input::placeholder {
+  text-align: center;
+}
+
+.form-block textarea {
   opacity: 0.8;
   border-radius: 10px;
   height: 300px;
@@ -213,13 +219,14 @@ body {
   flex: 1;
   overflow-y: scroll;
   background-color: #ece2e1;
+  padding-bottom: 5%;
 }
 
 .group-top {
   flex: 1;
   font-size: 40px;
   margin: 11% 5% 1% 6%;
-  padding-bottom: 3%;
+  padding-bottom: 30px;
   border-bottom: 1px solid #aa8b56;
 }
 

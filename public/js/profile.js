@@ -368,37 +368,6 @@ $('#past-signup-link').click(async (e) => {
   const result = await axios.get(`/api/1.0/past/signup${id}`);
   const pastSignup = result.data.result;
 
-  // $('#past-signup-groups-details').empty();
-  // for (let i = 0; i < pastSignup.length; i++) {
-  //   $('#past-signup-groups-details').append(
-  //     `<a class="group-details-link" href="/group.html?id=${pastSignup[i].groupId}">
-  //       <div class="group-details">
-  //         <div class="group-title">${pastSignup[i].title}</div>
-  //         <div class="group-date">${pastSignup[i].date} ${pastSignup[i].time}</div>
-  //       </div>
-  //     </a>`
-  //   );
-
-  //   // 打 getComment api
-  //   const comment = await axios.post('/api/1.0/comment/status', {
-  //     commenterId: userId,
-  //     groupId: `${pastSignup[i].groupId}`
-  //   });
-  //   const [commentStatus] = comment.data.result;
-
-  //   if (userId === idSplit) {
-  //     if (commentStatus) {
-  //       $('#past-signup-groups-details').append(
-  //         `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn" onclick="comment(this)" disabled>已評價</button>`
-  //       );
-  //     } else {
-  //       $('#past-signup-groups-details').append(
-  //         `<button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn" onclick="comment(this)">待評價</button>`
-  //       );
-  //     }
-  //   }
-  // }
-
   $('#past-signup-groups-details').empty();
   for (let i = 0; i < pastSignup.length; i++) {
     // 打 getComment api
@@ -417,7 +386,7 @@ $('#past-signup-link').click(async (e) => {
              <div class="group-date">${pastSignup[i].date} ${pastSignup[i].time}</div>
             </div>
            </a>
-           <button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn psgd-btn" onclick="comment(this)" disabled>已評價
+           <button id="group-${pastSignup[i].groupId}-creator-${pastSignup[i].creatorId}" class="comment-btn psgd-btn" onclick="comment(this)" style="background-color: rgba(249, 213, 167, 0.5); color: grey; cursor: not-allowed" disabled>已評價
            </button>
           `
         );
@@ -447,7 +416,7 @@ async function comment(e) {
   const result = await axios.post('/api/1.0/group/info', { groupId });
   const [groupInfo] = result.data.result;
   $('#comment-title').html(`${groupInfo.title}`);
-  $('#comment-time').html(`活動時間: ${groupInfo.date} ${groupInfo.time}`);
+  $('#comment-time').html(`${groupInfo.date} ${groupInfo.time}`);
 
   // 新增 class 給 send comment button
   $('#send-comment').removeClass();
@@ -488,7 +457,7 @@ $('#send-comment').click(async (e) => {
         OK = false;
         Swal.fire({
           icon: 'error',
-          title: `請輸入 ${$(requiredField).attr('name')} 欄位`
+          title: `請輸入${$(requiredField).attr('name')}欄位`
         });
         return false; // break
       }
@@ -538,22 +507,31 @@ $('#star').click(async () => {
 
   // 渲染評價
   let score = 0;
-  $('#comment-block-container').empty();
+  $('#comment-container').empty();
   for (let i = 0; i < comment.length; i++) {
     score += comment[i].score;
-    $('#comment-block-container').append(
-      `<a href="/group.html?id=${comment[i].groupId}" class="comment-group-link"><div class="comment-block">
-         <div class="commenter">
-           <div>${comment[i].commenterName}</div>
-           <div> | </div>
-           <div>${comment[i].date}</div>
-           <div> | </div>
-           <div>${comment[i].title}</div>
-         </div>
-         <div>${comment[i].content}</div>
-       </div></a>
+    $('#comment-container').append(
+      `<a href="/group.html?id=${comment[i].groupId}" class="comment-group-link">
+         <div class="comment-block">
+            <div class="commenter cb">
+              <div class="comment-commenter">${comment[i].commenterName}</div>
+              <div class="personal-score"></div>            
+              <div class="split-line">|</div>
+              <div class="comment-title">${comment[i].title}</div>
+            </div>
+            <div class="comment-content cb">${comment[i].content}</div>
+            <div class="comment-date cb">${comment[i].date}</div>
+          </div>
+       </a>
     `
     );
+
+    // 渲染個人分數
+    $('.personal-score').rateYo({
+      rating: comment[i].score,
+      starWidth: '18px',
+      readOnly: true
+    });
   }
 
   // 評價分數
@@ -561,12 +539,14 @@ $('#star').click(async () => {
     $('#avg-score').html('0');
     $('#rateYo').rateYo({
       rating: 0,
+      starWidth: '50px',
       readOnly: true
     });
   } else {
     $('#avg-score').html(`${score / comment.length}`);
     $('#rateYo').rateYo({
       rating: score / comment.length,
+      starWidth: '50px',
       readOnly: true
     });
   }

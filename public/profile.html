@@ -32,26 +32,30 @@
             id="my-profile"
             src="./images/personal.png"
             alt="personal icon"
-            height="20"
+            height="28"
           />
-          <img id="star" src="images/star.png" height="28" alt="my comments" />
+          <img id="star" src="images/star.png" height="33" alt="my comments" />
         </div>
         <div class="group-dashboard">
-          <div>
-            <div id="i-create-num"></div>
-            <a id="i-create-link" href=""><div>我主揪的團</div></a>
+          <div class="i">
+            <a id="i-create-link" href="" class="sub sub-dashboard-i">
+              <div id="i-create-num" class="dashboard-num"></div>
+              <div class="dashboard-title">我主揪的團</div>
+            </a>
+            <a id="i-signup-link" href="" class="sub sub-dashboard-i">
+              <div id="i-signup-num" class="dashboard-num"></div>
+              <div class="dashboard-title">我報名的團</div>
+            </a>
           </div>
-          <div>
-            <div id="i-signup-num"></div>
-            <a id="i-signup-link" href=""><div>我報名的團</div></a>
-          </div>
-          <div>
-            <div id="past-create-num"></div>
-            <a id="past-create-link" href=""><div>過去主揪的團</div></a>
-          </div>
-          <div>
-            <div id="past-signup-num"></div>
-            <a id="past-signup-link" href=""><div>過去報名的團</div></a>
+          <div class="past">
+            <a id="past-create-link" href="" class="sub sub-dashboard-past">
+              <div id="past-create-num" class="dashboard-num"></div>
+              <div class="dashboard-title">過去主揪的團</div>
+            </a>
+            <a id="past-signup-link" href="" class="sub sub-dashboard-past">
+              <div id="past-signup-num" class="dashboard-num"></div>
+              <div class="dashboard-title">過去報名的團</div>
+            </a>
           </div>
         </div>
       </div>
@@ -121,11 +125,11 @@
           </div>
           <div id="comment">
             <div id="comment-score">
-              <div id="avg-score">4.5</div>
+              <div id="avg-score"></div>
               <div id="rateYo"></div>
-              <div id="comment-num">(58)</div>
+              <div id="comment-num"></div>
             </div>
-            <div id="comment-block-container"></div>
+            <div id="comment-container"></div>
           </div>
         </div>
       </div>
@@ -133,42 +137,83 @@
     <div id="background-pop">
       <div id="div-pop">
         <div class="div-top">
-          <span id="close-button">×</span>
-          <div>我的檔案</div>
+          <div id="pop-title">我的檔案</div>
+          <div id="close-button">X</div>
         </div>
         <div class="div-content">
           <form id="edit-form" action="post">
-            <div>
-              姓名:
+            <div class="edit-form-block">
+              <div class="edit-form-title">姓名</div>
               <input id="name" name="姓名" required />
             </div>
-            <div id="sex">
-              生理性別:
-              <input id="male" type="radio" name="gender" value="1" />
-              <label for="male">男</label>
-              <input id="female" type="radio" name="gender" value="0" />
-              <label for="female">女</label>
+            <div id="sex" class="edit-form-sex-block">
+              <div class="edit-form-title">生理性別</div>
+              <div class="radio-selection">
+                <input
+                  id="male"
+                  type="radio"
+                  name="gender"
+                  value="1"
+                  style="transform: scale(1.5)"
+                />
+                <label for="male">男</label>
+                <input
+                  id="female"
+                  type="radio"
+                  name="gender"
+                  value="0"
+                  style="transform: scale(1.5)"
+                />
+                <label for="female">女</label>
+              </div>
             </div>
-            <div class="tw-city-selector">
-              常出現在哪裡打球:
+            <div class="tw-city-selector edit-form-block">
+              <div class="edit-form-title">常出現在哪裡打球</div>
               <select id="county" class="county"></select>
-              <select id="district" class="district"></select>
+              <select id="district" class="district" hidden></select>
             </div>
-            <div>
-              擅長位置(最多兩個):
-              <input type="checkbox" name="position" value="0" />
-              <label for="setter">舉球</label>
-              <input type="checkbox" name="position" value="1" />
-              <label for="spiker">大砲</label>
-              <input type="checkbox" name="position" value="2" />
-              <label for="middle">欄中</label>
-              <input type="checkbox" name="position" value="3" />
-              <label for="oposite">舉對</label>
-              <input type="checkbox" name="position" value="4" />
-              <label for="libero">自由</label>
+            <div class="edit-form-pos-block">
+              <div class="edit-form-title">擅長位置 (最多兩個)</div>
+              <div class="checkbox-selection">
+                <input
+                  type="checkbox"
+                  name="position"
+                  value="0"
+                  style="transform: scale(1.5)"
+                />
+                <label for="setter">舉球</label>
+                <input
+                  type="checkbox"
+                  name="position"
+                  value="1"
+                  style="transform: scale(1.5)"
+                />
+                <label for="spiker">大砲</label>
+                <input
+                  type="checkbox"
+                  name="position"
+                  value="2"
+                  style="transform: scale(1.5)"
+                />
+                <label for="middle">欄中</label>
+                <input
+                  type="checkbox"
+                  name="position"
+                  value="3"
+                  style="transform: scale(1.5)"
+                />
+                <label for="oposite">舉對</label>
+                <input
+                  type="checkbox"
+                  name="position"
+                  value="4"
+                  style="transform: scale(1.5)"
+                />
+                <label for="libero">自由</label>
+              </div>
             </div>
-            <div>
-              自評程度
+            <div class="edit-form-block">
+              <div class="edit-form-title">自評程度</div>
               <select id="my-level">
                 <option value="0">新手</option>
                 <option value="1">中下</option>
@@ -177,17 +222,15 @@
                 <option value="4">超強</option>
               </select>
             </div>
-            <div>
-              自評程度描述
-              <br />
+            <div class="edit-form-block">
+              <div class="edit-form-title">自評程度描述</div>
               <textarea id="my-level-des" rows="8" cols="50"></textarea>
             </div>
-            <div>
-              自我介紹
-              <br />
+            <div class="edit-form-block">
+              <div class="edit-form-title">自我介紹</div>
               <textarea id="self-intro" rows="8" cols="50"></textarea>
             </div>
-            <button id="save">儲存</button>
+            <center><button id="save">儲存</button></center>
           </form>
         </div>
       </div>
@@ -195,15 +238,18 @@
     <div id="comment-pop">
       <div id="comment-div-pop">
         <div class="comment-div-top">
-          <span id="comment-close-button">×</span>
-          <div>我的評價</div>
+          <div id="comment-pop-title">我的評價</div>
+          <div id="comment-close-button">X</div>
         </div>
         <div class="comment-div-content">
           <form id="comment-form">
-            <div id="comment-title"></div>
-            <div id="comment-time"></div>
-            <div>
-              分數
+            <div class="time-title">
+              <div id="comment-title" class="tt"></div>
+              <div class="tt">|</div>
+              <div id="comment-time" class="tt"></div>
+            </div>
+            <div class="comment-score">
+              <div>分數</div>
               <select id="score" name="分數" required>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -212,19 +258,9 @@
                 <option value="5">5</option>
               </select>
             </div>
-            <div>
-              評價
-              <br />
-              <textarea
-                id="content"
-                rows="8"
-                cols="30"
-                name="評價"
-                required
-              ></textarea>
-            </div>
-            <br />
-            <button id="send-comment">送出評價</button>
+            <div>評價</div>
+            <textarea id="content" name="評價" required></textarea>
+            <center><button id="send-comment">送出評價</button></center>
           </form>
         </div>
       </div>

@@ -37,10 +37,21 @@ body {
   display: flex;
   height: 50px;
   justify-content: space-evenly;
-  align-items: center;
-  margin: 10px 5% 10px 5%;
+  align-items: baseline;
+  margin: 15px 7% 10px 5%;
   border-bottom: 1px solid #aa8b56;
-  padding-bottom: 20px;
+  padding-bottom: 15px;
+}
+
+.vb-nav-mid a:link,
+.vb-nav-mid a:visited {
+  text-decoration: none;
+  color: black;
+}
+
+.vb-nav-mid a:hover {
+  text-decoration: underline;
+  color: black;
 }
 
 .underline {
@@ -50,7 +61,7 @@ body {
 }
 
 .log-out {
-  font-size: 20px;
+  font-size: 24px;
   font-family: 'cwTeXYe';
 }
 
@@ -74,12 +85,60 @@ body {
   border-radius: 10px;
   padding: 6%;
   height: 100%;
-  margin: 2.5% 5% 2.5% 5%;
+  margin: 4% 5% 4% 5%;
   overflow-y: scroll;
 }
 
 .shift-background::-webkit-scrollbar {
   display: none;
+}
+
+/* 現正、歷史 dashboard */
+.group-dashboard {
+  text-align: center;
+}
+
+.sub-dashboard-i {
+  margin: 10% 0 5% 0;
+  font-size: 23px;
+  border: 1.5px solid rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 2% 4% 2% 4%;
+}
+
+.sub-dashboard-past {
+  margin: 10% 0 5% 0;
+  font-size: 23px;
+  border: 1.5px solid rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 2%;
+}
+
+.sub:link,
+.sub:visited {
+  text-decoration: none;
+  color: black;
+}
+
+.sub:hover {
+  text-decoration: none;
+  border: 2px solid #004aad;
+}
+
+.dashboard-num {
+  font-size: 20px;
+  margin: 7px 0 10px 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.dashboard-title {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.i,
+.past {
+  display: flex;
+  justify-content: space-evenly;
 }
 
 /* 追蹤、編輯按鈕*/
@@ -163,8 +222,121 @@ body {
 }
 
 /* 編輯個人檔案 */
+#background-pop {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#div-pop {
+  background: #ffffff;
+  width: 70%;
+  height: 90%;
+  z-index: 1; /* 上移一層 */
+  position: absolute; /* 水平垂直置中 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  overflow-y: auto;
+}
+
+#div-pop::-webkit-scrollbar {
+  display: none;
+}
+
+.div-top {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 0 0 2% 2%;
+  background-color: #fef1e6;
+}
+
+#pop-title {
+  font-size: 40px;
+  color: black;
+  margin-top: 2.5%;
+}
+
+#close-button {
+  color: gray;
+  cursor: pointer;
+  font-size: 20px;
+  margin: 0 1% 3.5% 40%;
+}
+
+.div-content {
+  color: rgb(170, 139, 86);
+  font-size: 30px;
+  padding: 6% 10% 6% 10%;
+}
+
+.edit-form-block {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5%;
+}
+
+.edit-form-sex-block,
+.edit-form-pos-block {
+  margin-bottom: 5%;
+}
+
+.edit-form-title {
+  margin-bottom: 2%;
+}
+
+.edit-form-block select,
+.edit-form-block input {
+  opacity: 0.8;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  height: 50px;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: 'Lucida Console';
+  text-align: center;
+}
+
+.edit-form-block textarea {
+  opacity: 0.8;
+  border-radius: 10px;
+  height: 300px;
+  font-size: 20px;
+  resize: none;
+}
+
+.edit-form-sex-block label,
+.edit-form-pos-block label {
+  text-align: center;
+  font-size: 25px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.radio-selection,
+.checkbox-selection {
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  padding: 1.5% 0 1.5% 0;
+}
+
+#save {
+  font-size: 20px;
+  background-color: #f9d5a7;
+  border-radius: 5px;
+  border: 0px;
+  padding: 1%;
+  cursor: pointer;
+}
+
 /* 待評價 */
-#background-pop,
 #comment-pop {
   display: none;
   position: fixed;
@@ -174,46 +346,103 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
-#div-pop,
+
 #comment-div-pop {
   background: #ffffff;
-  width: 50%;
+  width: 70%;
   height: 90%;
-  z-index: 1;
-  margin: 3% auto;
-  overflow: auto;
+  z-index: 1; /* 上移一層 */
+  position: absolute; /* 水平垂直置中 */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  overflow-y: auto;
 }
-.div-top,
+
+#comment-div-pop::-webkit-scrollbar {
+  display: none;
+}
+
 .comment-div-top {
-  width: 100%;
-  height: auto;
-  text-align: center;
-  background-color: #28a3e7;
-  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 0 0 2% 2%;
+  background-color: #fef1e6;
 }
-.div-top div,
-.comment-div-top div {
-  padding: 3px 5px 5px 8px;
+
+#comment-pop-title {
+  font-size: 40px;
+  color: black;
+  margin-top: 2.5%;
 }
-#close-button,
+
 #comment-close-button {
-  color: white;
-  margin-bottom: 10px;
-  margin-left: 20px;
-  margin-right: 3px;
+  color: gray;
   cursor: pointer;
-  float: right;
+  font-size: 20px;
+  margin: 0 1% 3.5% 40%;
 }
-.div-content,
+
 .comment-div-content {
-  width: auto;
-  height: auto;
-  padding: 10px;
-  overflow: auto;
+  color: rgb(170, 139, 86);
+  font-size: 30px;
+  padding: 4% 10% 3% 10%;
 }
-.div-content div,
-.comment-div-content div {
-  padding: 3px;
+
+.time-title,
+.comment-score {
+  margin-bottom: 2%;
+}
+
+.time-title {
+  display: flex;
+  align-items: baseline;
+}
+
+.tt {
+  margin-right: 2%;
+}
+
+#comment-time {
+  font-size: 25px;
+}
+
+.comment-score {
+  display: flex;
+  align-items: center;
+}
+
+#score {
+  opacity: 0.8;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  height: 30px;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-left: 3%;
+  font-family: 'Lucida Console';
+}
+
+#content {
+  opacity: 0.8;
+  border-radius: 5px;
+  width: 100%;
+  height: 200px;
+  margin: 2% 0 2% 0;
+  font-size: 25px;
+  resize: none;
+}
+
+#send-comment {
+  font-size: 20px;
+  background-color: #f9d5a7;
+  border-radius: 5px;
+  border: 0px;
+  padding: 1%;
+  cursor: pointer;
 }
 
 /* 揪團ing、過去揪團*/
@@ -223,9 +452,10 @@ body {
   color: black;
 }
 
-.group-details-link:hover {
+.group-details:hover {
   text-decoration: none;
   color: #004aad;
+  border: 2px solid #004aad;
 }
 
 #i-create-groups,
@@ -249,13 +479,13 @@ body {
 .group-details {
   padding: 1%;
   margin: 3% 0 3% 0;
-  border: 1px solid;
+  border: 1.5px solid rgba(0, 0, 0, 0.3);
   border-radius: 8px;
 }
 
 .group-title {
   font-size: 25px;
-  margin: 1% 0 1% 0;
+  margin: 1% 0 3% 0;
 }
 
 .group-date {
@@ -284,59 +514,80 @@ body {
   margin: 2.6% 0 2.6% 0;
 }
 
-/* icon 區 */
-#icons {
-  display: flex;
-  justify-content: space-around;
-  width: 60%;
-  margin: 2% auto;
-}
-
 /* 評價區塊 */
-#comment {
-  display: none;
-}
-
-#comment-block-container {
-  padding: 2%;
-}
-
-.comment-block {
-  border: solid;
-  padding: 2%;
-  margin-top: 2%;
-}
-
 #comment-score {
   text-align: center;
+  margin-top: 3%;
   padding: 2%;
+}
+
+#comment-num {
+  margin-top: 2%;
+  font-size: 20px;
 }
 
 #avg-score {
-  font-size: xx-large;
+  font-size: 40px;
+  margin-bottom: 1.5%;
 }
 
 #rateYo {
   margin-left: auto;
   margin-right: auto;
+  z-index: 0;
+}
+
+.personal-score {
+  z-index: 0;
 }
 
 .commenter {
   display: flex;
+  align-items: stretch;
+  font-size: 22px;
 }
 
-.commenter div {
-  margin-right: 2%;
+.comment-commenter {
+  font-family: 'Lucida Console';
+  margin: 0 1% 0 0;
 }
 
-#comment-block-container a {
+.split-line,
+.personal-score {
+  margin: 0 2% 0 0;
+}
+
+.comment-content {
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.comment-date {
+  font-size: 16px;
+}
+
+.comment-block {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 2%;
+  margin: 5%;
+}
+
+.cb {
+  margin: 2% 0 2% 0;
+}
+
+.comment-group-link:link,
+.comment-group-link:visited {
   text-decoration: none;
-}
-
-.comment-group-link:link {
   color: black;
 }
 
-.comment-block div {
-  padding: 2px;
+.comment-block:hover {
+  border: 2px solid #004aad;
+}
+
+.comment-group-link:hover {
+  text-decoration: none;
+  color: #004aad;
 }
