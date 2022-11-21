@@ -3,14 +3,14 @@ $('#signup-btn').click(async (e) => {
 
   // 使用者未填欄位，發出 alert
   let OK = true;
-  $('#signup input')
+  $('.signup-container input')
     .filter('[required]') // 找出有 required 的屬性
     .each((i, requiredField) => {
       if (!$(requiredField).val()) {
         OK = false;
         Swal.fire({
           icon: 'error',
-          title: `請輸入 "${$(requiredField).attr('name')}" 欄位`
+          title: `請輸入${$(requiredField).attr('name')}欄位`
         });
         return false; // break
       }
@@ -64,14 +64,14 @@ $('#signin-btn').click(async (e) => {
   e.preventDefault();
   // 使用者未填欄位，發出 alert
   let OK = true;
-  $('#signin input')
+  $('.signin-container input')
     .filter('[required]') // 找出有 required 的屬性
     .each((i, requiredField) => {
       if (!$(requiredField).val()) {
         OK = false;
         Swal.fire({
           icon: 'error',
-          title: `請輸入 "${$(requiredField).attr('name')}" 欄位`
+          title: `請輸入${$(requiredField).attr('name')}欄位`
         });
         return false; // break
       }
@@ -104,4 +104,16 @@ $('#signin-btn').click(async (e) => {
       }
     }
   }
+});
+
+$('#to-signup').click(async (e) => {
+  e.preventDefault();
+  $('#signin-form').hide();
+  $('#signup-form').show();
+});
+
+$('#to-signin').click(async (e) => {
+  e.preventDefault();
+  $('#signup-form').hide();
+  $('#signin-form').show();
 });
