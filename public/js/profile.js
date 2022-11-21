@@ -539,14 +539,14 @@ $('#star').click(async () => {
     $('#avg-score').html('0');
     $('#rateYo').rateYo({
       rating: 0,
-      starWidth: '50px',
+      starWidth: '40px',
       readOnly: true
     });
   } else {
     $('#avg-score').html(`${score / comment.length}`);
     $('#rateYo').rateYo({
       rating: score / comment.length,
-      starWidth: '50px',
+      starWidth: '40px',
       readOnly: true
     });
   }

@@ -1,20 +1,39 @@
-/* 首頁 header*/
+/* 登入頁面架構*/
 html,
 body {
   height: 100%;
   margin: 0;
+  background-color: #ece2e1;
+}
+
+.main-container {
+  display: flex;
+  height: 100vh;
 }
 
 .vb-nav {
-  display: flex;
-  background: #28a3e7;
-  padding: 10px;
+  flex-basis: 40%;
+  margin: 4% 0 4% 17%;
+  background-color: #fef1e6;
+  border-radius: 30px 0 0 30px;
+  overflow-y: scroll;
 }
 
-.vb-nav-social {
-  display: flex;
+.signin {
+  flex-basis: 60%;
+  margin: 4% 17% 4% 0;
+  background-color: white;
+  overflow-y: scroll;
+  border-radius: 0 30px 30px 0;
 }
 
+.vb-nav::-webkit-scrollbar,
+.signin::-webkit-scrollbar {
+  /* 隱藏滾動條*/
+  display: none;
+}
+
+/* 左側內容*/
 form {
   border: solid;
   padding: 2%;
@@ -26,7 +45,12 @@ form div {
 }
 
 #register {
-  display: flex;
+  display: none;
+  /* display: flex; */
   justify-content: space-around;
   margin: 3%;
+}
+
+.signup {
+  display: none;
 }
