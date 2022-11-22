@@ -194,7 +194,7 @@
 #edit-div-pop {
   background: #ffffff;
   width: 70%;
-  height: 100%;
+  height: 90%;
   z-index: 1;
   margin: auto;
   position: absolute; /* 水平垂直置中 */
@@ -245,18 +245,20 @@
   margin: 0 0 1% 2%;
 }
 
-#edit-start-group-form div select,
-#edit-start-group-form div input {
-  opacity: 0.8;
+.edit-form-block select,
+.edit-form-block input {
+  border: 1px solid rgba(0, 0, 0, 0.8);
   border-radius: 10px;
   height: 50px;
   font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
   margin: 0 1% 4% 2%;
   font-family: 'Lucida Console';
+  text-align: center;
 }
 
-#edit-start-group-form div textarea {
-  opacity: 0.8;
+.edit-form-block textarea {
+  border: 1px solid rgba(0, 0, 0, 0.8);
   border-radius: 10px;
   height: 300px;
   font-size: 20px;
