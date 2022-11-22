@@ -1,7 +1,3 @@
-// 從 local storage 拿 jwt token
-const { localStorage } = window;
-const jwtToken = localStorage.getItem('jwtToken');
-
 // 抓網址 userId (?id=21)，可以連到別人頁面 (到誰的個人頁面)
 const url = new URL(window.location.href);
 const id = url.search;

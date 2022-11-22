@@ -117,3 +117,7 @@ $('#to-signin').click(async (e) => {
   $('#signup-form').hide();
   $('#signin-form').show();
 });
+
+$('.logo').click(async () => {
+  window.location.href = '/index.html';
+});

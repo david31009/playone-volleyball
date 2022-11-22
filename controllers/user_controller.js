@@ -70,4 +70,8 @@ const profile = async (req, res) => {
   res.status(200).send({ userId: user.userId });
 };
 
-module.exports = { signup, signin, profile };
+const loginCheck = async (req, res) => {
+  res.status(200).send('ok');
+};
+
+module.exports = { signup, signin, profile, loginCheck };

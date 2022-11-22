@@ -10,6 +10,7 @@ $('#card-group').hide();
 let userId;
 
 // 渲染某團詳細資料
+$('.group-detail').hide();
 (async () => {
   // 打 group details API
   let detail;
@@ -95,7 +96,7 @@ let userId;
     if (signupMembers[i].signupStatus === '1') {
       $('#member-list').append(
         `<div class="member">
-           <div class="member-name">${signupMembers[i].username}</div>
+           <a href="/profile.html?id=${signupMembers[i].userId}" class="member-name">${signupMembers[i].username}</a>
            <div class="accept-deny-btn">
              <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)" style="background-color: rgba(211, 228, 205, 0.5); cursor:not-allowed; color: grey" disabled>已接受報名</button>
            </div>
@@ -104,7 +105,7 @@ let userId;
     } else if (signupMembers[i].signupStatus === '2') {
       $('#member-list').append(
         `<div class="member">
-           <div class="member-name">${signupMembers[i].username}</div>
+           <a href="/profile.html?id=${signupMembers[i].userId}" class="member-name">${signupMembers[i].username}</a>
            <div class="accept-deny-btn">
              <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)" style="background-color: rgba(255, 209, 209, 0.5); cursor:not-allowed; color: grey" disabled>已拒絕報名</button>
            </div>
@@ -113,7 +114,7 @@ let userId;
     } else {
       $('#member-list').append(
         `<div class="member">
-          <div class="member-name">${signupMembers[i].username}</div>
+          <a href="/profile.html?id=${signupMembers[i].userId}" class="member-name">${signupMembers[i].username}</a>
           <div class="accept-deny-btn">
             <button id="${signupMembers[i].username}-${signupMembers[i].userId}-accept" class="accept" onclick="decide(this)">接受</button>
             <button id="${signupMembers[i].username}-${signupMembers[i].userId}-deny" class="deny" onclick="decide(this)">拒絕</button>
@@ -208,6 +209,7 @@ let userId;
     );
   }
 })();
+$('.group-detail').show();
 
 // 決定報名者是否報名成功
 async function decide(e) {

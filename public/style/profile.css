@@ -33,6 +33,10 @@ body {
   cursor: pointer;
 }
 
+#star {
+  cursor: pointer;
+}
+
 .vb-nav-mid {
   display: flex;
   height: 50px;

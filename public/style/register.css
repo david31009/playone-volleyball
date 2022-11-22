@@ -153,6 +153,7 @@ body {
 .logo {
   text-align: center;
   margin-top: 12%;
+  cursor: pointer;
 }
 
 .slogan {
@@ -163,69 +164,7 @@ body {
   margin-top: 8%;
 }
 
+/* 動畫*/
 .animation {
   text-align: center;
-}
-
-/* 動畫*/
-svg#freepik_stories-beach-volleyball:not(.animated) .animable {
-  opacity: 0;
-}
-svg#freepik_stories-beach-volleyball.animated #freepik--Floor--inject-5 {
-  animation: 1.5s Infinite linear heartbeat;
-  animation-delay: 0s;
-}
-svg#freepik_stories-beach-volleyball.animated #freepik--Ball--inject-5 {
-  animation: 1.8s 1 forwards ease-out slideDown;
-  animation-delay: 0s;
-}
-svg#freepik_stories-beach-volleyball.animated #freepik--character-4--inject-5 {
-  animation: 1.5s Infinite linear floating;
-  animation-delay: 0s;
-}
-@keyframes heartbeat {
-  0% {
-    transform: scale(1);
-  }
-  10% {
-    transform: scale(1.1);
-  }
-  30% {
-    transform: scale(1);
-  }
-  40% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  60% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-@keyframes slideDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes floating {
-  0% {
-    opacity: 1;
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0px);
-  }
 }
