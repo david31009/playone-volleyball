@@ -75,7 +75,8 @@ body {
 
 .tw-select {
   /* 下拉式選單*/
-  margin: 0 1% 0 2%;
+  height: 50px;
+  margin: 0 1% 2% 2%;
 }
 
 .tw-select select {
@@ -86,7 +87,6 @@ body {
   font-size: 18px;
   font-family: 'cwTeXYe';
   width: 48%;
-  margin: 0 0 -12% 0;
 }
 
 .select {
