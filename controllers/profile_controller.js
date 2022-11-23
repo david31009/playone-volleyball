@@ -186,6 +186,32 @@ const getComments = async (req, res) => {
   res.status(200).json({ result });
 };
 
+const getFollow = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await Profile.getFollow([id]);
+  const result = resultDB.map((i) => {
+    return {
+      userId: i.user_id,
+      id: i.id,
+      username: i.username
+    };
+  });
+  res.status(200).json({ result });
+};
+
+const getFans = async (req, res) => {
+  const { id } = req.query;
+  const resultDB = await Profile.getFans([id]);
+  const result = resultDB.map((i) => {
+    return {
+      followId: i.follow_id,
+      id: i.id,
+      username: i.username
+    };
+  });
+  res.status(200).json({ result });
+};
+
 module.exports = {
   updateUser,
   userProfile,
@@ -199,5 +225,7 @@ module.exports = {
   groupInfo,
   storeComment,
   commentStatus,
-  getComments
+  getComments,
+  getFollow,
+  getFans
 };

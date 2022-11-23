@@ -1,9 +1,23 @@
 // 渲染字卡
 (async () => {
   const getCards = await axios.get('/api/1.0/group');
-  const cardInfo = getCards.data.result;
+  const cardInfo = getCards.data.firstPage;
+  const { totalPage } = getCards.data;
+  // console.log(totalPage);
 
   $('.group-top').html('最新揪團');
+  // 渲染總頁數
+  for (let i = 0; i < totalPage; i++) {
+    $('.page').append(
+      `<div id="page=${i + 1}" class="per-page" onclick="nextPage(this)">${
+        i + 1
+      }
+      </div>
+      `
+    );
+  }
+
+  // 渲染第一頁的團
   for (let i = 0; i < cardInfo.length; i++) {
     const newDom = $('.card').first().clone().removeAttr('hidden');
 

@@ -50,12 +50,18 @@ const createGroup = async (req, res) => {
 
 const getGroups = async (req, res) => {
   const resultDB = await Group.getGroups();
-  const result = resultDB.map((i) => {
+  const { groups } = resultDB;
+  const { totalRecords } = resultDB;
+
+  // 第一頁資料 (10筆)
+  const firstPage = groups.map((i) => {
+    moment.locale('zh-tw');
     const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+    const day = moment(i.date).format('dddd')[2]; // 星期幾
     return {
       groupId: i.id,
       title: i.title,
-      date: datetime.split(' ')[0],
+      date: `${datetime.split(' ')[0]} (${day})`,
       time: datetime.split(' ')[1],
       timeDuration: i.time_duration / 60,
       net: netHigh[i.net],
@@ -68,28 +74,77 @@ const getGroups = async (req, res) => {
       username: i.username
     };
   });
-  res.status(200).json({ result });
+
+  // 計算共幾頁
+  const pageSize = 10; // 每頁 10 筆
+  let totalPage = Math.floor(totalRecords / pageSize); // 無條件捨去
+  if (totalRecords % pageSize === 0) {
+    totalPage = totalRecords / pageSize;
+  } else {
+    totalPage += 1;
+  }
+
+  res.status(200).json({ firstPage, totalPage });
+};
+
+const nextPage = async (req, res) => {
+  const { page } = req.body;
+  const pageSize = 10;
+  const startRecord = (page - 1) * pageSize;
+  const result = await Group.nextPage(`${startRecord}`, `${pageSize}`);
+  // console.log(result);
+
+  const nextPageGroup = result.map((i) => {
+    moment.locale('zh-tw');
+    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+    const day = moment(i.date).format('dddd')[2]; // 星期幾
+    return {
+      groupId: i.id,
+      title: i.title,
+      date: `${datetime.split(' ')[0]} (${day})`,
+      time: datetime.split(' ')[1],
+      timeDuration: i.time_duration / 60,
+      net: netHigh[i.net],
+      place: i.place,
+      placeDescription: i.place_description,
+      money: i.money,
+      groupLevel: groupLevel[i.level],
+      peopleHave: i.people_have,
+      peopleNeed: i.people_need,
+      username: i.username
+    };
+  });
+
+  res.status(200).json({ nextPageGroup });
 };
 
 const filterGroups = async (req, res) => {
   const info = req.body;
+  const pageSize = 10; // 每頁 10 筆
+  let { page } = info;
+  page = (page - 1) * pageSize;
+
   // % 是 sql like 語法用來做相似搜尋
-  const filterInfo = [
+  const resultDB = await Group.filterGroups(
     `${info.county}%`,
     `%${info.district}`,
     `%${info.groupLevel}`,
     `%${info.net}`,
     `%${info.court}`,
-    `%${info.isCharge}`
-  ];
+    `%${info.isCharge}`,
+    `${page}`
+  );
+  const { groups } = resultDB;
+  const { totalRecords } = resultDB;
 
-  const resultDB = await Group.filterGroups(filterInfo);
-  const result = resultDB.map((i) => {
+  const perPage = groups.map((i) => {
+    moment.locale('zh-tw');
     const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+    const day = moment(i.date).format('dddd')[2]; // 星期幾
     return {
       groupId: i.id,
       title: i.title,
-      date: datetime.split(' ')[0],
+      date: `${datetime.split(' ')[0]} (${day})`,
       time: datetime.split(' ')[1],
       timeDuration: i.time_duration / 60,
       net: netHigh[i.net],
@@ -102,7 +157,15 @@ const filterGroups = async (req, res) => {
       username: i.username
     };
   });
-  res.status(200).json({ result });
+
+  // 計算共幾頁
+  let totalPage = Math.floor(totalRecords / pageSize); // 無條件捨去
+  if (totalRecords % pageSize === 0) {
+    totalPage = totalRecords / pageSize;
+  } else {
+    totalPage += 1;
+  }
+  res.status(200).json({ perPage, totalPage });
 };
 
 const groupDetails = async (req, res) => {
@@ -117,7 +180,9 @@ const groupDetails = async (req, res) => {
     return;
   }
   const result = resultDB.map((i) => {
+    moment.locale('zh-tw');
     const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+    const day = moment(i.date).format('dddd')[2]; // 星期幾
     // 對照表，數字跟中文都給
     return {
       groupId: i.id,
@@ -125,7 +190,7 @@ const groupDetails = async (req, res) => {
       username: i.username,
       title: i.title,
       datetime: i.date,
-      date: datetime.split(' ')[0],
+      date: `${datetime.split(' ')[0]} (${day})`,
       time: datetime.split(' ')[1],
       timeDuration: i.time_duration / 60,
       net: [i.net, netHigh[i.net]],
@@ -262,6 +327,37 @@ const closeGroup = async (req, res) => {
   res.status(200).send('ok');
 };
 
+// 渲染第一頁和各頁頁碼
+const testGroup = async (req, res) => {
+  const result = await Group.testGroup();
+  const { totalRecords } = result; // groups 總數量
+  const { groups } = result; // 各 group 細節
+
+  // 計算共幾頁
+  const pageSize = 10; // 每頁 10 筆
+  let totalPage = Math.floor(totalRecords / pageSize); // 無條件捨去
+  if (totalRecords % pageSize === 0) {
+    totalPage = totalRecords / pageSize;
+  } else {
+    totalPage += 1;
+  }
+
+  // 第一頁資料
+  const firstPage = groups.slice(0, pageSize);
+
+  res.status(200).json({ firstPage, totalPage });
+};
+
+// 每頁資料
+const testPage = async (req, res) => {
+  const { page } = req.body;
+  const pageSize = 10;
+  const startRecord = (page - 1) * pageSize;
+  const result = await Group.testPage([`${startRecord}`, `${pageSize}`]);
+
+  res.status(200).json({ result });
+};
+
 module.exports = {
   createGroup,
   getGroups,
@@ -274,5 +370,6 @@ module.exports = {
   getMsg,
   getSignupMembers,
   decideSignupStatus,
-  closeGroup
+  closeGroup,
+  nextPage
 };

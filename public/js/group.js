@@ -10,7 +10,6 @@ $('#card-group').hide();
 let userId;
 
 // 渲染某團詳細資料
-$('.group-detail').hide();
 (async () => {
   // 打 group details API
   let detail;
@@ -21,6 +20,8 @@ $('.group-detail').hide();
   }
 
   const [groupDetail] = detail.data.result;
+
+  console.log(groupDetail);
 
   // 確認使用者是誰，顯示不同按鈕 (主揪 => edit，使用者、訪客 => view)
   let user;
@@ -209,7 +210,6 @@ $('.group-detail').hide();
     );
   }
 })();
-$('.group-detail').show();
 
 // 決定報名者是否報名成功
 async function decide(e) {

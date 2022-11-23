@@ -11,7 +11,7 @@ body {
 }
 
 .vb-nav {
-  width: 30%;
+  flex-basis: 30%;
   background-color: #fef1e6;
   overflow-y: scroll;
 }
@@ -212,23 +212,54 @@ body {
   resize: none;
 }
 
+/* 換頁*/
+.page {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.per-page {
+  margin-right: 30px;
+  font-size: 20px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.per-page:hover {
+  border: 1px solid #004aad;
+  color: #004aad;
+}
+
 /* 揪團字卡渲染*/
 .card-group {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  flex: 1;
+  flex-basis: 70%;
+  /* flex: 1; */
   overflow-y: scroll;
   background-color: #ece2e1;
   padding-bottom: 5%;
 }
 
 .group-top {
-  flex: 1;
+  /* flex: 1; */
+  flex-basis: 100%;
   font-size: 40px;
-  margin: 11% 5% 1% 6%;
+  margin: 11% 5% 15px 6%;
   padding-bottom: 30px;
   border-bottom: 1px solid #aa8b56;
+}
+
+.filter-result {
+  flex-basis: 100%;
+  font-size: 40px;
+  margin: 15% 5% 0 6%;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .card {

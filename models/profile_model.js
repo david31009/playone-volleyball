@@ -142,7 +142,22 @@ const getComments = async (userId) => {
     'SELECT user_id, commenter_id, group_id, score, content, comment.date, title, username FROM `comment` INNER JOIN `user` ON comment.commenter_id = user.id INNER JOIN `group` ON comment.group_id = group.id WHERE user_id = ? ORDER BY date DESC',
     userId
   );
-  // console.log(result);
+  return result;
+};
+
+const getFollow = async (userId) => {
+  const [result] = await pool.execute(
+    'SELECT user_id, follow_id, user.id, username FROM `fans` INNER JOIN `user` ON fans.follow_id = user.id WHERE user_id = ?',
+    userId
+  );
+  return result;
+};
+
+const getFans = async (userId) => {
+  const [result] = await pool.execute(
+    'SELECT user_id, follow_id, user.id, username FROM `fans` INNER JOIN `user` ON fans.user_id = user.id WHERE follow_id = ?',
+    userId
+  );
   return result;
 };
 
@@ -159,5 +174,7 @@ module.exports = {
   groupInfo,
   storeComment,
   commentStatus,
-  getComments
+  getComments,
+  getFollow,
+  getFans
 };

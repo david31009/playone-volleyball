@@ -279,7 +279,7 @@ $('#i-create-link').click(async (e) => {
   $('#comment').hide();
 
   // 打 nowCreate api
-  const result = await axios(`/api/1.0/now/create${id}`);
+  const result = await axios.get(`/api/1.0/now/create${id}`);
   const iCreate = result.data.result;
 
   $('#i-create-groups-details').empty();
@@ -307,7 +307,7 @@ $('#i-signup-link').click(async (e) => {
   $('#comment').hide();
 
   // 打 nowSignup api
-  const nowSignupResult = await axios(`/api/1.0/now/signup${id}`);
+  const nowSignupResult = await axios.get(`/api/1.0/now/signup${id}`);
   const nowSignup = nowSignupResult.data.result;
 
   $('#i-signup-groups-details').empty();
@@ -333,7 +333,7 @@ $('#past-create-link').click(async (e) => {
   $('#comment').hide();
 
   // 打 pastCreate api
-  const result = await axios(`/api/1.0/past/create${id}`);
+  const result = await axios.get(`/api/1.0/past/create${id}`);
   const pastCreate = result.data.result;
 
   $('#past-create-groups-details').empty();
@@ -547,4 +547,38 @@ $('#star').click(async () => {
     });
   }
   $('#comment-num').html(`(${comment.length})`);
+});
+
+// 查看追蹤清單
+$('#follow-part').click(async () => {
+  $('#intro-part').hide();
+  $('#my-fans').hide();
+  $('#my-follow').show();
+
+  const result = await axios.get(`/api/1.0/follow${id}`);
+  const followList = result.data.result;
+
+  $('#follow-list').empty();
+  for (let i = 0; i < followList.length; i++) {
+    $('#follow-list').append(
+      `<a href="/profile.html?id=${followList[i].id}" class="i-follow">${followList[i].username}</a>`
+    );
+  }
+});
+
+// 查看粉絲清單
+$('#fans-part').click(async () => {
+  $('#intro-part').hide();
+  $('#my-follow').hide();
+  $('#my-fans').show();
+
+  const result = await axios.get(`/api/1.0/fans${id}`);
+  const fansList = result.data.result;
+
+  $('#fans-list').empty();
+  for (let i = 0; i < fansList.length; i++) {
+    $('#fans-list').append(
+      `<a href="/profile.html?id=${fansList[i].id}" class="my-fans">${fansList[i].username}</a>`
+    );
+  }
 });

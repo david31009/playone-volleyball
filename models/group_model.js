@@ -10,24 +10,56 @@ const createGroup = async (groupInfo) => {
 };
 
 const getGroups = async () => {
+  // 第一頁資料 (10筆)
   const datenow = moment().format('YYYY-MM-DD HH:mm:ss');
-  const [result] = await pool.execute(
+  const [groups] = await pool.execute(
     // 按最新的團、剩餘名額多排序 (取 10 筆)、已關團或時間過期者不從 DB 撈取
     'SELECT * FROM (SELECT group.id, title, date, time_duration, net, place, place_description, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" ORDER BY date DESC, people_left DESC LIMIT 10',
     [datenow]
   );
-  return result;
+
+  // 總頁數
+  let [[totalRecords]] = await pool.execute(
+    'SELECT COUNT(*) FROM (SELECT group.id, title, date, time_duration, net, place, place_description, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed"',
+    [datenow]
+  );
+  totalRecords = totalRecords['COUNT(*)'];
+
+  return { groups, totalRecords };
 };
 
-const filterGroups = async (filterInfo) => {
+const nextPage = async (startRecord, pageSize) => {
   const datenow = moment().format('YYYY-MM-DD HH:mm:ss');
-  filterInfo.unshift(datenow);
-  const [result] = await pool.execute(
-    // 加入篩選條件，按最新的團、剩餘名額最多排序 (取 10 筆)、已關團或時間過期者不從 DB 撈取
-    'SELECT * FROM (SELECT group.id, title, date, time_duration, net, place, place_description, court, is_charge, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" AND place LIKE ? AND place LIKE ? AND level LIKE ? AND net LIKE ? AND court LIKE ? AND is_charge LIKE ? ORDER BY date DESC, people_left DESC LIMIT 10',
-    filterInfo
+  const [GroupsPerPage] = await pool.execute(
+    'SELECT * FROM (SELECT group.id, title, date, time_duration, net, place, place_description, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" ORDER BY date DESC, people_left DESC LIMIT ?, ?',
+    [datenow, startRecord, pageSize]
   );
-  return result;
+  return GroupsPerPage;
+};
+
+const filterGroups = async (
+  county,
+  district,
+  groupLevel,
+  net,
+  court,
+  isCharge,
+  page
+) => {
+  const datenow = moment().format('YYYY-MM-DD HH:mm:ss');
+  const [groups] = await pool.execute(
+    // 加入篩選條件，按最新的團、剩餘名額最多排序 (取 10 筆)、已關團或時間過期者不從 DB 撈取
+    'SELECT * FROM (SELECT group.id, title, date, time_duration, net, place, place_description, court, is_charge, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" AND place LIKE ? AND place LIKE ? AND level LIKE ? AND net LIKE ? AND court LIKE ? AND is_charge LIKE ? ORDER BY date DESC, people_left DESC LIMIT ?, 10',
+    [datenow, county, district, groupLevel, net, court, isCharge, page]
+  );
+
+  // 總頁數
+  let [[totalRecords]] = await pool.execute(
+    'SELECT COUNT(*) FROM (SELECT group.id, title, date, time_duration, net, place, place_description, court, is_charge, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" AND place LIKE ? AND place LIKE ? AND level LIKE ? AND net LIKE ? AND court LIKE ? AND is_charge LIKE ?',
+    [datenow, county, district, groupLevel, net, court, isCharge]
+  );
+  totalRecords = totalRecords['COUNT(*)'];
+  return { groups, totalRecords };
 };
 
 const groupDetails = async (groupId) => {
@@ -131,6 +163,22 @@ const closeGroup = async (groupId) => {
   await pool.execute('UPDATE `group` SET is_build = 0 WHERE id = ? ', groupId);
 };
 
+// 測試
+const testGroup = async () => {
+  const [groups] = await pool.execute('SELECT * FROM `group`');
+  let [[totalRecords]] = await pool.execute('SELECT COUNT(*) FROM `group`');
+  totalRecords = totalRecords['COUNT(*)'];
+  return { groups, totalRecords };
+};
+
+const testPage = async (page) => {
+  const [GroupsPerPage] = await pool.execute(
+    'SELECT * FROM `group` LIMIT ?, ?',
+    page
+  );
+  return GroupsPerPage;
+};
+
 module.exports = {
   createGroup,
   getGroups,
@@ -143,5 +191,6 @@ module.exports = {
   getMsg,
   getSignupMembers,
   decideSignupStatus,
-  closeGroup
+  closeGroup,
+  nextPage
 };

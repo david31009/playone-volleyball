@@ -11,6 +11,74 @@ function show() {
   });
 }
 
+// 點擊下一頁，變換下一頁資料
+async function nextPage(e) {
+  const page = $(e).attr('id').split('=')[1];
+  const result = await axios.post('/api/1.0/group/nextpage', { page });
+  const { nextPageGroup } = result.data;
+
+  $('.no-filter').remove();
+  // 渲染下一頁的團
+  for (let i = 0; i < nextPageGroup.length; i++) {
+    const newDom = $('.card').first().clone().removeAttr('hidden');
+
+    // 按照日期，剩餘報名名額排列
+    newDom.addClass('no-filter');
+    newDom.attr('href', `/group.html?id=${nextPageGroup[i].groupId}`);
+    newDom
+      .children('.card-left')
+      .children('.card-title')
+      .html(`${nextPageGroup[i].title}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-date')
+      .html(`📅 ${nextPageGroup[i].date}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-time')
+      .html(`${nextPageGroup[i].time}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-time-duration')
+      .html(`${nextPageGroup[i].timeDuration} hr`);
+    newDom
+      .children('.card-left')
+      .children('.card-place-container')
+      .children('.card-place')
+      .html(`📍 ${nextPageGroup[i].place}`);
+    newDom
+      .children('.card-left')
+      .children('.card-place-container')
+      .children('.card-place-des')
+      .html(`${nextPageGroup[i].placeDescription}`);
+    newDom
+      .children('.card-left')
+      .children('.card-creator')
+      .html(`💁🏻‍♂️ ${nextPageGroup[i].username}`);
+    newDom
+      .children('.card-right')
+      .children('.card-net')
+      .html(`網高: ${nextPageGroup[i].net}`);
+    newDom
+      .children('.card-right')
+      .children('.card-group-level')
+      .html(`程度: ${nextPageGroup[i].groupLevel}`);
+    newDom
+      .children('.card-right')
+      .children('.card-money')
+      .html(`費用: ${nextPageGroup[i].money} 元`);
+    newDom
+      .children('.card-right')
+      .children('.card-people-have')
+      .html(`內建: ${nextPageGroup[i].peopleHave} 人`);
+
+    $('#card-group').append(newDom);
+  }
+}
+
 $('#close-button').click(() => {
   $('#background-pop').hide();
 });
@@ -126,7 +194,7 @@ $('#start-group').click(async (e) => {
 $('#filter').click(async (e) => {
   e.preventDefault();
   $('#card-group').show();
-  $('.group-signup').hide();
+  $('.group-signup').hide(); // 揪團詳細頁面
 
   const filterInfo = {
     county: $('#filter-county').val(),
@@ -134,15 +202,36 @@ $('#filter').click(async (e) => {
     groupLevel: $('#filter-group-level').val(),
     net: $('#filter-net').val(),
     court: $('#filter-court').val(),
-    isCharge: $('#filter-is-charge').val()
+    isCharge: $('#filter-is-charge').val(),
+    page: 1 // 按下瞬間，顯示第一頁結果
   };
 
   const filterCards = await axios.post('/api/1.0/filter', filterInfo);
-  const filterCardsInfo = filterCards.data.result;
+  const filterCardsInfo = filterCards.data.perPage;
+  const { totalPage } = filterCards.data;
 
   $('.no-filter').remove();
   $('.filter').remove();
   $('.group-top').html('篩選結果');
+
+  // 渲染總頁數
+  $('.page').empty();
+  for (let i = 0; i < totalPage; i++) {
+    $('.page').append(
+      `<div id="page=${
+        i + 1
+      }" class="per-page" onclick="nextPageFilter(this)">${i + 1}</div>`
+    );
+  }
+
+  if (filterCardsInfo.length === 0) {
+    $('.filter-result').show();
+    $('.filter-result').html('目前沒有相關的揪團喔...');
+    $('.card-group').css('padding-bottom', '40%');
+  } else {
+    $('.filter-result').hide();
+  }
+
   for (let i = 0; i < filterCardsInfo.length; i++) {
     const newDom = $('.card').first().clone().removeAttr('hidden');
 
@@ -202,6 +291,84 @@ $('#filter').click(async (e) => {
     $('#card-group').append(newDom);
   }
 });
+
+// 篩選後，點擊下一頁，變換下一頁資料
+async function nextPageFilter(e) {
+  const page = $(e).attr('id').split('=')[1];
+  const filterInfo = {
+    county: $('#filter-county').val(),
+    district: $('#filter-district').val(),
+    groupLevel: $('#filter-group-level').val(),
+    net: $('#filter-net').val(),
+    court: $('#filter-court').val(),
+    isCharge: $('#filter-is-charge').val(),
+    page
+  };
+
+  const result = await axios.post('/api/1.0/filter', filterInfo);
+  const { perPage } = result.data;
+
+  $('.filter').remove();
+  // 渲染下一頁的團
+  for (let i = 0; i < perPage.length; i++) {
+    const newDom = $('.card').first().clone().removeAttr('hidden');
+
+    // 按照日期，剩餘報名名額排列
+    newDom.addClass('filter');
+    newDom.attr('href', `/group.html?id=${perPage[i].groupId}`);
+    newDom
+      .children('.card-left')
+      .children('.card-title')
+      .html(`${perPage[i].title}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-date')
+      .html(`📅 ${perPage[i].date}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-time')
+      .html(`${perPage[i].time}`);
+    newDom
+      .children('.card-left')
+      .children('.card-time-container')
+      .children('.card-time-duration')
+      .html(`${perPage[i].timeDuration} hr`);
+    newDom
+      .children('.card-left')
+      .children('.card-place-container')
+      .children('.card-place')
+      .html(`📍 ${perPage[i].place}`);
+    newDom
+      .children('.card-left')
+      .children('.card-place-container')
+      .children('.card-place-des')
+      .html(`${perPage[i].placeDescription}`);
+    newDom
+      .children('.card-left')
+      .children('.card-creator')
+      .html(`💁🏻‍♂️ ${perPage[i].username}`);
+    newDom
+      .children('.card-right')
+      .children('.card-net')
+      .html(`網高: ${perPage[i].net}`);
+    newDom
+      .children('.card-right')
+      .children('.card-group-level')
+      .html(`程度: ${perPage[i].groupLevel}`);
+    newDom
+      .children('.card-right')
+      .children('.card-money')
+      .html(`費用: ${perPage[i].money} 元`);
+    newDom
+      .children('.card-right')
+      .children('.card-people-have')
+      .html(`內建: ${perPage[i].peopleHave} 人`);
+
+    $('#card-group').append(newDom);
+  }
+}
 
 // 個人頁面連結，確認使用者身分，要有jwt token
 $('#my-profile').click(async () => {

@@ -13,7 +13,9 @@ const {
   groupInfo,
   storeComment,
   commentStatus,
-  getComments
+  getComments,
+  getFollow,
+  getFans
 } = require('../controllers/profile_controller');
 
 router.route('/user').put(wrapAsync(updateUser));
@@ -29,5 +31,8 @@ router.route('/group/info').post(wrapAsync(groupInfo));
 router.route('/comment').post(wrapAsync(storeComment));
 router.route('/comment/status').post(wrapAsync(commentStatus));
 router.route('/comment').get(wrapAsync(getComments));
+router.route('/comment').get(wrapAsync(getComments));
+router.route('/follow').get(wrapAsync(getFollow));
+router.route('/fans').get(wrapAsync(getFans));
 
 module.exports = router;

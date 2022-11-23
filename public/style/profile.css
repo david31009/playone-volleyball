@@ -595,3 +595,15 @@ body {
   text-decoration: none;
   color: #004aad;
 }
+
+/* 追蹤清單*/
+#follow-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 粉絲清單*/
+#fans-list {
+  display: flex;
+  flex-direction: column;
+}
