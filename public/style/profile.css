@@ -107,7 +107,7 @@ body {
   font-size: 23px;
   border: 1.5px solid rgba(0, 0, 0, 0.3);
   border-radius: 10px;
-  padding: 2% 4% 2% 4%;
+  padding: 2%;
 }
 
 .sub-dashboard-past {
@@ -597,13 +597,77 @@ body {
 }
 
 /* 追蹤清單*/
+#follow-part {
+  cursor: pointer;
+}
+
+#follow-part:hover {
+  color: #004aad;
+}
+
 #follow-list {
   display: flex;
   flex-direction: column;
 }
 
+.my-follow-title {
+  font-size: 27px;
+  color: #aa8b56;
+  margin: 5% 0 3% 0;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid #aa8b56;
+}
+
+.i-follow {
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 2% 0 2% 0;
+}
+
+.i-follow:link,
+.i-follow:visited {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.i-follow:hover {
+  text-decoration: underline;
+}
+
 /* 粉絲清單*/
+#fans-part {
+  cursor: pointer;
+}
+
+#fans-part:hover {
+  color: #004aad;
+}
+
 #fans-list {
   display: flex;
   flex-direction: column;
+}
+
+.my-fans-title {
+  font-size: 27px;
+  color: #aa8b56;
+  margin: 5% 0 3% 0;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid #aa8b56;
+}
+
+.my-fans {
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 2% 0 2% 0;
+}
+
+.my-fans:link,
+.my-fans:visited {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.my-fans:hover {
+  text-decoration: underline;
 }

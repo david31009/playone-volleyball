@@ -30,6 +30,8 @@ async function myProfile() {
     userInfo.myLevel[1] === null ? '' : `#${userInfo.myLevel[1]}程度`;
   if (userInfo.gender[1] === null) userInfo.gender[1] = '';
 
+  console.log(userInfo);
+
   // 取得追蹤狀態 API
   const follow = await axios.post('/api/1.0/follow/status', {
     userId,
@@ -70,6 +72,12 @@ async function myProfile() {
   } else {
     $('#follow-btn').show();
     $('#self-edit').hide();
+    $('#i-create-dashboard-title').html(`${userInfo.username}主揪的團`);
+    $('#i-signup-dashboard-title').html(`${userInfo.username}報名的團`);
+    $('#past-create-dashboard-title').html(`${userInfo.username}過去揪的`);
+    $('#past-signup-dashboard-title').html(`${userInfo.username}過去報的`);
+    $('.my-follow-title').html(`${userInfo.username}的追蹤`);
+    $('.my-fans-title').html(`${userInfo.username}的粉絲`);
   }
 
   // 確認追蹤按鈕是否追蹤
