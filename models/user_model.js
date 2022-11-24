@@ -1,4 +1,5 @@
 require('dotenv').config();
+const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { pool } = require('./mysqlcon');
@@ -19,9 +20,10 @@ const signup = async (username, email, password) => {
 
   // 存進 DB
   const hashPassword = bcrypt.hashSync(password, salt);
+  const provider = 'native';
   const [result] = await pool.execute(
-    'INSERT INTO `user` (username, email, password) VALUES (?, ?, ?)',
-    [username, email, hashPassword]
+    'INSERT INTO `user` (provider, username, email, password) VALUES (?, ?, ?, ?)',
+    [provider, username, email, hashPassword]
   );
   const userId = result.insertId;
 
@@ -38,18 +40,10 @@ const signup = async (username, email, password) => {
     }
   );
 
-  // 回給前端
-  const userInfo = {
-    userId,
-    username,
-    email,
-    jwtToken
-  };
-
-  return userInfo;
+  return { userId, username, email, jwtToken };
 };
 
-const signin = async (email, password) => {
+const nativeSignin = async (email, password) => {
   const [[user]] = await pool.execute('SELECT * FROM `user` WHERE email = ?', [
     email
   ]);
@@ -88,4 +82,62 @@ const signin = async (email, password) => {
   return userInfo;
 };
 
-module.exports = { signup, signin };
+const facebookSignin = async (id, username, email) => {
+  // 檢查 email 是否存在
+  const [emailCheck] = await pool.execute(
+    'SELECT id, username, email FROM `user` WHERE email = ?',
+    [email]
+  );
+
+  let jwtToken;
+  let userId;
+  // 存在更新 jwt token
+  if (emailCheck.length > 0) {
+    userId = emailCheck[0].id;
+    jwtToken = jwt.sign(
+      {
+        userId,
+        username: emailCheck[0].username,
+        email: emailCheck[0].email
+      },
+      process.env.TOKEN_SECRET,
+      {
+        expiresIn: '1 day'
+      }
+    );
+  } else {
+    // 不存在，存入 DB
+    const provider = 'facebook';
+    const [result] = await pool.execute(
+      'INSERT INTO `user` (provider, username, email) VALUES (?, ?, ?)',
+      [provider, username, email]
+    );
+
+    // 產生 jwt token
+    userId = result.insertId;
+    jwtToken = jwt.sign(
+      {
+        userId,
+        username,
+        email
+      },
+      process.env.TOKEN_SECRET,
+      {
+        expiresIn: '1 day'
+      }
+    );
+  }
+
+  return { userId, username, email, jwtToken };
+};
+
+const getFacebookProfile = async (accessToken) => {
+  const userInfo = await axios.get(
+    // 從後端向 fb server 確認 token 並取得使用者資訊
+    `https://graph.facebook.com/v15.0/me?fields=id%2Cname%2Cemail&access_token=${accessToken}`
+  );
+
+  return userInfo.data;
+};
+
+module.exports = { signup, nativeSignin, facebookSignin, getFacebookProfile };

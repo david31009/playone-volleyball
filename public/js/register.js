@@ -79,7 +79,8 @@ $('#signin-btn').click(async (e) => {
 
   const signinInfo = {
     email: $('#signin-email').val(),
-    password: $('#signin-password').val()
+    password: $('#signin-password').val(),
+    provider: 'native'
   };
 
   // 使用者填欄位填寫完畢，才打 API
