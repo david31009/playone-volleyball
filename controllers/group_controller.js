@@ -1,4 +1,8 @@
 const moment = require('moment');
+const formData = require('form-data');
+const Mailgun = require('mailgun.js');
+const fs = require('fs');
+
 const {
   groupLevel,
   netHigh,
@@ -243,10 +247,48 @@ const updateGroup = async (req, res) => {
   res.status(200).send('ok');
 };
 
+// 使用者報名，寄信通知主揪
+const sigupEmail = async (groupId, username, creator, creatorEmail) => {
+  // 路徑默認與 app.js 同層
+  let html = fs.readFileSync('./utils/mail_signup.html').toString();
+  html = html.replace('creator', creator);
+  html = html.replace('username', username);
+  html = html.replace(
+    'group-link',
+    `${process.env.IP}group.html?id=${groupId}`
+  );
+
+  const mailgun = new Mailgun(formData);
+  const client = mailgun.client({
+    username: 'api',
+    key: process.env.MAILGUN_API_KEY
+  });
+
+  const messageData = {
+    from: 'PLAYONE 排球揪團 <notify@mailgun.org>',
+    to: creatorEmail,
+    subject: '有人報名你的揪團囉!',
+    html
+  };
+  await client.messages.create(process.env.MAILGUN_DOMAIN, messageData);
+};
+
 const signupGroup = async (req, res) => {
   const info = req.body;
+  const { user } = req;
   const signupInfo = [info.userId, info.groupId, info.signupStatus];
-  await Group.signupGroup(signupInfo);
+
+  // 回傳主揪名字、主揪 email
+  const [creator] = await Group.signupGroup(signupInfo);
+
+  // 有人報名，寄信給主揪
+  await sigupEmail(
+    info.groupId,
+    user.username,
+    creator.username,
+    creator.email
+  );
+
   res.status(200).json({ result: 'Sign up sucessfully!' });
 };
 
@@ -309,6 +351,35 @@ const getSignupMembers = async (req, res) => {
   res.status(200).json({ result });
 };
 
+// 主揪確認報名，寄信通知使用者
+const replyEmail = async (groupId, username, userEmail, signupStatus) => {
+  // 路徑默認與 app.js 同層
+  let html = fs.readFileSync('./utils/reply_signup.html').toString();
+  html = html.replace('username', username);
+  html = html.replace(
+    'group-link',
+    `${process.env.IP}group.html?id=${groupId}`
+  );
+
+  const mailgun = new Mailgun(formData);
+  const client = mailgun.client({
+    username: 'api',
+    key: process.env.MAILGUN_API_KEY
+  });
+
+  const subject =
+    signupStatus === '1'
+      ? '恭喜! 主揪已同意您的報名'
+      : '很抱歉! 主揪已拒絕您的報名';
+  const messageData = {
+    from: 'PLAYONE 排球揪團 <notify@mailgun.org>',
+    to: userEmail,
+    subject,
+    html
+  };
+  await client.messages.create(process.env.MAILGUN_DOMAIN, messageData);
+};
+
 const decideSignupStatus = async (req, res) => {
   const info = req.body;
   const updateInfo = [
@@ -317,7 +388,15 @@ const decideSignupStatus = async (req, res) => {
     info.statusCode,
     info.peopleLeft
   ];
-  await Group.decideSignupStatus(updateInfo);
+
+  const [user] = await Group.decideSignupStatus(updateInfo);
+  // console.log(user);
+  await replyEmail(
+    user.group_id,
+    user.username,
+    user.email,
+    user.signup_status
+  );
   res.status(200).send('ok');
 };
 
@@ -325,37 +404,6 @@ const closeGroup = async (req, res) => {
   const { groupId } = req.body;
   await Group.closeGroup([groupId]);
   res.status(200).send('ok');
-};
-
-// 渲染第一頁和各頁頁碼
-const testGroup = async (req, res) => {
-  const result = await Group.testGroup();
-  const { totalRecords } = result; // groups 總數量
-  const { groups } = result; // 各 group 細節
-
-  // 計算共幾頁
-  const pageSize = 10; // 每頁 10 筆
-  let totalPage = Math.floor(totalRecords / pageSize); // 無條件捨去
-  if (totalRecords % pageSize === 0) {
-    totalPage = totalRecords / pageSize;
-  } else {
-    totalPage += 1;
-  }
-
-  // 第一頁資料
-  const firstPage = groups.slice(0, pageSize);
-
-  res.status(200).json({ firstPage, totalPage });
-};
-
-// 每頁資料
-const testPage = async (req, res) => {
-  const { page } = req.body;
-  const pageSize = 10;
-  const startRecord = (page - 1) * pageSize;
-  const result = await Group.testPage([`${startRecord}`, `${pageSize}`]);
-
-  res.status(200).json({ result });
 };
 
 module.exports = {

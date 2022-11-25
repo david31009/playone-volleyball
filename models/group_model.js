@@ -91,8 +91,15 @@ const signupGroup = async (signupInfo) => {
       'UPDATE `group` SET people_left = people_left - 1 WHERE id = ? and people_left > 0',
       groupId
     );
+
+    // 回傳 creator username, creator email
+    const [result] = await conn.execute(
+      'SELECT username, email FROM `group` INNER JOIN `user` ON creator_id = user.id WHERE group.id = ?',
+      groupId
+    );
+
     await conn.execute('COMMIT');
-    return true;
+    return result;
   } catch (error) {
     await conn.execute('ROLLBACK');
     console.log(error);
@@ -139,6 +146,7 @@ const decideSignupStatus = async (updateInfo) => {
   const groupId = updateInfo[1];
   const statusCode = updateInfo[2];
   const peopleLeft = updateInfo[3];
+
   try {
     await conn.query('START TRANSACTION');
     await conn.execute(
@@ -149,8 +157,13 @@ const decideSignupStatus = async (updateInfo) => {
       'UPDATE `group` SET people_left = people_left + ? WHERE id = ? and people_left < people_need',
       [peopleLeft, groupId]
     );
+    // 回傳 creator username, creator email
+    const [result] = await conn.execute(
+      'SELECT username, email, group_id, signup_status FROM `user` INNER JOIN `member` ON user.id = user_id WHERE id = ?',
+      [userId]
+    );
     await conn.query('COMMIT');
-    return true;
+    return result;
   } catch (error) {
     await conn.query('ROLLBACK');
     console.log(error);
@@ -161,22 +174,6 @@ const decideSignupStatus = async (updateInfo) => {
 
 const closeGroup = async (groupId) => {
   await pool.execute('UPDATE `group` SET is_build = 0 WHERE id = ? ', groupId);
-};
-
-// 測試
-const testGroup = async () => {
-  const [groups] = await pool.execute('SELECT * FROM `group`');
-  let [[totalRecords]] = await pool.execute('SELECT COUNT(*) FROM `group`');
-  totalRecords = totalRecords['COUNT(*)'];
-  return { groups, totalRecords };
-};
-
-const testPage = async (page) => {
-  const [GroupsPerPage] = await pool.execute(
-    'SELECT * FROM `group` LIMIT ?, ?',
-    page
-  );
-  return GroupsPerPage;
 };
 
 module.exports = {
