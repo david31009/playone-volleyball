@@ -1,12 +1,28 @@
 const moment = require('moment');
 const { pool } = require('./mysqlcon');
 
-const createGroup = async (groupInfo) => {
-  const [result] = await pool.execute(
-    'INSERT INTO `group` (creator_id, title, date, time_duration, net, place, place_description, court, is_charge, money, level, level_description, people_have, people_need, people_left, group_description, is_build) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    groupInfo
-  );
-  return result.insertId;
+const createGroup = async (groupInfo, creatorId) => {
+  const conn = await pool.getConnection();
+  try {
+    // 建立揪團
+    const [result] = await conn.execute(
+      'INSERT INTO `group` (creator_id, title, date, time_duration, net, place, place_description, court, is_charge, money, level, level_description, people_have, people_need, people_left, group_description, is_build) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      groupInfo
+    );
+
+    // 撈主揪的粉絲資料
+    const [fans] = await conn.execute(
+      'SELECT user_id, username, email FROM `fans` INNER JOIN `user` ON user_id = user.id WHERE follow_id = ?',
+      [creatorId]
+    );
+    await conn.execute('COMMIT');
+    return { groupId: result.insertId, fans };
+  } catch {
+    await conn.execute('ROLLBACK');
+    console.log(error);
+  } finally {
+    await conn.release();
+  }
 };
 
 const getGroups = async () => {

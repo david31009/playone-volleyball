@@ -13,6 +13,36 @@ const {
 } = require('../utils/enum');
 const Group = require('../models/group_model');
 
+// 主揪揪團，寄信給粉絲
+const notifyFans = async (groupIdAndFans) => {
+  const { groupId } = groupIdAndFans;
+  const { fans } = groupIdAndFans;
+
+  for (let i = 0; i < fans.length; i++) {
+    // 路徑默認與 app.js 同層
+    let html = fs.readFileSync('./utils/notify_fans.html').toString();
+    html = html.replace('username', fans[i].username);
+    html = html.replace(
+      'group-link',
+      `${process.env.IP}group.html?id=${groupId}`
+    );
+
+    const mailgun = new Mailgun(formData);
+    const client = mailgun.client({
+      username: 'api',
+      key: process.env.MAILGUN_API_KEY
+    });
+
+    const messageData = {
+      from: 'PLAYONE 排球揪團 <notify@mailgun.org>',
+      to: fans[i].email,
+      subject: '您追蹤的主揪，剛建立了一個新的揪團!',
+      html
+    };
+    await client.messages.create(process.env.MAILGUN_DOMAIN, messageData);
+  }
+};
+
 const createGroup = async (req, res) => {
   const info = req.body;
   const { user } = req;
@@ -48,8 +78,12 @@ const createGroup = async (req, res) => {
   }
 
   // 存入 DB，傳入 array，回傳建立的 groupId
-  const groupId = await Group.createGroup(groupInfo);
-  res.status(200).json({ groupId });
+  const groupIdAndFans = await Group.createGroup(groupInfo, creatorId);
+
+  // 寄信給粉絲
+  await notifyFans(groupIdAndFans);
+
+  res.status(200).json(groupIdAndFans);
 };
 
 const getGroups = async (req, res) => {
