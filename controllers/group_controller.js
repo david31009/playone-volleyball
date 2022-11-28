@@ -71,7 +71,7 @@ const checkRedis = async (groupId) => {
   };
 
   const arr = [];
-  let deleteLast = false;
+  let deleteFirst = false;
   if (Cache.ready === true) {
     const keys = await Cache.keys('*');
     for (let i = 0; i < keys.length; i++) {
@@ -79,22 +79,22 @@ const checkRedis = async (groupId) => {
       value = JSON.parse(value);
       arr.push(value);
 
-      // 依揪團時間(新到舊)排序
+      // 依揪團時間(舊到新)排序
       arr.sort((a, b) => {
-        return b.groupTime - a.groupTime;
+        return a.groupTime - b.groupTime;
       });
 
       if (groupTime > value.groupTime) {
-        deleteLast = true;
+        deleteFirst = true;
         const diff = groupTime - timeNow; // 現在時間距離未來揪團的差距 in milliseconds
         Cache.set(`group-${resultDB.id}`, JSON.stringify(data), { PX: diff });
       }
     }
   }
 
-  if (deleteLast) {
+  if (deleteFirst) {
     // 刪掉第一頁時間最舊的
-    Cache.del(`group-${arr[9].groupId}`);
+    Cache.del(`group-${arr[0].groupId}`);
   } else {
     // 把自己刪掉 (編輯揪團，把時間往後移又往前移回來)
     Cache.del(`group-${groupId}`);
@@ -414,8 +414,10 @@ const updateGroup = async (req, res) => {
 
   // 檢查新團時間在 redis 中的排序
   const { groupId } = info;
-  console.log(groupId);
-  checkRedis(groupId);
+  const closeTarget = `group-${groupId}`;
+  if (Cache.ready === true) {
+    Cache.del(closeTarget);
+  }
 
   res.status(200).send('ok');
 };
@@ -505,11 +507,7 @@ const closeGroup = async (req, res) => {
   // 檢查關閉團的 Id 是否在 redis 中
   const closeTarget = `group-${groupId}`;
   if (Cache.ready === true) {
-    const keys = await Cache.keys('*');
-    const found = keys.find((element) => element === closeTarget);
-    if (found) {
-      Cache.del(closeTarget);
-    }
+    Cache.del(closeTarget);
   }
   res.status(200).send('ok');
 };
