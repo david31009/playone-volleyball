@@ -182,7 +182,6 @@ const decideSignupStatus = async (updateInfo) => {
       'SELECT username, email, group_id, signup_status FROM `user` INNER JOIN `member` ON user.id = user_id WHERE id = ? AND group_id = ?',
       [userId, groupId]
     );
-    console.log(result);
     await conn.query('COMMIT');
     return result;
   } catch (error) {

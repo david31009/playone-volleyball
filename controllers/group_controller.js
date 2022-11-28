@@ -217,8 +217,6 @@ const getGroups = async (req, res) => {
       const day = moment(i.date).format('dddd')[2]; // 星期幾
       const groupTime = moment(i.date).valueOf(); // 揪團時間轉成微秒
 
-      console.log(datetime, groupTime);
-
       const data = {
         groupId: i.id,
         title: i.title,
@@ -527,7 +525,7 @@ const getSignupMembers = async (req, res) => {
 };
 
 // 主揪確認報名，寄信通知使用者
-const replyEmail = async (groupId, username, userEmail, signupStatus) => {
+const replyEmail = async (groupId, username, userEmail, signUpStatus) => {
   // 路徑默認與 app.js 同層
   let html = fs.readFileSync('./utils/reply_signup.html').toString();
   html = html.replace('username', username);
@@ -543,7 +541,7 @@ const replyEmail = async (groupId, username, userEmail, signupStatus) => {
   });
 
   const subject =
-    signupStatus === '1'
+    signUpStatus === '1'
       ? '恭喜! 主揪已同意您的報名'
       : '很抱歉! 主揪已拒絕您的報名';
   const messageData = {
