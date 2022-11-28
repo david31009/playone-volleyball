@@ -240,7 +240,7 @@ async function decide(e) {
       } else {
         // 改報名狀態 = 2; // 報名剩餘人數 + 1
         await axios.post('/api/1.0/update/signup/status', {
-          userId: userId,
+          userId,
           groupId: idSplit,
           statusCode: 2,
           peopleLeft: 1

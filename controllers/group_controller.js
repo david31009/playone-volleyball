@@ -565,13 +565,13 @@ const decideSignupStatus = async (req, res) => {
   ];
 
   const [user] = await Group.decideSignupStatus(updateInfo);
-  // console.log(user);
   await replyEmail(
     user.group_id,
     user.username,
     user.email,
     user.signup_status
   );
+
   res.status(200).send('ok');
 };
 
