@@ -21,8 +21,6 @@ let userId;
 
   const [groupDetail] = detail.data.result;
 
-  console.log(groupDetail);
-
   // 確認使用者是誰，顯示不同按鈕 (主揪 => edit，使用者、訪客 => view)
   let user;
   try {
@@ -293,7 +291,7 @@ async function edit() {
   const [groupDetail] = detail.data.result;
 
   $('#edit-title').val(`${groupDetail.title}`);
-  $('#edit-date').val(`${groupDetail.date}`);
+  $('#edit-date').val(`${groupDetail.date.split(' ')[0]}`);
   $('#edit-time').val(`${groupDetail.time}`);
   $('#edit-time-duration').val(`${groupDetail.timeDuration}`);
   $('#edit-net').val(`${groupDetail.net[0]}`);

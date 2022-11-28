@@ -13,9 +13,8 @@ const {
   getSignupMembers,
   decideSignupStatus,
   closeGroup,
-  testGroup,
-  testPage,
-  nextPage
+  nextPage,
+  allPage
 } = require('../controllers/group_controller');
 
 router.route('/group').post(auth, wrapAsync(createGroup));
@@ -31,5 +30,6 @@ router.route('/member').get(wrapAsync(getSignupMembers));
 router.route('/update/signup/status').post(wrapAsync(decideSignupStatus));
 router.route('/close/group').post(wrapAsync(closeGroup));
 router.route('/group/nextpage').post(wrapAsync(nextPage));
+router.route('/group/allpage').get(wrapAsync(allPage));
 
 module.exports = router;

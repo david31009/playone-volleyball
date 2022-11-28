@@ -14,18 +14,22 @@ const getGroups = async () => {
   const datenow = moment().format('YYYY-MM-DD HH:mm:ss');
   const [groups] = await pool.execute(
     // 按最新的團、剩餘名額多排序 (取 10 筆)、已關團或時間過期者不從 DB 撈取
-    'SELECT * FROM (SELECT group.id, title, date, time_duration, net, place, place_description, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" ORDER BY date DESC, people_left DESC LIMIT 10',
+    'SELECT * FROM (SELECT group.id, title, date, time_duration, net, place, place_description, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" ORDER BY date DESC LIMIT 10',
     [datenow]
   );
 
+  return groups;
+};
+
+const allPage = async () => {
+  const datenow = moment().format('YYYY-MM-DD HH:mm:ss');
   // 總頁數
   let [[totalRecords]] = await pool.execute(
     'SELECT COUNT(*) FROM (SELECT group.id, title, date, time_duration, net, place, place_description, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed"',
     [datenow]
   );
   totalRecords = totalRecords['COUNT(*)'];
-
-  return { groups, totalRecords };
+  return { totalRecords };
 };
 
 const nextPage = async (startRecord, pageSize) => {
@@ -192,5 +196,6 @@ module.exports = {
   getSignupMembers,
   decideSignupStatus,
   closeGroup,
-  nextPage
+  nextPage,
+  allPage
 };

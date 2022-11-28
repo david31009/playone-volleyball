@@ -1,9 +1,9 @@
 // 渲染字卡
 (async () => {
   const getCards = await axios.get('/api/1.0/group');
+  const allPage = await axios.get('/api/1.0/group/allpage');
   const cardInfo = getCards.data.firstPage;
-  const { totalPage } = getCards.data;
-  // console.log(totalPage);
+  const { totalPage } = allPage.data;
 
   $('.group-top').html('最新揪團');
   // 渲染總頁數
