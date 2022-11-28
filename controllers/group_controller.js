@@ -2,6 +2,7 @@ const moment = require('moment');
 const formData = require('form-data');
 const Mailgun = require('mailgun.js');
 const fs = require('fs');
+const Cache = require('../utils/cache');
 
 const {
   groupLevel,
@@ -40,6 +41,63 @@ const notifyFans = async (groupIdAndFans) => {
       html
     };
     await client.messages.create(process.env.MAILGUN_DOMAIN, messageData);
+  }
+};
+
+const checkRedis = async (groupId) => {
+  // 撈 group detail
+  const [resultDB] = await Group.groupDetails([groupId]);
+  moment.locale('zh-tw'); // 台灣時間
+  const datetime = moment(resultDB.date).format('YYYY-MM-DD HH:mm');
+  const day = moment(resultDB.date).format('dddd')[2]; // 星期幾
+  const timeNow = moment().valueOf(); // 現在時間轉成微秒
+  const groupTime = moment(resultDB.date).valueOf();
+
+  const data = {
+    groupId: resultDB.id,
+    title: resultDB.title,
+    date: `${datetime.split(' ')[0]} (${day})`,
+    time: datetime.split(' ')[1],
+    timeDuration: resultDB.time_duration / 60,
+    net: netHigh[resultDB.net],
+    place: resultDB.place,
+    placeDescription: resultDB.place_description,
+    money: resultDB.money,
+    groupLevel: groupLevel[resultDB.level],
+    peopleHave: resultDB.people_have,
+    peopleNeed: resultDB.people_need,
+    username: resultDB.username,
+    groupTime
+  };
+
+  const arr = [];
+  let deleteLast = false;
+  if (Cache.ready === true) {
+    const keys = await Cache.keys('*');
+    for (let i = 0; i < keys.length; i++) {
+      let value = await Cache.get(keys[i]);
+      value = JSON.parse(value);
+      arr.push(value);
+
+      // 依揪團時間(新到舊)排序
+      arr.sort((a, b) => {
+        return b.groupTime - a.groupTime;
+      });
+
+      if (groupTime > value.groupTime) {
+        deleteLast = true;
+        const diff = groupTime - timeNow; // 現在時間距離未來揪團的差距 in milliseconds
+        Cache.set(`group-${resultDB.id}`, JSON.stringify(data), { PX: diff });
+      }
+    }
+  }
+
+  if (deleteLast) {
+    // 刪掉第一頁時間最舊的
+    Cache.del(`group-${arr[9].groupId}`);
+  } else {
+    // 把自己刪掉 (編輯揪團，把時間往後移又往前移回來)
+    Cache.del(`group-${groupId}`);
   }
 };
 
@@ -83,35 +141,110 @@ const createGroup = async (req, res) => {
   // 寄信給粉絲
   await notifyFans(groupIdAndFans);
 
+  // 檢查新團時間在 redis 中的排序
+  const { groupId } = groupIdAndFans;
+  await checkRedis(groupId);
+
   res.status(200).json(groupIdAndFans);
 };
 
 const getGroups = async (req, res) => {
-  const resultDB = await Group.getGroups();
-  const { groups } = resultDB;
-  const { totalRecords } = resultDB;
+  // 連上 redis
+  if (Cache.ready === true) {
+    const keys = await Cache.keys('*');
+    // console.log(keys);
+    if (keys.length === 10) {
+      const firstPage = [];
+      for (let i = 0; i < keys.length; i++) {
+        const value = await Cache.get(keys[i]);
+        firstPage.push(JSON.parse(value));
+      }
 
-  // 第一頁資料 (10筆)
-  const firstPage = groups.map((i) => {
-    moment.locale('zh-tw');
-    const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
-    const day = moment(i.date).format('dddd')[2]; // 星期幾
-    return {
-      groupId: i.id,
-      title: i.title,
-      date: `${datetime.split(' ')[0]} (${day})`,
-      time: datetime.split(' ')[1],
-      timeDuration: i.time_duration / 60,
-      net: netHigh[i.net],
-      place: i.place,
-      placeDescription: i.place_description,
-      money: i.money,
-      groupLevel: groupLevel[i.level],
-      peopleHave: i.people_have,
-      peopleNeed: i.people_need,
-      username: i.username
-    };
-  });
+      // 依最新揪團時間排序
+      firstPage.sort((a, b) => {
+        return b.groupTime - a.groupTime;
+      });
+
+      console.log('Redis is connected, and the data is from redis.');
+      res.status(200).json({ firstPage });
+    } else {
+      // 有揪團過期消失，重撈 DB，整理後再存進 redis
+      Cache.flushDb(); // 刪掉 redis 資料
+      const resultDB = await Group.getGroups();
+
+      // 第一頁資料 (10筆)
+      const firstPage = resultDB.map((i) => {
+        moment.locale('zh-tw'); // 台灣時間
+        const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+        const day = moment(i.date).format('dddd')[2]; // 星期幾
+        const timeNow = moment().valueOf(); // 現在時間轉成微秒
+        const groupTime = moment(i.date).valueOf(); // 揪團時間轉成微秒
+
+        const data = {
+          groupId: i.id,
+          title: i.title,
+          date: `${datetime.split(' ')[0]} (${day})`,
+          time: datetime.split(' ')[1],
+          timeDuration: i.time_duration / 60,
+          net: netHigh[i.net],
+          place: i.place,
+          placeDescription: i.place_description,
+          money: i.money,
+          groupLevel: groupLevel[i.level],
+          peopleHave: i.people_have,
+          peopleNeed: i.people_need,
+          username: i.username,
+          groupTime
+        };
+
+        // 存進 redis
+        const diff = groupTime - timeNow; // 現在時間距離未來揪團的差距 in milliseconds
+        Cache.set(`group-${i.id}`, JSON.stringify(data), { PX: diff });
+
+        return data;
+      });
+      console.log('Redis is connected, but the data is from db.');
+      res.status(200).json({ firstPage });
+    }
+  } else {
+    // 沒連上 redis，重撈 DB
+    const resultDB = await Group.getGroups();
+
+    // 第一頁資料 (10筆)
+    const firstPage = resultDB.map((i) => {
+      moment.locale('zh-tw'); // 台灣時間
+      const datetime = moment(i.date).format('YYYY-MM-DD HH:mm');
+      const day = moment(i.date).format('dddd')[2]; // 星期幾
+      const groupTime = moment(i.date).valueOf(); // 揪團時間轉成微秒
+
+      console.log(datetime, groupTime);
+
+      const data = {
+        groupId: i.id,
+        title: i.title,
+        date: `${datetime.split(' ')[0]} (${day})`,
+        time: datetime.split(' ')[1],
+        timeDuration: i.time_duration / 60,
+        net: netHigh[i.net],
+        place: i.place,
+        placeDescription: i.place_description,
+        money: i.money,
+        groupLevel: groupLevel[i.level],
+        peopleHave: i.people_have,
+        peopleNeed: i.people_need,
+        username: i.username,
+        groupTime
+      };
+      return data;
+    });
+    console.log('Redis is not connect. The data is from db');
+    res.status(200).json({ firstPage });
+  }
+};
+
+const allPage = async (req, res) => {
+  const resultDB = await Group.allPage();
+  const { totalRecords } = resultDB;
 
   // 計算共幾頁
   const pageSize = 10; // 每頁 10 筆
@@ -122,7 +255,7 @@ const getGroups = async (req, res) => {
     totalPage += 1;
   }
 
-  res.status(200).json({ firstPage, totalPage });
+  res.status(200).json({ totalPage });
 };
 
 const nextPage = async (req, res) => {
@@ -278,6 +411,12 @@ const updateGroup = async (req, res) => {
   }
 
   await Group.updateGroup(updateInfo);
+
+  // 檢查新團時間在 redis 中的排序
+  const { groupId } = info;
+  console.log(groupId);
+  checkRedis(groupId);
+
   res.status(200).send('ok');
 };
 
@@ -437,6 +576,16 @@ const decideSignupStatus = async (req, res) => {
 const closeGroup = async (req, res) => {
   const { groupId } = req.body;
   await Group.closeGroup([groupId]);
+
+  // 檢查關閉團的 Id 是否在 redis 中
+  const closeTarget = `group-${groupId}`;
+  if (Cache.ready === true) {
+    const keys = await Cache.keys('*');
+    const found = keys.find((element) => element === closeTarget);
+    if (found) {
+      Cache.del(closeTarget);
+    }
+  }
   res.status(200).send('ok');
 };
 
@@ -453,5 +602,6 @@ module.exports = {
   getSignupMembers,
   decideSignupStatus,
   closeGroup,
-  nextPage
+  nextPage,
+  allPage
 };

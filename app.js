@@ -6,6 +6,9 @@ require('dotenv').config();
 const app = express();
 const { PORT, API_VERSION } = process.env;
 
+// redis 連線
+const Cache = require('./utils/cache');
+
 // CORS allow all
 app.use(cors());
 
@@ -14,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API routes
-app.use('/api/' + API_VERSION, [
+app.use(`/api/${API_VERSION}`, [
   require('./routes/group_route'),
   require('./routes/profile_route'),
   require('./routes/user_route')
@@ -27,7 +30,12 @@ app.use(function (err, req, res, next) {
   res.status(500).send('Internal Server Error');
 });
 
-//set port to 3000
-app.listen(PORT, () => {
+// set port to 3000
+// redis 連線
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+  console.log('Connecting to redis...');
+  Cache.connect().catch(() => {
+    console.log('Error in Redis');
+  });
 });
