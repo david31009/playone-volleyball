@@ -59,7 +59,7 @@
 
 #signup {
   font-size: 22px;
-  font-family: 'cwTeXYen';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
   background-color: #f9d5a7;
   border-radius: 5px;
   text-align: center;
@@ -81,6 +81,7 @@
   font-size: 21px;
   line-height: 30px;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .group-margin {
@@ -112,7 +113,7 @@
 #edit,
 #close-group {
   font-size: 22px;
-  font-family: 'cwTeXYen';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
   background-color: #f9d5a7;
   border-radius: 5px;
   border: 0px;
@@ -153,7 +154,7 @@
 .accept,
 .deny {
   font-size: 20px;
-  font-family: 'cwTeXYen';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
   border-radius: 15px;
   border: 0px;
   padding: 7px;
@@ -253,7 +254,7 @@
   font-size: 20px;
   color: rgba(0, 0, 0, 0.6);
   margin: 0 1% 4% 2%;
-  font-family: 'Microsoft Sans Serif';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
   text-align: center;
 }
 
@@ -279,7 +280,7 @@
 /* 留言板*/
 #msg-board {
   font-size: 19px;
-  font-family: 'cwTeXYen';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   width: 94%;
@@ -291,7 +292,7 @@
 
 #leave-msg {
   font-size: 20px;
-  font-family: 'cwTeXYen';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
   background-color: #f9d5a7;
   border-radius: 5px;
   text-align: center;
@@ -313,13 +314,18 @@
   line-height: 30px;
 }
 
+.content {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 .username {
   font-size: 24px;
 }
 
 .time {
   font-size: 16px;
-  font-family: 'Microsoft JhengHei';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
 }
 
 .content {
