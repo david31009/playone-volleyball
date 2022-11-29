@@ -1,6 +1,7 @@
 // 主揪揪團彈窗
 function show() {
   $('#background-pop').show();
+  $('#date').attr('min', moment().format('YYYY-MM-DD'));
   new TwCitySelector({
     // 選擇台灣、地區
     el: '.start-group',
@@ -153,12 +154,21 @@ $('#start-group').click(async (e) => {
         OK = false;
         Swal.fire({
           icon: 'error',
-          title: 'Oops...',
-          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`
+          title: `請輸入${$(requiredField).attr('name')}`
         });
         return false; // break
       }
     });
+
+  // 數字填超過 65535，或非正整數，發出 alert
+  const money = Number($('#money').val());
+  if (money > 65535 || !Number.isInteger(money)) {
+    Swal.fire({
+      icon: 'error',
+      title: '費用需為正整數且 < 65535'
+    });
+    return false; // break
+  }
 
   // 使用者填欄位填寫完畢，才打 API，(用 header 帶 jwt token)
   if (OK) {

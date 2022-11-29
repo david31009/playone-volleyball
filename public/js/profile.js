@@ -30,8 +30,6 @@ async function myProfile() {
     userInfo.myLevel[1] === null ? '' : `#${userInfo.myLevel[1]}程度`;
   if (userInfo.gender[1] === null) userInfo.gender[1] = '';
 
-  console.log(userInfo);
-
   // 取得追蹤狀態 API
   const follow = await axios.post('/api/1.0/follow/status', {
     userId,
@@ -290,6 +288,8 @@ $('#i-create-link').click(async (e) => {
   const result = await axios.get(`/api/1.0/now/create${id}`);
   const iCreate = result.data.result;
 
+  console.log(iCreate);
+
   $('#i-create-groups-details').empty();
   for (let i = 0; i < iCreate.length; i++) {
     $('#i-create-groups-details').append(
@@ -547,7 +547,7 @@ $('#star').click(async () => {
       readOnly: true
     });
   } else {
-    $('#avg-score').html(`${score / comment.length}`);
+    $('#avg-score').html(`${Math.round((score * 10) / comment.length) / 10}`);
     $('#rateYo').rateYo({
       rating: score / comment.length,
       starWidth: '40px',

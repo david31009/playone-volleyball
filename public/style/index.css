@@ -2,7 +2,8 @@
 html,
 body {
   margin: 0;
-  font-family: 'Lucida Console', 'cwTeXYen';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
+  /* 'Lucida Console' */
 }
 
 .main-container {
@@ -64,7 +65,7 @@ body {
 #filter {
   /* 搜尋按鈕*/
   cursor: pointer;
-  margin: 5% 4% 10% 80%;
+  margin: 5% 3% 10% 75%;
   border-radius: 5px;
   background-color: #f9d5a7;
   border: 0px;
@@ -195,7 +196,7 @@ body {
   font-size: 20px;
   color: rgba(0, 0, 0, 0.6);
   margin: 0 1% 4% 2%;
-  font-family: 'Lucida Console';
+  font-family: 'Microsoft Sans Serif';
   text-align: center;
 }
 
@@ -272,14 +273,14 @@ body {
 }
 
 .card-left {
-  flex-basis: 60%;
+  flex-basis: 77%;
   margin-top: 3%;
 }
 
 .card-right {
   flex-basis: 23%;
   font-size: 22px;
-  margin-top: 5%;
+  margin-top: 6%;
 }
 
 .card-right div {
@@ -303,15 +304,23 @@ body {
   margin-bottom: 4%;
 }
 
+.ctc {
+  margin-right: 2%;
+}
+
 .card-place-container {
   display: flex;
   align-items: baseline;
-  font-size: 24px;
+  font-size: 22px;
   margin-bottom: 4%;
 }
 
+.cpc {
+  margin-right: 2%;
+}
+
 .card-creator {
-  font-size: 20px;
+  font-size: 22px;
   margin-left: 5px;
   margin-bottom: 4%;
 }

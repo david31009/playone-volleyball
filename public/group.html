@@ -36,11 +36,6 @@
           <button class="btn-pop" onclick="show()">當主揪</button>
         </div>
         <form action="post" class="vb-nav-filter">
-          <div class="underline">篩選縣市</div>
-          <div class="tw-city-filter tw-select">
-            <select id="filter-county" class="county"></select>
-            <select id="filter-district" class="district"></select>
-          </div>
           <div class="underline">篩選程度</div>
           <select id="filter-group-level" class="select" name="程度">
             <option value="">選擇程度</option>
@@ -68,6 +63,11 @@
             <option value="0">免費</option>
             <option value="1">收費</option>
           </select>
+          <div class="underline">篩選縣市</div>
+          <div class="tw-city-filter tw-select">
+            <select id="filter-county" class="county"></select>
+            <select id="filter-district" class="district"></select>
+          </div>
           <button id="filter">搜尋</button>
         </form>
       </div>
@@ -157,7 +157,13 @@
           <form id="start-group-form" action="post">
             <div class="form-block">
               <div class="form-text">揪團標題</div>
-              <input id="title" name="揪團標題" required />
+              <input
+                id="title"
+                type="text"
+                maxlength="20"
+                name="揪團標題"
+                required
+              />
             </div>
             <div class="form-block">
               <div class="form-text">揪團日期</div>
@@ -187,6 +193,8 @@
               <input
                 id="place-description"
                 name="詳細地點"
+                type="text"
+                maxlength="20"
                 placeholder="詳細地點"
                 required
               />
@@ -222,6 +230,8 @@
               <textarea
                 id="level-description"
                 name="程度描述"
+                type="text"
+                maxlength="255"
                 rows="8"
                 cols="30"
                 required
@@ -239,6 +249,8 @@
               <textarea
                 id="group-description"
                 name="揪團描述"
+                type="text"
+                maxlength="255"
                 rows="8"
                 cols="30"
                 required

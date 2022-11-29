@@ -1,7 +1,7 @@
 /* 首頁左側 header*/
 html,
 body {
-  font-family: 'Lucida Console', 'cwTeXYen';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
   margin: 0;
 }
 
@@ -184,9 +184,6 @@ body {
 
 .rm {
   margin: 3% 1% 2% 1%;
-  border: 1.5px solid black;
-  border-radius: 30px;
-  padding: 0.5%;
 }
 
 /* 追蹤數、粉絲數 */
@@ -304,7 +301,7 @@ body {
   height: 50px;
   font-size: 20px;
   color: rgba(0, 0, 0, 0.6);
-  font-family: 'Lucida Console';
+  font-family: 'Microsoft Sans Serif';
   text-align: center;
 }
 
@@ -427,7 +424,7 @@ body {
   font-size: 20px;
   color: rgba(0, 0, 0, 0.6);
   margin-left: 3%;
-  font-family: 'Lucida Console';
+  font-family: 'Microsoft Sans Serif';
 }
 
 #content {
@@ -552,7 +549,7 @@ body {
 }
 
 .comment-commenter {
-  font-family: 'Lucida Console';
+  font-family: 'Microsoft Sans Serif';
   margin: 0 1% 0 0;
 }
 

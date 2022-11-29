@@ -17,7 +17,7 @@ const createGroup = async (groupInfo, creatorId) => {
     );
     await conn.execute('COMMIT');
     return { groupId: result.insertId, fans };
-  } catch {
+  } catch (error) {
     await conn.execute('ROLLBACK');
     console.log(error);
   } finally {

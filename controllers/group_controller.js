@@ -103,12 +103,33 @@ const checkRedis = async (groupId) => {
 
 const createGroup = async (req, res) => {
   const info = req.body;
-  const { user } = req;
+  const { user } = req; // 經過 auth，拿 userId
   const creatorId = user.userId;
-  const isBuild = 1; // 已成團
+  const Build = 1; // 已成團
   const peopleLeft = info.peopleNeed; // 剩餘報名名額
-  let isCharge = 1; // 是否收費
-  if (info.money === '0') isCharge = 0;
+  let Charge = 1; // 是否收費
+
+  // 阻擋 money 填入文字、非正整數、大於 65535 的數字
+  const money = Number(info.money);
+  if (money === 0) {
+    Charge = 0;
+  } else if (money > 65535 || !Number.isInteger(money)) {
+    return res
+      .status(400)
+      .json({ error: 'money must be inter and less than 65535' });
+  }
+
+  // 阻擋超過 DB 字數限制
+  if (
+    info.title.length > 20 ||
+    info.placeDescription.length > 20 ||
+    info.levelDescription.length > 255 ||
+    info.groupDescription.length > 255
+  ) {
+    return res.status(400).json({
+      error: '字數限制: 標題(20)、地點(20)、程度描述(255)、揪團描述(255)'
+    });
+  }
 
   const groupInfo = [
     creatorId,
@@ -119,7 +140,7 @@ const createGroup = async (req, res) => {
     info.county + info.district,
     info.placeDescription,
     info.court,
-    isCharge,
+    Charge,
     info.money,
     info.level,
     info.levelDescription,
@@ -127,7 +148,7 @@ const createGroup = async (req, res) => {
     info.peopleNeed,
     peopleLeft,
     info.groupDescription,
-    isBuild
+    Build
   ];
 
   // 阻擋欄位未輸入
