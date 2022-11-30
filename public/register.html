@@ -21,6 +21,28 @@
     <title>Register</title>
   </head>
   <body>
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: '633489238189413',
+          xfbml: true,
+          version: 'v15.0'
+        });
+        FB.AppEvents.logPageView();
+      };
+
+      (function (d, s, id) {
+        var js,
+          fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = 'https://connect.facebook.net/zh_TW/sdk.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      })(document, 'script', 'facebook-jssdk');
+    </script>
     <div class="main-container">
       <div class="vb-nav">
         <div class="logo">
@@ -86,12 +108,13 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/register.js"></script>
     <script src="js/fbLogin.js"></script>
-    <script
+
+    <!-- <script
       async
       defer
       crossorigin="anonymous"
       src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v15.0&appId=633489238189413&autoLogAppEvents=1"
       nonce="bgOoGQrU"
-    ></script>
+    ></script> -->
   </body>
 </html>
