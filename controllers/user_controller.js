@@ -2,8 +2,11 @@ const validator = require('validator');
 const User = require('../models/user_model');
 
 const signup = async (req, res) => {
-  const { username } = req.body;
+  let { username } = req.body;
   const { email, password } = req.body;
+
+  // 姓名不能包含 dash(-)
+  username = validator.blacklist(username, '-');
 
   // 檢查 username, email, password 有無填寫
   if (!username || !email || !password) {
@@ -69,7 +72,8 @@ const facebookSignin = async (accessToken) => {
 
   try {
     const profile = await User.getFacebookProfile(accessToken);
-    const { id, name, email } = profile;
+    const { id, email } = profile;
+    let { name } = profile;
 
     if (!id || !name || !email) {
       return {
@@ -77,6 +81,8 @@ const facebookSignin = async (accessToken) => {
       };
     }
 
+    // 姓名不能包含 dash(-)
+    name = validator.blacklist(name, '-');
     const result = await User.facebookSignin(id, name, email);
 
     return result;

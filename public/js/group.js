@@ -231,26 +231,41 @@ async function decide(e) {
     if (result.isConfirmed) {
       if (decision === 'accept') {
         // 改報名狀態 = 1;報名剩餘人數 + 0
-        await axios.post('/api/1.0/update/signup/status', {
-          userId,
-          groupId: idSplit,
-          statusCode: 1,
-          peopleLeft: 0
-        });
+        await axios.put(
+          '/api/1.0/signup/status',
+          {
+            userId,
+            groupId: idSplit,
+            statusCode: 1,
+            peopleLeft: 0
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`
+            }
+          }
+        );
       } else {
         // 改報名狀態 = 2; // 報名剩餘人數 + 1
-        await axios.post('/api/1.0/update/signup/status', {
-          userId,
-          groupId: idSplit,
-          statusCode: 2,
-          peopleLeft: 1
-        });
+        await axios.put(
+          '/api/1.0/signup/status',
+          {
+            userId,
+            groupId: idSplit,
+            statusCode: 2,
+            peopleLeft: 1
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`
+            }
+          }
+        );
       }
-      Swal.fire(
-        `${decisionChi}`,
-        `已${decisionChi} ${username} 的報名`,
-        'success'
-      ).then(() => {
+      Swal.fire({
+        icon: 'success',
+        title: `已${decisionChi} ${username} 的報名`
+      }).then(() => {
         // 刷新頁面，接受 => 報名剩餘人數不變；拒絕 => 報名剩餘人數-1
         location.reload();
       });
@@ -350,8 +365,7 @@ $('#save').click(async (e) => {
         OK = false;
         Swal.fire({
           icon: 'error',
-          title: '錯誤',
-          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`
+          title: `請輸入${$(requiredField).attr('name')}欄位`
         });
         return false; // break
       }
@@ -359,13 +373,35 @@ $('#save').click(async (e) => {
 
   // 更新資料庫表單
   if (OK) {
-    await axios.post('/api/1.0/update/group', updateInfo);
-    Swal.fire({
-      icon: 'success',
-      title: '已儲存揪團資訊'
-    }).then(() => {
-      location.reload();
-    });
+    try {
+      await axios.put('/api/1.0/group', updateInfo, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      });
+      Swal.fire({
+        icon: 'success',
+        title: '已儲存揪團資訊'
+      }).then(() => {
+        location.reload();
+      });
+    } catch (error) {
+      // 後端傳回錯誤回應處理
+      const Error = error.response.data.error;
+      if (Error === 'No token' || Error === 'Wrong token') {
+        Swal.fire({
+          icon: 'error',
+          title: '請先登入或註冊'
+        }).then(() => {
+          window.location.href = '/register.html';
+        });
+      } else if (Error === 'Exceed word limit') {
+        Swal.fire({
+          icon: 'error',
+          title: '標題、程度、揪團描述超過字數限制'
+        });
+      }
+    }
   }
 });
 
@@ -424,14 +460,14 @@ $('#leave-msg').click(async () => {
     Swal.fire({
       icon: 'error',
       title: '錯誤',
-      text: '你還沒留言唷~'
+      text: '你還沒留言唷'
     });
     return;
   }
 
   // 打 API，儲存留言
   const msgInfo = {
-    userId,
+    userId: `${userId}`,
     groupId: idSplit,
     content: $('#msg-board').val()
   };
@@ -455,6 +491,11 @@ $('#leave-msg').click(async () => {
       }).then(() => {
         window.location.href = '/register.html';
       });
+    } else if (Error === 'Exceed word limit') {
+      Swal.fire({
+        icon: 'error',
+        title: '留言超過字數限制'
+      });
     }
   }
 });
@@ -472,7 +513,15 @@ $('#close-group').click(async () => {
     cancelButtonText: '再想想'
   }).then(async (result) => {
     if (result.isConfirmed) {
-      await axios.post('/api/1.0/close/group', { groupId: idSplit });
+      await axios.post(
+        '/api/1.0/close/group',
+        { groupId: idSplit },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`
+          }
+        }
+      );
       Swal.fire('關團成功', '已關閉揪團', 'success').then(() => {
         // 刷新頁面
         location.reload();

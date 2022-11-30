@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const { TOKEN_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
 
 // reference: https://thecodebarbarian.com/80-20-guide-to-express-error-handling
 const wrapAsync = (fn) => {
@@ -35,7 +36,18 @@ const auth = async (req, res, next) => {
   }
 };
 
+const injection = async (req, res, next) => {
+  const info = req.body;
+  const keys = Object.keys(info);
+  for (let i = 0; i < keys.length; i++) {
+    if (info[keys[i]] === null) info[keys[i]] = '';
+    info[keys[i]] = validator.escape(info[keys[i]]);
+  }
+  next();
+};
+
 module.exports = {
   wrapAsync,
-  auth
+  auth,
+  injection
 };

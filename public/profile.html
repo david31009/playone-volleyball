@@ -167,7 +167,14 @@
           <form id="edit-form" action="post">
             <div class="edit-form-block">
               <div class="edit-form-title">姓名</div>
-              <input id="name" name="姓名" required />
+              <input
+                id="name"
+                name="姓名"
+                type="text"
+                maxlength="20"
+                placeholder="上限 20 字"
+                required
+              />
             </div>
             <div id="sex" class="edit-form-sex-block">
               <div class="edit-form-title">生理性別</div>
@@ -247,11 +254,25 @@
             </div>
             <div class="edit-form-block">
               <div class="edit-form-title">自評程度描述</div>
-              <textarea id="my-level-des" rows="8" cols="50"></textarea>
+              <textarea
+                id="my-level-des"
+                type="text"
+                maxlength="500"
+                placeholder="上限 500 字"
+                rows="8"
+                cols="50"
+              ></textarea>
             </div>
             <div class="edit-form-block">
               <div class="edit-form-title">自我介紹</div>
-              <textarea id="self-intro" rows="8" cols="50"></textarea>
+              <textarea
+                id="self-intro"
+                type="text"
+                maxlength="500"
+                placeholder="上限 500 字"
+                rows="8"
+                cols="50"
+              ></textarea>
             </div>
             <center><button id="save">儲存</button></center>
           </form>
@@ -282,7 +303,14 @@
               </select>
             </div>
             <div>評價</div>
-            <textarea id="content" name="評價" required></textarea>
+            <textarea
+              id="content"
+              name="評價"
+              type="text"
+              maxlength="255"
+              placeholder="上限 255 字"
+              required
+            ></textarea>
             <center><button id="send-comment">送出評價</button></center>
           </form>
         </div>

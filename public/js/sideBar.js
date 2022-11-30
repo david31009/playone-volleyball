@@ -195,6 +195,11 @@ $('#start-group').click(async (e) => {
         }).then(() => {
           window.location.href = '/register.html';
         });
+      } else if (Error === 'Exceed word limit') {
+        Swal.fire({
+          icon: 'error',
+          title: '標題、程度、揪團描述超過字數限制'
+        });
       }
     }
   }

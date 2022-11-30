@@ -44,7 +44,7 @@
 }
 
 .dtd {
-  margin: 0 1% 0 0;
+  margin: 0 3% 0 0;
 }
 
 .place-and-des {
@@ -337,15 +337,10 @@
 /* 超連結*/
 .group-detail a:link {
   text-decoration: none;
-  color: black;
-}
-
-.group-detail a:hover {
-  text-decoration: underline;
-  color: black;
+  color: #004aad;
 }
 
 .group-detail a:visited {
   text-decoration: none;
-  color: black;
+  color: #004aad;
 }

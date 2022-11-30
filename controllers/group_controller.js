@@ -79,12 +79,12 @@ const checkRedis = async (groupId) => {
       value = JSON.parse(value);
       arr.push(value);
 
-      // 依揪團時間(舊到新)排序
+      // 依揪團時間(新到舊)排序
       arr.sort((a, b) => {
-        return a.groupTime - b.groupTime;
+        return b.groupTime - a.groupTime;
       });
 
-      if (groupTime > value.groupTime) {
+      if (groupTime < value.groupTime) {
         deleteFirst = true;
         const diff = groupTime - timeNow; // 現在時間距離未來揪團的差距 in milliseconds
         Cache.set(`group-${resultDB.id}`, JSON.stringify(data), { PX: diff });
@@ -93,11 +93,8 @@ const checkRedis = async (groupId) => {
   }
 
   if (deleteFirst) {
-    // 刪掉第一頁時間最舊的
+    // 刪掉第一頁時間最新的
     Cache.del(`group-${arr[0].groupId}`);
-  } else {
-    // 把自己刪掉 (編輯揪團，把時間往後移又往前移回來)
-    Cache.del(`group-${groupId}`);
   }
 };
 
@@ -114,9 +111,7 @@ const createGroup = async (req, res) => {
   if (money === 0) {
     Charge = 0;
   } else if (money > 65535 || !Number.isInteger(money)) {
-    return res
-      .status(400)
-      .json({ error: 'money must be inter and less than 65535' });
+    return res.status(400).json({ error: 'Money datatype and limit error' });
   }
 
   // 阻擋超過 DB 字數限制
@@ -127,7 +122,7 @@ const createGroup = async (req, res) => {
     info.groupDescription.length > 255
   ) {
     return res.status(400).json({
-      error: '字數限制: 標題(20)、地點(20)、程度描述(255)、揪團描述(255)'
+      error: 'Exceed word limit'
     });
   }
 
@@ -173,7 +168,7 @@ const getGroups = async (req, res) => {
   // 連上 redis
   if (Cache.ready === true) {
     const keys = await Cache.keys('*');
-    // console.log(keys);
+
     if (keys.length === 10) {
       const firstPage = [];
       for (let i = 0; i < keys.length; i++) {
@@ -181,9 +176,9 @@ const getGroups = async (req, res) => {
         firstPage.push(JSON.parse(value));
       }
 
-      // 依最新揪團時間排序
+      // 快到期揪團會排在前面 (舊到新排列)
       firstPage.sort((a, b) => {
-        return b.groupTime - a.groupTime;
+        return a.groupTime - b.groupTime;
       });
 
       console.log('Redis is connected, and the data is from redis.');
@@ -403,8 +398,28 @@ const groupDetails = async (req, res) => {
 
 const updateGroup = async (req, res) => {
   const info = req.body;
-  let isCharge = 1; // 是否收費
-  if (info.money === '0') isCharge = 0;
+  let Charge = 1; // 是否收費
+  const peopleLeft = info.peopleNeed; // 剩餘報名名額
+
+  // 阻擋 money 填入文字、非正整數、大於 65535 的數字
+  const money = Number(info.money);
+  if (money === 0) {
+    Charge = 0;
+  } else if (money > 65535 || !Number.isInteger(money)) {
+    return res.status(400).json({ error: 'Money datatype and limit error' });
+  }
+
+  // 阻擋超過 DB 字數限制
+  if (
+    info.title.length > 20 ||
+    info.placeDescription.length > 20 ||
+    info.levelDescription.length > 255 ||
+    info.groupDescription.length > 255
+  ) {
+    return res.status(400).json({
+      error: 'Exceed word limit'
+    });
+  }
 
   const updateInfo = [
     info.title,
@@ -414,12 +429,13 @@ const updateGroup = async (req, res) => {
     info.county + info.district,
     info.placeDescription,
     info.court,
-    isCharge,
+    Charge,
     info.money,
     info.level,
     info.levelDescription,
     info.peopleHave,
     info.peopleNeed,
+    peopleLeft,
     info.groupDescription,
     info.groupId
   ];
@@ -502,9 +518,15 @@ const getSignupStatus = async (req, res) => {
 
 const createMsg = async (req, res) => {
   const info = req.body;
+
   // 阻擋留言為空狀況
   if (info.content === '') {
     return res.status(400).json({ error: 'message is blank' });
+  }
+
+  // 阻擋留言超過 255 字
+  if (info.content.length > 255) {
+    return res.status(400).json({ error: 'Exceed word limit' });
   }
 
   // 取得現在時間

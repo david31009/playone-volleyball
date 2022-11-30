@@ -167,12 +167,12 @@ $('#self-edit').click(async () => {
   });
 });
 
-// 關閉編輯表單彈窗按鈕
+// 關閉編輯表單彈窗
 $('#close-button').click(() => {
   $('#background-pop').hide();
 });
 
-// 點畫面其他處關閉編輯表單彈窗
+// 關閉編輯表單 (點畫面其他處)
 $(window).click((e) => {
   if (e.target.id === 'background-pop') {
     $('#background-pop').hide();
@@ -195,12 +195,12 @@ $('#save').click(async (e) => {
   });
 
   const myInfo = {
-    userId,
+    userId: `${userId}`,
     username: $('#name').val(),
     gender: $('input[name="gender"]:checked').val(),
     county: $('#county').val(),
     district: $('#district').val(),
-    position,
+    position: `${position}`,
     myLevel: $('#my-level').val(),
     myLevelDes: $('#my-level-des').val(),
     selfIntro: $('#self-intro').val()
@@ -215,8 +215,7 @@ $('#save').click(async (e) => {
         OK = false;
         Swal.fire({
           icon: 'error',
-          title: '錯誤',
-          text: `請輸入 "${$(requiredField).attr('name')}" 欄位`
+          title: `請輸入${$(requiredField).attr('name')}欄位`
         });
         return false; // break
       }
@@ -224,14 +223,28 @@ $('#save').click(async (e) => {
 
   // 使用者填欄位填寫完畢，才打 API
   if (OK) {
-    await axios.put('/api/1.0/user', myInfo);
-    Swal.fire({
-      icon: 'success',
-      title: '已儲存您的資料',
-      showConfirmButton: true
-    }).then(() => {
-      location.reload();
-    });
+    try {
+      await axios.put('/api/1.0/user', myInfo, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      });
+      Swal.fire({
+        icon: 'success',
+        title: '已儲存您的資料',
+        showConfirmButton: true
+      }).then(() => {
+        location.reload();
+      });
+    } catch (error) {
+      const Error = error.response.data.error;
+      if (Error === 'Exceed word limit') {
+        Swal.fire({
+          icon: 'error',
+          title: '姓名、自評程度、自我介紹超過字數限制'
+        });
+      }
+    }
   }
 });
 
@@ -244,7 +257,15 @@ $('#my-profile').click(() => {
 $('#follow-btn').click(async (e) => {
   // class = able-follow => 可追蹤
   if (e.target.className === 'able-follow') {
-    await axios.post('/api/1.0/follow', { userId: userId, followId: idSplit });
+    await axios.post(
+      '/api/1.0/follow',
+      { userId, followId: idSplit },
+      {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      }
+    );
     location.reload();
   } else {
     // 無class => 可取消追蹤
@@ -259,10 +280,18 @@ $('#follow-btn').click(async (e) => {
     })
       .then(async (result) => {
         if (result.isConfirmed) {
-          await axios.post('/api/1.0/unfollow', {
-            userId: userId,
-            followId: idSplit
-          });
+          await axios.post(
+            '/api/1.0/unfollow',
+            {
+              userId,
+              followId: idSplit
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`
+              }
+            }
+          );
           Swal.fire('成功', '已取消追蹤', 'success');
         }
       })
@@ -417,7 +446,15 @@ async function comment(e) {
   const id = $(e).attr('id').split('-');
   const groupId = id[1];
 
-  const result = await axios.post('/api/1.0/group/info', { groupId });
+  const result = await axios.post(
+    '/api/1.0/group/info',
+    { groupId },
+    {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      }
+    }
+  );
   const [groupInfo] = result.data.result;
   $('#comment-title').html(`${groupInfo.title}`);
   $('#comment-time').html(`${groupInfo.date} ${groupInfo.time}`);
@@ -427,12 +464,12 @@ async function comment(e) {
   $('#send-comment').addClass(`${$(e).attr('id')}`);
 }
 
-// 關閉評價彈窗按鈕
+// 關閉評價彈窗
 $('#comment-close-button').click(() => {
   $('#comment-pop').hide();
 });
 
-// 點畫面其他處關閉評價彈窗
+// 關閉評價彈窗 (點畫面其他處)
 $(window).click((e) => {
   if (e.target.id === 'comment-pop') {
     $('#comment-pop').hide();
@@ -446,7 +483,7 @@ $('#send-comment').click(async (e) => {
   const className = e.target.className.split('-');
   const commentInfo = {
     creatorId: className[3],
-    commentorId: userId,
+    commentorId: `${userId}`,
     groupId: className[1],
     score: $('#score').val(),
     content: $('#content').val()
@@ -481,12 +518,26 @@ $('#send-comment').click(async (e) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         // 打 comment api
-        await axios.post('/api/1.0/comment', commentInfo);
-        Swal.fire('成功', '已送出評價', 'success').then(() => {
-          // 送出評價後，關閉評價彈窗，再次點擊過去報名的團
-          $('#comment-pop').hide();
-          $('#past-signup-link').trigger('click');
-        });
+        try {
+          await axios.post('/api/1.0/comment', commentInfo, {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`
+            }
+          });
+          Swal.fire('成功', '已送出評價', 'success').then(() => {
+            // 送出評價後，關閉評價彈窗，再次點擊過去報名的團
+            $('#comment-pop').hide();
+            $('#past-signup-link').trigger('click');
+          });
+        } catch (error) {
+          const Error = error.response.data.error;
+          if (Error === 'Exceed word limit') {
+            Swal.fire({
+              icon: 'error',
+              title: '評價超過字數限制'
+            });
+          }
+        }
       }
     });
   }

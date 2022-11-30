@@ -168,6 +168,7 @@
                 type="text"
                 maxlength="20"
                 name="揪團標題"
+                placeholder="上限 20 字"
                 required
               />
             </div>
@@ -180,7 +181,7 @@
               <input id="time" type="time" name="揪團時間" required />
             </div>
             <div class="form-block">
-              <div class="form-text">打多久</div>
+              <div class="form-text">打多久 (小時)</div>
               <select id="time-duration" name="打多久" required></select>
             </div>
             <div class="form-block">
@@ -201,7 +202,7 @@
                 name="詳細地點"
                 type="text"
                 maxlength="20"
-                placeholder="詳細地點"
+                placeholder="詳細地點 (上限 20 字)"
                 required
               />
             </div>
@@ -217,7 +218,8 @@
               <input
                 id="money"
                 name="費用"
-                placeholder="請輸入數字，免費請輸入 0"
+                type="number"
+                placeholder="請輸入數字 (小於 65535)，免費請輸入 0"
                 required
               />
             </div>
@@ -236,6 +238,7 @@
               <textarea
                 id="level-description"
                 name="程度描述"
+                placeholder="上限 255 字"
                 type="text"
                 maxlength="255"
                 rows="8"
@@ -255,6 +258,7 @@
               <textarea
                 id="group-description"
                 name="揪團描述"
+                placeholder="上限 255 字"
                 type="text"
                 maxlength="255"
                 rows="8"
@@ -277,7 +281,14 @@
           <form id="edit-start-group-form" action="post">
             <div class="edit-form-block">
               <div class="edit-form-text">揪團標題</div>
-              <input id="edit-title" name="揪團標題" required />
+              <input
+                id="edit-title"
+                type="text"
+                maxlength="20"
+                name="揪團標題"
+                placeholder="上限 20 字"
+                required
+              />
             </div>
             <div class="edit-form-block">
               <div class="edit-form-text">揪團日期</div>
@@ -288,7 +299,7 @@
               <input id="edit-time" type="time" name="揪團時間" required />
             </div>
             <div class="edit-form-block">
-              <div class="edit-form-text">打多久</div>
+              <div class="edit-form-text">打多久 (小時)</div>
               <select id="edit-time-duration" name="打多久" required></select>
             </div>
             <div class="edit-form-block">
@@ -307,7 +318,9 @@
               <input
                 id="edit-place-description"
                 name="詳細地點"
-                placeholder="詳細地點"
+                type="text"
+                maxlength="20"
+                placeholder="詳細地點 (上限 20 字)"
                 required
               />
             </div>
@@ -323,7 +336,8 @@
               <input
                 id="edit-money"
                 name="費用"
-                placeholder="請輸入數字，免費請輸入 0"
+                type="number"
+                placeholder="請輸入數字 (小於 65535)，免費請輸入 0"
                 required
               />
             </div>
@@ -342,6 +356,9 @@
               <textarea
                 id="edit-level-description"
                 name="程度描述"
+                placeholder="上限 255 字"
+                type="text"
+                maxlength="255"
                 rows="8"
                 cols="30"
                 required
@@ -351,7 +368,7 @@
               <div class="edit-form-text">人數</div>
               <div class="edit-form-text">內建幾人</div>
               <select id="edit-people-have" name="內建人數" required></select>
-              <div class="edit-form-text">預計揪幾人</div>
+              <div class="edit-form-text">預計再揪幾人</div>
               <select id="edit-people-need" name="預計揪人數" required></select>
             </div>
             <div class="edit-form-block">
@@ -359,6 +376,9 @@
               <textarea
                 id="edit-group-description"
                 name="揪團描述"
+                placeholder="上限 255 字"
+                type="text"
+                maxlength="255"
                 required
               ></textarea>
             </div>

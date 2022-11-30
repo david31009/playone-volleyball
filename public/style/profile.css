@@ -208,6 +208,7 @@ body {
 #intro,
 #level-des {
   white-space: pre-wrap;
+  word-break: break-all;
   line-height: 30px;
   font-size: 22px;
 }

@@ -1,26 +1,43 @@
 const moment = require('moment');
+const validator = require('validator');
 const { myLevel, gender, position } = require('../utils/enum');
 const Profile = require('../models/profile_model');
 
 const updateUser = async (req, res) => {
   const info = req.body;
+
+  // 姓名不能包含 dash(-)
+  const username = validator.blacklist(info.username, '-');
+  const pos = info.position.split(',');
   let myInfo = [
-    info.username,
+    username,
     info.gender,
     info.county,
-    info.position[0],
-    info.position[1],
+    pos[0],
+    pos[1],
     info.myLevel,
     info.myLevelDes,
     info.selfIntro,
     info.userId
   ];
+
+  // 阻擋姓名字數 > 20字、自介字數 > 500、自評程度字數 > 500
+  if (
+    info.username.length > 20 ||
+    info.myLevelDes.length > 500 ||
+    info.selfIntro.length > 500
+  ) {
+    return res.status(400).json({ error: 'Exceed word limit' });
+  }
+
+  // 未填資訊轉換成 null
   myInfo = myInfo.map((i) => {
     if (i === '' || i === undefined) {
       i = null;
     }
     return i;
   });
+
   await Profile.updateUser(myInfo);
   res.status(200).send('ok');
 };
@@ -149,6 +166,12 @@ const groupInfo = async (req, res) => {
 
 const storeComment = async (req, res) => {
   const info = req.body;
+
+  // 阻擋評價超過 255 字
+  if (info.content.length > 255) {
+    return res.status(400).json({ error: 'Exceed word limit' });
+  }
+
   const currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
   const comment = [
     info.creatorId,
