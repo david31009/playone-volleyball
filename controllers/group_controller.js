@@ -165,13 +165,9 @@ const createGroup = async (req, res) => {
 };
 
 const getGroups = async (req, res) => {
-  const ip = req.headers['x-forwarded-for']
-    ? req.headers['x-forwarded-for']
-    : req.ip;
-  console.log(ip);
   // 連上 redis
   if (Cache.ready === true) {
-    const keys = await Cache.keys('*');
+    const keys = await Cache.keys('group-*'); // 找以 group 為開頭的key
 
     if (keys.length === 10) {
       const firstPage = [];
@@ -189,9 +185,12 @@ const getGroups = async (req, res) => {
       res.status(200).json({ firstPage });
     } else {
       // 有揪團過期消失，重撈 DB，整理後再存進 redis
-      Cache.flushDb(); // 刪掉 redis 資料
-      const resultDB = await Group.getGroups();
+      for (let i = 0; i < keys.length; i++) {
+        // 刪掉 redis 以 group- 為開頭的資料
+        Cache.del(`${keys[i]}`);
+      }
 
+      const resultDB = await Group.getGroups();
       // 第一頁資料 (10筆)
       const firstPage = resultDB.map((i) => {
         moment.locale('zh-tw'); // 台灣時間
@@ -218,7 +217,7 @@ const getGroups = async (req, res) => {
         };
 
         // 存進 redis
-        const diff = groupTime - timeNow; // 現在時間距離未來揪團的差距 in milliseconds
+        const diff = groupTime - timeNow; // 現在時間距離揪團時間的差距 in milliseconds
         Cache.set(`group-${i.id}`, JSON.stringify(data), { PX: diff });
 
         return data;

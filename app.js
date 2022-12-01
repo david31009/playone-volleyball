@@ -8,6 +8,7 @@ const { PORT, API_VERSION } = process.env;
 
 // redis 連線
 const Cache = require('./utils/cache');
+const { rateLimiterRoute } = require('./utils/ratelimiter');
 
 // CORS allow all
 app.use(cors());
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API routes
-app.use(`/api/${API_VERSION}`, [
+app.use(`/api/${API_VERSION}`, rateLimiterRoute, [
   require('./routes/group_route'),
   require('./routes/profile_route'),
   require('./routes/user_route')

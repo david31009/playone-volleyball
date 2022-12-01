@@ -10,7 +10,6 @@ async function loginCheck() {
       }
     });
     $('.log-out').html('登出');
-    // console.log(result);
   } catch (error) {
     $('.log-out').html('登入');
   }
