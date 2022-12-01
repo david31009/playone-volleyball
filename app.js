@@ -12,6 +12,9 @@ const Cache = require('./utils/cache');
 // CORS allow all
 app.use(cors());
 
+// get user ip
+app.set('trust proxy', true);
+
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

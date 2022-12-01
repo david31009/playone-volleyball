@@ -165,6 +165,10 @@ const createGroup = async (req, res) => {
 };
 
 const getGroups = async (req, res) => {
+  const ip = req.headers['x-forwarded-for']
+    ? req.headers['x-forwarded-for']
+    : req.ip;
+  console.log(ip);
   // 連上 redis
   if (Cache.ready === true) {
     const keys = await Cache.keys('*');
