@@ -67,21 +67,20 @@
             />
           </div>
           <div class="signin-btn">
-            <div class="signin-fb">
-              <button id="signin-btn">登入</button>
-              <div
-                class="fb-login-button"
-                data-width=""
-                data-size="medium"
-                data-button-type="login_with"
-                data-layout="default"
-                data-auto-logout-link="false"
-                data-use-continue-as="false"
-                scope="public_profile,email"
-                onlogin="checkLoginState();"
-              ></div>
-            </div>
-            <div><button id="to-signup">建立新帳號</button></div>
+            <button id="signin-btn">登入</button>
+            <button id="to-signup">建立新帳號</button>
+            <br />
+            <div
+              class="fb-login-button"
+              data-width=""
+              data-size="medium"
+              data-button-type="login_with"
+              data-layout="default"
+              data-auto-logout-link="false"
+              data-use-continue-as="false"
+              scope="public_profile,email"
+              onlogin="checkLoginState();"
+            ></div>
           </div>
         </form>
         <form id="signup-form">
@@ -108,13 +107,5 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="js/register.js"></script>
     <script src="js/fbLogin.js"></script>
-
-    <!-- <script
-      async
-      defer
-      crossorigin="anonymous"
-      src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v15.0&appId=633489238189413&autoLogAppEvents=1"
-      nonce="bgOoGQrU"
-    ></script> -->
   </body>
 </html>

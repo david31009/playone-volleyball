@@ -41,12 +41,6 @@ window.fbAsyncInit = function () {
     xfbml: true, // Parse social plugins on this webpage.
     version: 'v15.0' // Use this Graph API version for this call.
   });
-
-  // 頁面重載會自動登入，所以註解掉
-  // FB.getLoginStatus(function (response) {
-  //   // Called after the JS SDK has been initialized.
-  //   statusChangeCallback(response); // Returns the login status.
-  // });
 };
 
 function testAPI() {

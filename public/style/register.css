@@ -4,7 +4,7 @@ body {
   height: 100%;
   margin: 0;
   background-color: #ece2e1;
-  font-family: 'Lucida Console', 'cwTeXYen';
+  font-family: 'Microsoft Sans Serif', 'cwTeXYen';
 }
 
 .main-container {
@@ -41,7 +41,7 @@ body {
   font-size: 20px;
   width: 80%;
   padding: 10px;
-  margin: 2% 0 10% 0;
+  margin: 2% 0 9% 0;
   display: inline-block;
   border: none;
   border-radius: 5px;
@@ -91,14 +91,9 @@ body {
   margin-left: 10%;
 }
 
+/* fb 登入 */
 .fb-login-button {
   margin-bottom: 3%;
-}
-
-.signin-fb {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
 }
 
 /* 註冊 */
