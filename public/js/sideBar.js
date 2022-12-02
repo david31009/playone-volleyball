@@ -1,5 +1,20 @@
 // 主揪揪團彈窗
 function show() {
+  axios
+    .get('/api/1.0/user/auth', {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      }
+    })
+    .catch(() => {
+      Swal.fire({
+        icon: 'error',
+        title: '請先登入或註冊'
+      }).then(() => {
+        window.location.href = '/register.html';
+      });
+    });
+
   $('#background-pop').show();
   $('#date').attr('min', moment().format('YYYY-MM-DD'));
   $('#date').attr('value', moment().format('YYYY-MM-DD'));

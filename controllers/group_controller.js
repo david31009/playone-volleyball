@@ -23,6 +23,7 @@ const sseNotify = async (req, res) => {
 
   res.sseId = Date.now();
   clients.push({ res });
+  console.log(res.sseId);
 
   res.on('close', () => {
     // 把使用者下線的 Id 移掉
@@ -304,7 +305,6 @@ const nextPage = async (req, res) => {
   const pageSize = 10;
   const startRecord = (page - 1) * pageSize;
   const result = await Group.nextPage(`${startRecord}`, `${pageSize}`);
-  // console.log(result);
 
   const nextPageGroup = result.map((i) => {
     moment.locale('zh-tw');

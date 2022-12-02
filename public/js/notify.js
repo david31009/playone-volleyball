@@ -5,7 +5,7 @@ $.notify.addStyle('notify', {
   html: `<div>
             <img class="bell" src="./images/notification.gif" height="30">
             <div class='title' data-notify-html='title'></div>
-            <button class='yes' data-notify-text='button'>去看看</button>
+            <button class='yes' data-notify-text='button'></button>
          </div>
          `
 });
@@ -18,7 +18,8 @@ eventSource.onmessage = (event) => {
 
   $.notify(
     {
-      title: '有人建立新的揪團 !'
+      title: '有人建立新的揪團 !',
+      button: '去看看'
     },
     {
       style: 'notify',

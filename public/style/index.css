@@ -275,23 +275,24 @@ body {
 
 /* 換頁*/
 .page {
-  flex-basis: 100%;
+  flex-basis: 80%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 20px;
+  margin-left: 12%;
 }
 
 .per-page {
-  margin-right: 30px;
+  padding: 8px 15px 8px 15px;
   font-size: 20px;
   cursor: pointer;
   text-align: center;
 }
 
 .per-page:hover {
-  border: 1px solid #004aad;
-  color: #004aad;
+  background-color: #004aad;
+  color: white;
 }
 
 /* 揪團字卡渲染*/
