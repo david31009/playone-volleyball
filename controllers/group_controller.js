@@ -207,17 +207,12 @@ const getGroups = async (req, res) => {
       console.log('Redis is connected, and the data is from redis.');
       res.status(200).json({ firstPage });
     } else {
-<<<<<<< Updated upstream
-      // 有揪團過期消失，重撈 DB，整理後再存進 redis
-      Cache.flushDb(); // 刪掉 redis 資料
-=======
       // 連上 redis，資料不足10筆 (有揪團過期消失)，重撈 DB，整理後再存進 redis
       for (let i = 0; i < keys.length; i++) {
         // 刪掉 redis 以 group- 為開頭的資料
         Cache.del(`${keys[i]}`);
       }
 
->>>>>>> Stashed changes
       const resultDB = await Group.getGroups();
 
       // 第一頁資料 (10筆)
