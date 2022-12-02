@@ -1,0 +1,34 @@
+/* notify*/
+.notifyjs-notify-base {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  opacity: 0.7;
+  width: 350px;
+  height: 50px;
+  background: rgba(0, 74, 173, 1);
+  padding: 5px;
+  border-radius: 10px;
+  margin-right: 15px;
+}
+
+.notifyjs-notify-base .title {
+  width: 120px;
+  flex-basis: 50%;
+  font-size: 22px;
+  color: white;
+}
+
+.notifyjs-notify-base button {
+  font-size: 16px;
+  padding: 6px;
+  flex-basis: 22%;
+  border-radius: 7px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  margin: 1% 0 1% 0;
+  cursor: pointer;
+}
+
+.bell {
+  flex-basis: 10%;
+}

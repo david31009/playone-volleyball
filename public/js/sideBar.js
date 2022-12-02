@@ -2,6 +2,9 @@
 function show() {
   $('#background-pop').show();
   $('#date').attr('min', moment().format('YYYY-MM-DD'));
+  $('#date').attr('value', moment().format('YYYY-MM-DD'));
+  $('#time').attr('value', moment().format('HH:mm'));
+
   new TwCitySelector({
     // 選擇台灣、地區
     el: '.start-group',

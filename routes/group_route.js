@@ -14,7 +14,8 @@ const {
   decideSignupStatus,
   closeGroup,
   nextPage,
-  allPage
+  allPage,
+  sseNotify
 } = require('../controllers/group_controller');
 
 router.route('/group').post(auth, injection, wrapAsync(createGroup));
@@ -31,5 +32,7 @@ router.route('/signup/status').put(auth, wrapAsync(decideSignupStatus));
 router.route('/close/group').post(auth, wrapAsync(closeGroup));
 router.route('/group/nextpage').post(wrapAsync(nextPage));
 router.route('/group/allpage').get(wrapAsync(allPage));
+
+router.route('/sse').get(wrapAsync(sseNotify));
 
 module.exports = router;
