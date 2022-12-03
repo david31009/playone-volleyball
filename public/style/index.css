@@ -306,8 +306,8 @@ body {
 
 .page {
   display: flex;
-  justify-content: center;
-  margin-left: 16%;
+  width: 100%;
+  justify-content: start;
 }
 
 .per-page {
