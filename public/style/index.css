@@ -274,13 +274,43 @@ body {
 }
 
 /* 換頁*/
-.page {
-  flex-basis: 80%;
+.paging {
   display: flex;
-  flex-wrap: wrap;
+  flex-basis: 55%;
   justify-content: center;
-  margin-top: 20px;
-  margin-left: 12%;
+  /* margin-left: 12%; */
+  /* align-items: center; */
+  overflow-x: scroll;
+  margin-top: 1%;
+}
+
+.paging::-webkit-scrollbar {
+  /* 隱藏滾動條*/
+  display: none;
+}
+
+.arrow-left {
+  flex-basis: 15%;
+  font-size: 18px;
+  margin: 2% 0 0 7%;
+  text-align: center;
+}
+
+.arrow-right {
+  flex-basis: 15%;
+  font-size: 18px;
+  margin-top: 2%;
+  text-align: center;
+}
+
+.page {
+  /* flex-basis: 17%; */
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: center;
+  /* overflow-x: scroll; */
+  /* margin-top: 20px; */
+  /* margin-left: 12%; */
 }
 
 .per-page {

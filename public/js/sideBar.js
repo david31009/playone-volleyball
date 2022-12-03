@@ -403,6 +403,17 @@ async function nextPageFilter(e) {
   }
 }
 
+// 換頁滑動
+$('.arrow-left').click(() => {
+  const leftPos = $('.paging').scrollLeft();
+  $('.paging').animate({ scrollLeft: leftPos - 50 }, 800);
+});
+
+$('.arrow-right').click(() => {
+  const leftPos = $('.paging').scrollLeft();
+  $('.paging').animate({ scrollLeft: leftPos + 50 }, 800);
+});
+
 // 個人頁面連結，確認使用者身分，要有jwt token
 $('#my-profile').click(async () => {
   // 無 jwt token，跳轉到註冊、登入頁面
