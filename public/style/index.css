@@ -276,7 +276,7 @@ body {
 /* 換頁*/
 .paging {
   display: flex;
-  flex-basis: 55%;
+  flex-basis: 77%;
   justify-content: center;
   /* margin-left: 12%; */
   /* align-items: center; */
@@ -290,17 +290,19 @@ body {
 }
 
 .arrow-left {
-  flex-basis: 15%;
+  flex-basis: 5%;
   font-size: 18px;
   margin: 2% 0 0 7%;
   text-align: center;
+  cursor: pointer;
 }
 
 .arrow-right {
-  flex-basis: 15%;
+  flex-basis: 5%;
   font-size: 18px;
   margin-top: 2%;
   text-align: center;
+  cursor: pointer;
 }
 
 .page {
