@@ -305,13 +305,9 @@ body {
 }
 
 .page {
-  /* flex-basis: 17%; */
   display: flex;
-  /* flex-wrap: wrap; */
   justify-content: center;
-  /* overflow-x: scroll; */
-  /* margin-top: 20px; */
-  /* margin-left: 12%; */
+  margin-left: 16%;
 }
 
 .per-page {
