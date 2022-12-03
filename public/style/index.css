@@ -88,6 +88,22 @@ body {
   font-size: 18px;
   font-family: 'cwTeXYe';
   width: 48%;
+  padding-left: 3%;
+
+  /* 箭頭修改*/
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px), calc(0% - 2.5em) 0.5em;
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
 }
 
 .select {
@@ -100,6 +116,23 @@ body {
   font-family: 'cwTeXYe';
   width: 95%;
   margin: 0 1% 2% 2%;
+  padding-left: 3%;
+  /* text-align: center; */
+
+  /* 箭頭修改*/
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px), calc(0% - 2.5em) 0.5em;
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
 }
 
 /* 主揪揪團表單*/
@@ -187,21 +220,47 @@ body {
   margin: 0 0 1% 2%;
 }
 
-.form-block select,
 .form-block input {
   opacity: 0.8;
   border: 1px solid rgba(0, 0, 0, 0.8);
   border-radius: 10px;
   height: 50px;
   font-size: 20px;
-  color: rgba(0, 0, 0, 0.6);
   margin: 0 1% 4% 2%;
   font-family: 'Microsoft Sans Serif';
-  text-align: center;
+  padding: 0 2% 0 2%;
 }
 
-.form-block input::placeholder {
-  text-align: center;
+.form-block select {
+  opacity: 0.8;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  height: 50px;
+  font-size: 20px;
+  margin: 0 1% 4% 2%;
+  font-family: 'Microsoft Sans Serif';
+  padding-left: 2%;
+
+  /* 箭頭修改*/
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%),
+    linear-gradient(to right, #ccc, #ccc);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px), calc(0% - 2.5em) 0.5em;
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+}
+
+#county,
+#district {
+  width: 30%;
+  padding-left: 2%;
 }
 
 .form-block textarea {
@@ -211,27 +270,61 @@ body {
   font-size: 20px;
   margin: 0 1% 4% 2%;
   resize: none;
+  padding: 2%;
 }
 
 /* 換頁*/
-.page {
-  flex-basis: 100%;
+.paging {
   display: flex;
-  flex-wrap: wrap;
+  flex-basis: 77%;
   justify-content: center;
-  margin-top: 20px;
+  /* margin-left: 12%; */
+  /* align-items: center; */
+  overflow-x: scroll;
+  margin-top: 1%;
+}
+
+.paging::-webkit-scrollbar {
+  /* 隱藏滾動條*/
+  display: none;
+}
+
+.arrow-left {
+  flex-basis: 5%;
+  font-size: 18px;
+  margin: 2% 0 0 7%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.arrow-right {
+  flex-basis: 5%;
+  font-size: 18px;
+  margin-top: 2%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.page {
+  /* flex-basis: 17%; */
+  display: flex;
+  /* flex-wrap: wrap; */
+  justify-content: center;
+  /* overflow-x: scroll; */
+  /* margin-top: 20px; */
+  /* margin-left: 12%; */
 }
 
 .per-page {
-  margin-right: 30px;
+  padding: 8px 15px 8px 15px;
   font-size: 20px;
   cursor: pointer;
   text-align: center;
 }
 
 .per-page:hover {
-  border: 1px solid #004aad;
-  color: #004aad;
+  background-color: #004aad;
+  color: white;
 }
 
 /* 揪團字卡渲染*/

@@ -1,7 +1,25 @@
 // 主揪揪團彈窗
 function show() {
+  axios
+    .get('/api/1.0/user/auth', {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      }
+    })
+    .catch(() => {
+      Swal.fire({
+        icon: 'error',
+        title: '請先登入或註冊'
+      }).then(() => {
+        window.location.href = '/register.html';
+      });
+    });
+
   $('#background-pop').show();
   $('#date').attr('min', moment().format('YYYY-MM-DD'));
+  $('#date').attr('value', moment().format('YYYY-MM-DD'));
+  $('#time').attr('value', moment().format('HH:mm'));
+
   new TwCitySelector({
     // 選擇台灣、地區
     el: '.start-group',
@@ -384,6 +402,17 @@ async function nextPageFilter(e) {
     $('#card-group').append(newDom);
   }
 }
+
+// 換頁滑動
+$('.arrow-left').click(() => {
+  const leftPos = $('.paging').scrollLeft();
+  $('.paging').animate({ scrollLeft: leftPos - 50 }, 800);
+});
+
+$('.arrow-right').click(() => {
+  const leftPos = $('.paging').scrollLeft();
+  $('.paging').animate({ scrollLeft: leftPos + 50 }, 800);
+});
 
 // 個人頁面連結，確認使用者身分，要有jwt token
 $('#my-profile').click(async () => {

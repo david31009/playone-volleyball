@@ -14,6 +14,24 @@ const {
 } = require('../utils/enum');
 const Group = require('../models/group_model');
 
+let clients = [];
+const sseNotify = async (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  res.sseId = Date.now();
+  clients.push({ res });
+  console.log(res.sseId);
+
+  res.on('close', () => {
+    // 把使用者下線的 Id 移掉
+    clients = clients.filter((client) => client.res.sseId !== res.sseId);
+    res.end();
+  });
+};
+
 // 主揪揪團，寄信給粉絲
 const notifyFans = async (groupIdAndFans) => {
   const { groupId } = groupIdAndFans;
@@ -72,17 +90,13 @@ const checkRedis = async (groupId) => {
 
   const arr = [];
   let deleteFirst = false;
+  // 從 cache 取資料，比對與新建團的時間
   if (Cache.ready === true) {
-    const keys = await Cache.keys('*');
+    const keys = await Cache.keys('group-*');
     for (let i = 0; i < keys.length; i++) {
       let value = await Cache.get(keys[i]);
       value = JSON.parse(value);
       arr.push(value);
-
-      // 依揪團時間(新到舊)排序
-      arr.sort((a, b) => {
-        return b.groupTime - a.groupTime;
-      });
 
       if (groupTime < value.groupTime) {
         deleteFirst = true;
@@ -91,6 +105,11 @@ const checkRedis = async (groupId) => {
       }
     }
   }
+
+  // 依揪團時間(新到舊)排序
+  arr.sort((a, b) => {
+    return b.groupTime - a.groupTime;
+  });
 
   if (deleteFirst) {
     // 刪掉第一頁時間最新的
@@ -161,6 +180,11 @@ const createGroup = async (req, res) => {
   const { groupId } = groupIdAndFans;
   await checkRedis(groupId);
 
+  // 有人創團，通知所有在瀏覽網頁的人
+  clients.forEach((client) => {
+    client.res.write(`data: ${groupId}\n\n`);
+  });
+
   res.status(200).json(groupIdAndFans);
 };
 
@@ -184,7 +208,7 @@ const getGroups = async (req, res) => {
       console.log('Redis is connected, and the data is from redis.');
       res.status(200).json({ firstPage });
     } else {
-      // 有揪團過期消失，重撈 DB，整理後再存進 redis
+      // 連上 redis，資料不足10筆 (有揪團過期消失)，重撈 DB，整理後再存進 redis
       for (let i = 0; i < keys.length; i++) {
         // 刪掉 redis 以 group- 為開頭的資料
         Cache.del(`${keys[i]}`);
@@ -280,7 +304,6 @@ const nextPage = async (req, res) => {
   const pageSize = 10;
   const startRecord = (page - 1) * pageSize;
   const result = await Group.nextPage(`${startRecord}`, `${pageSize}`);
-  // console.log(result);
 
   const nextPageGroup = result.map((i) => {
     moment.locale('zh-tw');
@@ -645,5 +668,6 @@ module.exports = {
   decideSignupStatus,
   closeGroup,
   nextPage,
-  allPage
+  allPage,
+  sseNotify
 };
