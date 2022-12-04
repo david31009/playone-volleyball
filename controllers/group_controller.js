@@ -20,7 +20,7 @@ const sseNotify = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Connection', 'keep-alive');
   res.setHeader('Cache-Control', 'no-cache');
-  // res.setHeader('X-Accel-Buffering', 'no'); // fix sse problem on https
+  res.setHeader('X-Accel-Buffering', 'no'); // fix sse problem on https
   res.flushHeaders();
 
   res.sseId = Date.now();
