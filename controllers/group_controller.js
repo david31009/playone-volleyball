@@ -23,7 +23,6 @@ const sseNotify = async (req, res) => {
 
   res.sseId = Date.now();
   clients.push({ res });
-  console.log(res.sseId);
 
   res.on('close', () => {
     // 把使用者下線的 Id 移掉
