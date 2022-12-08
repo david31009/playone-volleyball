@@ -4,9 +4,6 @@ const { pool } = require('../models/mysqlcon');
 const createTable = async () => {
   try {
     // 刪表和建表順序要對
-    await pool.execute('DROP TABLE IF EXISTS `chat_msg`;');
-    await pool.execute('DROP TABLE IF EXISTS `user_chatroom`;');
-    await pool.execute('DROP TABLE IF EXISTS `chatroom`;');
     await pool.execute('DROP TABLE IF EXISTS `fans`;');
     await pool.execute('DROP TABLE IF EXISTS `msg_board`;');
     await pool.execute('DROP TABLE IF EXISTS `comment`;');
@@ -33,15 +30,7 @@ const createTable = async () => {
     await pool.execute(
       'CREATE TABLE `fans`(`user_id` INT UNSIGNED, `follow_id` INT UNSIGNED, PRIMARY KEY (`user_id`, `follow_id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`follow_id`) REFERENCES `user` (`id`) ON DELETE CASCADE)'
     );
-    // await pool.execute(
-    //   'CREATE TABLE `chatroom`(`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `name` VARCHAR(20), PRIMARY KEY (`id`))'
-    // );
-    // await pool.execute(
-    //   'CREATE TABLE `user_chatroom`(`user_id` INT UNSIGNED, `chatroom_id` INT UNSIGNED, PRIMARY KEY (`user_id`, `chatroom_id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`chatroom_id`) REFERENCES `chatroom` (`id`) ON DELETE CASCADE)'
-    // );
-    // await pool.execute(
-    //   'CREATE TABLE `chat_msg`(`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `user_id` INT UNSIGNED, `chatroom_id` INT UNSIGNED, `msg` VARCHAR(45), `time` DATETIME, PRIMARY KEY (`id`), FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE, FOREIGN KEY (`chatroom_id`) REFERENCES `chatroom` (`id`) ON DELETE CASCADE)'
-    // );
+
     console.log('table created successfully.');
     process.exit();
   } catch (err) {

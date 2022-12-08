@@ -4,6 +4,7 @@ const { pool } = require('./mysqlcon');
 const createGroup = async (groupInfo, creatorId) => {
   const conn = await pool.getConnection();
   try {
+    await conn.query('START TRANSACTION');
     // 建立揪團
     const [result] = await conn.execute(
       'INSERT INTO `group` (creator_id, title, date, time_duration, net, place, place_description, court, is_charge, money, level, level_description, people_have, people_need, people_left, group_description, is_build) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -103,6 +104,7 @@ const signupGroup = async (signupInfo) => {
   const groupId = [signupInfo[1]];
   // 報名時，剩餘報名名額會少一位
   try {
+    await conn.query('START TRANSACTION');
     await conn.execute(
       'INSERT INTO `member` (user_id, group_id, signup_status) VALUES (?,?,?)',
       signupInfo
@@ -122,7 +124,7 @@ const signupGroup = async (signupInfo) => {
     return result;
   } catch (error) {
     await conn.execute('ROLLBACK');
-    console.log(error);
+    console.log(error); // FIXME: 用 throw error 讓 wrap async 去接，才能回給前端
   } finally {
     await conn.release();
   }

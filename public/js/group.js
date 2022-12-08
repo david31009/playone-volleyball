@@ -124,7 +124,7 @@ let userId;
   }
 
   // 確認使用者報名狀態
-  const datenow = new Date(+new Date() + 8 * 3600 * 1000).toISOString(); // 取得當下時間
+  const datenow = moment().format('YYYY-MM-DD HH:mm:ss'); // 取得當下時間
   if (groupDetail.isBuild[0] === 0) {
     // 主揪自行關團
     $('#leave-msg, #edit, #close-group, #signup').css({
