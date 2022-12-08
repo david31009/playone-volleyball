@@ -104,7 +104,9 @@ const checkRedis = async (groupId) => {
       if (groupTime < value.groupTime) {
         deleteFirst = true;
         const diff = groupTime - timeNow; // 現在時間距離未來揪團的差距 in milliseconds
-        Cache.set(`group-${resultDB.id}`, JSON.stringify(data), { PX: diff });
+        if (diff > 0) {
+          Cache.set(`group-${resultDB.id}`, JSON.stringify(data), { PX: diff });
+        }
       }
     }
   }
