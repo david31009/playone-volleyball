@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const Joi = require('joi');
 const { TOKEN_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
@@ -46,8 +47,38 @@ const injectionCheck = async (req, res, next) => {
   next();
 };
 
+const inputCheck = async (req, res, next) => {
+  const info = req.body;
+  const schema = Joi.object().keys({
+    title: Joi.string().max(20),
+    date: Joi.string(),
+    time: Joi.string(),
+    timeDuration: Joi.number().positive(),
+    net: Joi.number().integer().min(0).max(1),
+    county: Joi.string().max(4).required(),
+    district: Joi.string().max(6).required(),
+    placeDescription: Joi.string().max(20),
+    court: Joi.number().max(1),
+    money: Joi.number().integer().min(0).max(65535),
+    level: Joi.number().integer().min(0).max(4),
+    levelDescription: Joi.string().min(1).max(255),
+    peopleHave: Joi.number().integer().min(1).max(255),
+    peopleNeed: Joi.number().integer().min(1).max(255),
+    groupDescription: Joi.string().max(255)
+  });
+
+  const result = schema.validate(info);
+
+  if (result.error) {
+    res.status(400).json({ error: 'Input error' });
+  } else {
+    next();
+  }
+};
+
 module.exports = {
   wrapAsync,
   auth,
-  injectionCheck
+  injectionCheck,
+  inputCheck
 };

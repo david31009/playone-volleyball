@@ -133,25 +133,8 @@ const createGroup = async (req, res) => {
   const peopleLeft = info.peopleNeed; // 剩餘報名名額
   let Charge = 1; // 是否收費
 
-  // 阻擋 money 填入文字、非正整數、大於 65535 的數字
   const money = Number(info.money);
-  if (money === 0) {
-    Charge = 0;
-  } else if (money > 65535 || !Number.isInteger(money)) {
-    return res.status(400).json({ error: 'Money datatype and limit error' });
-  }
-
-  // 阻擋超過 DB 字數限制
-  if (
-    info.title.length > 20 ||
-    info.placeDescription.length > 20 ||
-    info.levelDescription.length > 255 ||
-    info.groupDescription.length > 255
-  ) {
-    return res.status(400).json({
-      error: 'Exceed word limit'
-    });
-  }
+  if (money === 0) Charge = 0;
 
   const groupInfo = [
     creatorId,
@@ -172,11 +155,6 @@ const createGroup = async (req, res) => {
     info.groupDescription,
     Build
   ];
-
-  // 阻擋欄位未輸入
-  if (groupInfo.includes('')) {
-    return res.status(400).json({ error: '每個欄位都要輸入!' });
-  }
 
   // 存入 DB，傳入 array，回傳建立的 groupId
   const groupIdAndFans = await Group.createGroup(groupInfo, creatorId);
@@ -201,25 +179,8 @@ const updateGroup = async (req, res) => {
   let Charge = 1; // 是否收費
   const peopleLeft = info.peopleNeed; // 剩餘報名名額
 
-  // 阻擋 money 填入文字、非正整數、大於 65535 的數字
   const money = Number(info.money);
-  if (money === 0) {
-    Charge = 0;
-  } else if (money > 65535 || !Number.isInteger(money)) {
-    return res.status(400).json({ error: 'Money datatype and limit error' });
-  }
-
-  // 阻擋超過 DB 字數限制
-  if (
-    info.title.length > 20 ||
-    info.placeDescription.length > 20 ||
-    info.levelDescription.length > 255 ||
-    info.groupDescription.length > 255
-  ) {
-    return res.status(400).json({
-      error: 'Exceed word limit'
-    });
-  }
+  if (money === 0) Charge = 0;
 
   const updateInfo = [
     info.title,
@@ -240,11 +201,7 @@ const updateGroup = async (req, res) => {
     info.groupId
   ];
 
-  // 阻擋欄位未輸入
-  if (updateInfo.includes('')) {
-    return res.status(400).json({ error: '每個欄位都要輸入!' });
-  }
-
+  // 更新揪團
   await Group.updateGroup(updateInfo);
 
   // 檢查新團時間在 redis 中的排序

@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '../.env' });
 const redis = require('redis');
 
 // 利用 redis 套件，連接 EC2 redis

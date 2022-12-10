@@ -10,7 +10,7 @@ const { PORT, API_VERSION, IP } = process.env;
 const Cache = require('./utils/cache');
 const { rateLimiterRoute } = require('./utils/ratelimiter');
 
-// CORS allow all
+// CORS allow specific region
 app.use(
   cors({
     origin: `${IP}`
@@ -37,8 +37,7 @@ app.use(`/api/${API_VERSION}`, rateLimiterRoute, [
 ]);
 
 // Error handling
-app.use(function (err, req, res, next) {
-  // 接系統的錯誤，不讓 server crash
+app.use((err, req, res, next) => {
   console.log(err);
   res.status(500).send('Internal Server Error');
 });
