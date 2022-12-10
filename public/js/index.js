@@ -1,7 +1,7 @@
 // 渲染字卡
 (async () => {
   const getCards = await axios.get('/api/1.0/group');
-  const allPage = await axios.get('/api/1.0/group/allpage');
+  const allPage = await axios.get('/api/1.0/page');
   const cardInfo = getCards.data.firstPage;
   const { totalPage } = allPage.data;
 

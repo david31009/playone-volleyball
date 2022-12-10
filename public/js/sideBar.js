@@ -33,7 +33,7 @@ function show() {
 // 點擊下一頁，變換下一頁資料
 async function nextPage(e) {
   const page = $(e).attr('id').split('=')[1];
-  const result = await axios.post('/api/1.0/group/nextpage', { page });
+  const result = await axios.post('/api/1.0/page', { page });
   const { nextPageGroup } = result.data;
 
   $('.no-filter').remove();
@@ -239,7 +239,7 @@ $('#filter').click(async (e) => {
     page: 1 // 按下瞬間，顯示第一頁結果
   };
 
-  const filterCards = await axios.post('/api/1.0/filter', filterInfo);
+  const filterCards = await axios.post('/api/1.0/filter/group', filterInfo);
   const filterCardsInfo = filterCards.data.perPage;
   const { totalPage } = filterCards.data;
 
@@ -338,7 +338,7 @@ async function nextPageFilter(e) {
     page
   };
 
-  const result = await axios.post('/api/1.0/filter', filterInfo);
+  const result = await axios.post('/api/1.0/filter/group', filterInfo);
   const { perPage } = result.data;
 
   $('.filter').remove();

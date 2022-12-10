@@ -36,7 +36,7 @@ const auth = async (req, res, next) => {
   }
 };
 
-const injection = async (req, res, next) => {
+const injectionCheck = async (req, res, next) => {
   const info = req.body;
   const keys = Object.keys(info);
   for (let i = 0; i < keys.length; i++) {
@@ -49,5 +49,5 @@ const injection = async (req, res, next) => {
 module.exports = {
   wrapAsync,
   auth,
-  injection
+  injectionCheck
 };

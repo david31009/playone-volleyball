@@ -4,14 +4,18 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const { PORT, API_VERSION } = process.env;
+const { PORT, API_VERSION, IP } = process.env;
 
 // redis 連線
 const Cache = require('./utils/cache');
 const { rateLimiterRoute } = require('./utils/ratelimiter');
 
 // CORS allow all
-app.use(cors());
+app.use(
+  cors({
+    origin: `${IP}`
+  })
+);
 
 // get user ip
 app.set('trust proxy', true);
@@ -22,6 +26,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // API routes
 app.use(`/api/${API_VERSION}`, rateLimiterRoute, [
+  require('./routes/page_route'),
+  require('./routes/message_route'),
+  require('./routes/signup_route'),
+  require('./routes/comment_route'),
+  require('./routes/dashboard_route'),
   require('./routes/group_route'),
   require('./routes/profile_route'),
   require('./routes/user_route')

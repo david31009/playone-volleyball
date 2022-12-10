@@ -45,8 +45,8 @@ let userId;
   const msg = await axios.get(`/api/1.0/msg${id}`);
   const allMsg = msg.data.result;
 
-  // 打報名者的 APT 給主揪確認
-  const members = await axios.get(`/api/1.0/member${id}`);
+  // 打報名者的 API 給主揪確認
+  const members = await axios.get(`/api/1.0/signup/member${id}`);
   const signupMembers = members.data.result;
 
   // 渲染揪團細節
@@ -374,7 +374,7 @@ $('#save').click(async (e) => {
   // 更新資料庫表單
   if (OK) {
     try {
-      await axios.put('/api/1.0/group', updateInfo, {
+      await axios.patch('/api/1.0/group', updateInfo, {
         headers: {
           Authorization: `Bearer ${jwtToken}`
         }
@@ -513,15 +513,12 @@ $('#close-group').click(async () => {
     cancelButtonText: '再想想'
   }).then(async (result) => {
     if (result.isConfirmed) {
-      await axios.post(
-        '/api/1.0/close/group',
-        { groupId: idSplit },
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`
-          }
-        }
-      );
+      await axios.delete('/api/1.0/group', {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        },
+        data: { groupId: idSplit }
+      });
       Swal.fire('關團成功', '已關閉揪團', 'success').then(() => {
         // 刷新頁面
         location.reload();

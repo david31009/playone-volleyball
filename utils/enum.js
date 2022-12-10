@@ -3,33 +3,33 @@ const groupLevel = {
   1: '新手',
   2: '系隊',
   3: '校隊',
-  4: '職業',
+  4: '職業'
 };
 
 const netHigh = {
   0: '女網',
-  1: '男網',
+  1: '男網'
 };
 
 const court = {
   0: '室內',
-  1: '室外',
+  1: '室外'
 };
 
 const isBuild = {
   0: '已關團',
-  1: '已成團',
+  1: '已成團'
 };
 
 const isCharge = {
   0: '免費',
-  1: '收費',
+  1: '收費'
 };
 
 const signupStatus = {
   0: '報名待確認',
   1: '報名成功',
-  2: '報名失敗',
+  2: '報名失敗'
 };
 
 const myLevel = {
@@ -37,12 +37,12 @@ const myLevel = {
   1: '中下',
   2: '中上',
   3: '專業',
-  4: '超強',
+  4: '超強'
 };
 
 const gender = {
   0: '女',
-  1: '男',
+  1: '男'
 };
 
 const position = {
@@ -50,7 +50,7 @@ const position = {
   1: '大砲',
   2: '欄中',
   3: '舉對',
-  4: '自由',
+  4: '自由'
 };
 
 module.exports = {
@@ -62,5 +62,5 @@ module.exports = {
   signupStatus,
   myLevel,
   gender,
-  position,
+  position
 };

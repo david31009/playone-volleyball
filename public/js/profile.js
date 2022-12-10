@@ -317,8 +317,6 @@ $('#i-create-link').click(async (e) => {
   const result = await axios.get(`/api/1.0/now/create${id}`);
   const iCreate = result.data.result;
 
-  console.log(iCreate);
-
   $('#i-create-groups-details').empty();
   for (let i = 0; i < iCreate.length; i++) {
     $('#i-create-groups-details').append(
@@ -447,7 +445,7 @@ async function comment(e) {
   const groupId = id[1];
 
   const result = await axios.post(
-    '/api/1.0/group/info',
+    '/api/1.0/comment/title',
     { groupId },
     {
       headers: {
