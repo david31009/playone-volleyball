@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "testwatch": "jest --watchAll",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,8 @@
   "devDependencies": {
     "eslint": "^8.27.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.26.0"
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^29.3.1",
+    "supertest": "^6.3.3"
   }
 }
