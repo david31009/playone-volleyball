@@ -4,8 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "testwatch": "jest --watchAll",
-    "test": "jest"
+    "test": "jest --watchAll",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",

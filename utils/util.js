@@ -50,9 +50,10 @@ const injectionCheck = async (req, res, next) => {
 const inputCheck = async (req, res, next) => {
   const info = req.body;
   const schema = Joi.object().keys({
+    groupId: Joi.string(),
     title: Joi.string().max(20),
-    date: Joi.string(),
-    time: Joi.string(),
+    date: Joi.string().required(),
+    time: Joi.string().required(),
     timeDuration: Joi.number().positive(),
     net: Joi.number().integer().min(0).max(1),
     county: Joi.string().max(4).required(),

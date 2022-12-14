@@ -2,6 +2,7 @@ require('dotenv').config({ path: '../.env' });
 const bcrypt = require('bcrypt');
 const Cache = require('./cache');
 const { pool } = require('../models/mysqlcon');
+// const { createTable } = require('./create_table');
 const {
   users,
   groups,
@@ -92,8 +93,6 @@ async function createFakeFan(conn) {
 
 // 執行
 async function createFakeData() {
-  // 清快取
-
   // 建假資料
   const conn = await pool.getConnection();
   await conn.query('START TRANSACTION');

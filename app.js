@@ -44,12 +44,12 @@ app.use((err, req, res, next) => {
 
 // set port to 3000
 // redis 連線
-// app.listen(PORT, async () => {
-//   console.log(`Server running on port ${PORT}`);
-//   console.log('Connecting to redis...');
-//   Cache.connect().catch(() => {
-//     console.log('Error in Redis');
-//   });
-// });
+app.listen(PORT, async () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log('Connecting to redis...');
+  Cache.connect().catch(() => {
+    console.log('Error in Redis');
+  });
+});
 
 module.exports = app;
