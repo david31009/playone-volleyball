@@ -1,16 +1,10 @@
+#!/usr/bin/env node
+
 require('dotenv').config({ path: '../.env' });
 const bcrypt = require('bcrypt');
 const Cache = require('./cache');
 const { pool } = require('../models/mysqlcon');
-// const { createTable } = require('./create_table');
-const {
-  users,
-  groups,
-  members,
-  comments,
-  messages,
-  fans
-} = require('./fake_data');
+const { users, groups, members, comments, messages, fans } = require('./fake_data');
 
 const salt = parseInt(process.env.BCRYPT_SALT, 10);
 
@@ -65,10 +59,9 @@ async function createFakeGroup(conn) {
 }
 
 async function createFakeMember(conn) {
-  return await conn.query(
-    'INSERT INTO `member` (user_id, group_id, signup_status) VALUES ?',
-    [members.map((x) => Object.values(x))]
-  );
+  return await conn.query('INSERT INTO `member` (user_id, group_id, signup_status) VALUES ?', [
+    members.map((x) => Object.values(x))
+  ]);
 }
 
 async function createFakeComment(conn) {
@@ -79,10 +72,9 @@ async function createFakeComment(conn) {
 }
 
 async function createFakeMsg(conn) {
-  return await conn.query(
-    'INSERT INTO `msg_board` (user_id, group_id, content, time) VALUES ?',
-    [messages.map((x) => Object.values(x))]
-  );
+  return await conn.query('INSERT INTO `msg_board` (user_id, group_id, content, time) VALUES ?', [
+    messages.map((x) => Object.values(x))
+  ]);
 }
 
 async function createFakeFan(conn) {
