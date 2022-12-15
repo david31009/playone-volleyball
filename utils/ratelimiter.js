@@ -6,10 +6,7 @@ const { QUOTA, WINDOW } = process.env;
 
 async function rateLimiter(token) {
   // 若 key 存在，則不重新 set key (NX: true)
-  const replies = await Cache.multi()
-    .set(token, 0, { EX: WINDOW, NX: true })
-    .incr(token)
-    .exec();
+  const replies = await Cache.multi().set(token, 0, { EX: 60, NX: true }).incr(token).exec();
 
   const reqCount = replies[1];
   if (reqCount > QUOTA) {
