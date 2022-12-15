@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 require('dotenv').config({ path: '../.env' });
 const { pool } = require('../models/mysqlcon');
 

@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 require('dotenv').config({ path: '../.env' });
 const bcrypt = require('bcrypt');
 const Cache = require('./cache');
