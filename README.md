@@ -1,5 +1,3 @@
-<img  alt="playone logo" src="https://i.imgur.com/fhqNNw6.png" style="display:block; margin:auto; width:30%"><br>
-
 # PLAYONE VOLLEYBALL
 
 A website where volleyball players can meet up to find plays, games, or matches. It's simple to organize them and make friends.
@@ -133,12 +131,12 @@ A website where volleyball players can meet up to find plays, games, or matches.
 ### Facebook Login
 
 - Quick login with Facebook.
-- <img alt="Facebook Login" src="https://i.imgur.com/ctQQiAW.gif"></img>
+  <img alt="Facebook Login" src="https://i.imgur.com/ctQQiAW.gif"></img>
 
 ### Browse and Filter Plays
 
 - Browse the plays, switch pages, and filter the plays.
-- <img alt="Browse and Filter Plays" src="https://i.imgur.com/noVinbQ.gif"></img>
+  <img alt="Browse and Filter Plays" src="https://i.imgur.com/noVinbQ.gif"></img>
 
 ### Immediate Notification
 
@@ -149,29 +147,29 @@ A website where volleyball players can meet up to find plays, games, or matches.
 ### Build Plays
 
 - Build a play easy and fast.
-- <img alt="Build Plays" src="https://i.imgur.com/41hH2C8.gif"></img>
+  <img alt="Build Plays" src="https://i.imgur.com/41hH2C8.gif"></img>
 
 ### Update and Close Plays
 
 - Users can update and close their own play.
-- <img alt="Update and Close Plays" src="https://i.imgur.com/08A7iOh.gif"></img>
+  <img alt="Update and Close Plays" src="https://i.imgur.com/08A7iOh.gif"></img>
 
 ### Mailing Service for Signup
 
 - When the player signup games, an email will be sent to the user simultaneously.
-- <img src="https://i.imgur.com/JDENRU1.gif"></img>
+  <img src="https://i.imgur.com/JDENRU1.gif"></img>
 
 ### Leave Messages and Comments
 
 - User can leave messages and comments on each group.
-- <img src="https://i.imgur.com/lvylkgG.gif"></img>
+  <img src="https://i.imgur.com/lvylkgG.gif"></img>
 
 ### Dashboard
 
 - Browse history and incoming plays.
-- <img src="https://i.imgur.com/tEYxG6o.gif"></img>
+  <img src="https://i.imgur.com/tEYxG6o.gif"></img>
 
 ### Follow and Unfollow
 
 - User can follow and unfollow each other.
-- <img src="https://i.imgur.com/Leg9Hcn.gif"></img>
+  <img src="https://i.imgur.com/Leg9Hcn.gif"></img>
