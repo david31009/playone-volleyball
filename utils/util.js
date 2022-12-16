@@ -1,9 +1,9 @@
 require('dotenv').config();
-
 const Joi = require('joi');
-const { TOKEN_SECRET } = process.env;
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
+
+const { TOKEN_SECRET } = process.env;
 
 // reference: https://thecodebarbarian.com/80-20-guide-to-express-error-handling
 const wrapAsync = (fn) => {

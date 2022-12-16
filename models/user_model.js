@@ -1,17 +1,15 @@
 require('dotenv').config();
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { pool } = require('./mysqlcon');
+const { generateJwtToken } = require('../service/user_service');
 
+const { TOKEN_SECRET, EXPIRE } = process.env;
 const salt = parseInt(process.env.BCRYPT_SALT, 10);
 
 const signup = async (username, email, password) => {
   // 檢查 email 是否有重複
-  const [emailCheck] = await pool.execute(
-    'SELECT email FROM `user` WHERE email = ?',
-    [email]
-  );
+  const [emailCheck] = await pool.execute('SELECT email FROM `user` WHERE email = ?', [email]);
   if (emailCheck.length > 0) {
     return {
       error: 'Email Already Exists'
@@ -28,25 +26,13 @@ const signup = async (username, email, password) => {
   const userId = result.insertId;
 
   // 產生 jwt token
-  const jwtToken = jwt.sign(
-    {
-      userId,
-      username,
-      email
-    },
-    process.env.TOKEN_SECRET,
-    {
-      expiresIn: '1 day'
-    }
-  );
+  const jwtToken = generateJwtToken(userId, username, email, TOKEN_SECRET, EXPIRE);
 
   return { userId, username, email, jwtToken };
 };
 
 const nativeSignin = async (email, password) => {
-  const [[user]] = await pool.execute('SELECT * FROM `user` WHERE email = ?', [
-    email
-  ]);
+  const [[user]] = await pool.execute('SELECT * FROM `user` WHERE email = ?', [email]);
 
   // 信箱不存在
   if (!user) {
@@ -59,17 +45,7 @@ const nativeSignin = async (email, password) => {
   }
 
   // 產生新的 jwt token
-  const jwtToken = jwt.sign(
-    {
-      userId: user.id,
-      username: user.username,
-      email: user.email
-    },
-    process.env.TOKEN_SECRET,
-    {
-      expiresIn: '1 day'
-    }
-  );
+  const jwtToken = generateJwtToken(user.id, user.username, user.email, TOKEN_SECRET, EXPIRE);
 
   // 回給前端
   const userInfo = {
@@ -81,7 +57,6 @@ const nativeSignin = async (email, password) => {
 
   return userInfo;
 };
-
 const facebookSignin = async (id, username, email) => {
   // 檢查 email 是否存在
   const [emailCheck] = await pool.execute(
@@ -94,16 +69,12 @@ const facebookSignin = async (id, username, email) => {
   // 存在更新 jwt token
   if (emailCheck.length > 0) {
     userId = emailCheck[0].id;
-    jwtToken = jwt.sign(
-      {
-        userId,
-        username: emailCheck[0].username,
-        email: emailCheck[0].email
-      },
-      process.env.TOKEN_SECRET,
-      {
-        expiresIn: '1 day'
-      }
+    jwtToken = generateJwtToken(
+      userId,
+      emailCheck[0].username,
+      emailCheck[0].email,
+      TOKEN_SECRET,
+      EXPIRE
     );
   } else {
     // 不存在，存入 DB
@@ -115,17 +86,7 @@ const facebookSignin = async (id, username, email) => {
 
     // 產生 jwt token
     userId = result.insertId;
-    jwtToken = jwt.sign(
-      {
-        userId,
-        username,
-        email
-      },
-      process.env.TOKEN_SECRET,
-      {
-        expiresIn: '1 day'
-      }
-    );
+    jwtToken = generateJwtToken(userId, username, email, TOKEN_SECRET, EXPIRE);
   }
 
   return { userId, username, email, jwtToken };
