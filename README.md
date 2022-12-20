@@ -19,7 +19,7 @@ A website where volleyball players can meet up to find plays, games, or matches.
   - [Update and Close Plays](#update-and-close-plays)
   - [Mailing Service for Signup](#mailing-service-for-signup)
   - [Leave Messages and Comments](#leave-messages-and-comments)
-  - [Dashoard](#dashboard)
+  - [Dashboard](#dashboard)
   - [Follow and Unfollow](#follow-and-unfollow)
 
 ## Pain Points
