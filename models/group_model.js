@@ -1,9 +1,9 @@
 const moment = require('moment');
 const { pool } = require('./mysqlcon');
 
-const datenow = moment().format('YYYY-MM-DD HH:mm:ss');
-
 const getGroups = async () => {
+  const datenow = moment().format('YYYY-MM-DD HH:mm:ss');
+  console.log(datenow);
   const [groups] = await pool.execute(
     // 按最舊的團、已關團或時間過期者不從 DB 撈取
     'SELECT * FROM (SELECT group.id, title, date, time_duration, net, place, place_description, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" ORDER BY date ASC LIMIT 10',
@@ -37,15 +37,8 @@ const createGroup = async (groupInfo, creatorId) => {
   }
 };
 
-const filterGroups = async (
-  county,
-  district,
-  groupLevel,
-  net,
-  court,
-  isCharge,
-  page
-) => {
+const filterGroups = async (county, district, groupLevel, net, court, isCharge, page) => {
+  const datenow = moment().format('YYYY-MM-DD HH:mm:ss');
   const [groups] = await pool.execute(
     // 加入篩選條件，按最舊的團 (取 10 筆)、已關團或時間過期者不從 DB 撈取
     'SELECT * FROM (SELECT group.id, title, date, time_duration, net, place, place_description, court, is_charge, money, level, people_have, people_need, people_left, username, IF (`date` > ?, date, "expired") AS grp1, IF (`is_build` = 1, is_build, "closed") AS grp2 FROM `group` INNER JOIN `user` ON group.creator_id = user.id) AS T WHERE `grp1` != "expired" AND `grp2` != "closed" AND place LIKE ? AND place LIKE ? AND level LIKE ? AND net LIKE ? AND court LIKE ? AND is_charge LIKE ? ORDER BY date ASC LIMIT ?, 10',

@@ -2,13 +2,7 @@ const moment = require('moment');
 const Cache = require('../utils/cache');
 const { checkRedis, notifyFans } = require('../service/group_service');
 
-const {
-  groupLevel,
-  netHigh,
-  court,
-  isBuild,
-  isCharge
-} = require('../utils/enum');
+const { groupLevel, netHigh, court, isBuild, isCharge } = require('../utils/enum');
 const Group = require('../models/group_model');
 
 let clients = [];
@@ -57,6 +51,7 @@ const getGroups = async (req, res) => {
       }
 
       const resultDB = await Group.getGroups();
+
       // 第一頁資料 (10筆)
       const firstPage = resultDB.map((i) => {
         moment.locale('zh-tw'); // 台灣時間
